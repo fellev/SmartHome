@@ -1,0 +1,15 @@
+CC=gcc
+CFLAGS=-Wall -g
+LDFLAGS=-g
+SOURCES = GatewayBase.c
+OBJECTS=$(SOURCES:.c=.o) 
+INCLUDE_OBJECTS=-lpthread -lmosquitto
+EXECUTABLE=piGatewayBase
+
+all: $(SOURCES) $(EXECUTABLE)
+	
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(SOURCES) $(INCLUDE_OBJECTS) -o $(EXECUTABLE)
+
+clean:
+	rm -f $(OBJECTS) $(EXECUTABLE)

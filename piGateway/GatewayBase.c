@@ -1,0 +1,766 @@
+/*
+ MQTT Gateway. receiving data from the mosquitto broker and sent it to monteino
+ by Felix Laevsky
+
+ Date:  24-11-2014
+ File: GatewayBase.c
+ This app receives data from Mosquitto relay and forwards it to Monteino which send the command via RFM wireless transmitter
+
+ */
+
+/* Serial protocol between this app (GatewayBase) and monteino:
+ * GatewayBase->Monteino
+ * CCCCCCNN
+ * C - Command
+ * N - Receiver ID in HEX-ASCHII
+ *
+ * Availible commands:
+ * SHTOPNnn
+ * SHTCLSnn
+ * SHTSTOnn
+ * SHTSTSnn
+ *
+ * Monteino->GatewayBase
+ * 1. [SENDER ID]   [RSII:<message>]
+ *    messages: "CLOSED", "CLOSING", "OPENING", "OPEN", "UNKNOWN"
+ * 2. [ACK-sent]
+ * */
+
+#include <assert.h>
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <mosquitto.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <termios.h>    // POSIX terminal control definitions
+#include <fcntl.h>      // File control definitions
+
+
+
+#define VERSION "0.01"
+#define CONTROLLERS_ID "CONTROLLERS"
+#define SHUTTERS_ID "SHUTTERS"
+
+#define SERIAL_BAUDRATE B115200
+#define SHUTTER_CMD_LEN 8
+
+/* This struct is used to pass data to callbacks.
+ * An instance "ud" is created in main() and populated, then passed to
+ * mosquitto_new(). */
+struct userdata
+{
+	char **topics;
+	int topic_count;
+	int verbose;
+	char *username;
+	char *password;
+	int fd_serial;
+	pthread_mutex_t mxq; /* mutex used as quit flag */
+};
+
+void print_usage(void)
+{
+	int major, minor, revision;
+
+	mosquitto_lib_version(&major, &minor, &revision);
+	printf(
+			"gateway_base is a app that receives data from Mosquitto realy and forwards it to RFM wireless transmitter.\n");
+	printf("gateway_base version %s running on libmosquitto %d.%d.%d.\n\n",
+			VERSION, major, minor, revision);
+	printf(
+			"Usage: mosquitto_sub [-c] [-h host] [-k keepalive] [-p port] [-q qos] [-R] -t topic ...\n");
+	printf("                     [-T filter_out]\n");
+#ifdef WITH_SRV
+	printf("                     [-A bind_address] [-S]\n");
+#else
+	printf("                     [-A bind_address]\n");
+#endif
+	printf("                     [-u username [-P password]]\n");
+	printf(
+			"                     [--will-topic [--will-payload payload] [--will-qos qos] [--will-retain]]\n");
+#ifdef WITH_TLS
+	printf("                     [{--cafile file | --capath dir} [--cert file] [--key file]\n");
+	printf("                      [--ciphers ciphers] [--insecure]]\n");
+#ifdef WITH_TLS_PSK
+	printf("                     [--psk hex-key --psk-identity identity [--ciphers ciphers]]\n");
+#endif
+#endif
+	printf("       mosquitto_sub --help\n\n");
+	printf(
+			" -A : bind the outgoing socket to this host/ip address. Use to control which interface\n");
+	printf("      the client communicates over.\n");
+	printf(" -d : enable debug messages.\n");
+	printf(" -h : mqtt host to connect to. Defaults to localhost.\n");
+	printf(
+			" -i : id to use for this client. Defaults to mosquitto_sub_ appended with the process id.\n");
+	printf(" -p : network port to connect to. Defaults to 1883.\n");
+	printf(
+			" -t : mqtt topic to subscribe to. May be repeated multiple times.\n");
+	printf(" -u : provide a username (requires MQTT 3.1 broker)\n");
+	printf(" -v : print published messages verbosely.\n");
+	printf(" -P : provide a password (requires MQTT 3.1 broker)\n");
+	printf(" --help : display this message.\n");
+	printf(" --quiet : don't print error messages.\n");
+#ifdef WITH_TLS
+	printf(" --cafile : path to a file containing trusted CA certificates to enable encrypted\n");
+	printf("            certificate based communication.\n");
+	printf(" --capath : path to a directory containing trusted CA certificates to enable encrypted\n");
+	printf("            communication.\n");
+	printf(" --cert : client certificate for authentication, if required by server.\n");
+	printf(" --key : client private key for authentication, if required by server.\n");
+	printf(" --ciphers : openssl compatible list of TLS ciphers to support.\n");
+	printf(" --tls-version : TLS protocol version, can be one of tlsv1.2 tlsv1.1 or tlsv1.\n");
+	printf("                 Defaults to tlsv1.2 if available.\n");
+	printf(" --insecure : do not check that the server certificate hostname matches the remote\n");
+	printf("              hostname. Using this option means that you cannot be sure that the\n");
+	printf("              remote host is the server you wish to connect to and so is insecure.\n");
+	printf("              Do not use this option in a production environment.\n");
+#ifdef WITH_TLS_PSK
+	printf(" --psk : pre-shared-key in hexadecimal (no leading 0x) to enable TLS-PSK mode.\n");
+	printf(" --psk-identity : client identity string for TLS-PSK mode.\n");
+#endif
+#endif
+	printf(" -s: provide serial port for Monteino Gateway\n");
+	printf(" -b: provide baud rate for serial port for Monteino Gateway\n");
+	printf(" -b: provide baud rate for serial port for Monteino Gateway\n");
+}
+
+void my_connect_callback(struct mosquitto *mosq, void *obj, int result)
+{
+	int i;
+	struct userdata *ud;
+
+	assert(obj);
+	ud = (struct userdata *) obj;
+
+	if (!result)
+	{
+		for (i = 0; i < ud->topic_count; i++)
+		{
+			mosquitto_subscribe(mosq, NULL, ud->topics[i], 0);
+		}
+	}
+	else
+	{
+		if (result)
+		{
+			fprintf(stderr, "%s\n", mosquitto_connack_string(result));
+		}
+	}
+}
+
+void my_subscribe_callback(struct mosquitto *mosq, void *obj, int mid, int qos_count, const int *granted_qos)
+{
+	int i;
+	struct userdata *ud;
+
+	assert(obj);
+	ud = (struct userdata *)obj;
+
+	printf("Subscribed (mid: %d): %d", mid, granted_qos[0]);
+	for(i=1; i<qos_count; i++){
+		printf(", %d", granted_qos[i]);
+	}
+	printf("\n");
+}
+
+/* Returns 1 (true) if the mutex is unlocked, which is the
+ * thread's signal to terminate.
+ */
+int needQuit(pthread_mutex_t *mtx)
+{
+  switch(pthread_mutex_trylock(mtx)) {
+    case 0: /* if we got the lock, unlock and return 1 (true) */
+      pthread_mutex_unlock(mtx);
+      return 1;
+    case EBUSY: /* return 0 (false) if the mutex was locked */
+      return 0;
+  }
+  return 1;
+}
+
+void write_serial(char *msg, int len, int fd)
+{
+	int n_written = 0;
+
+	do{
+		n_written += write( fd, &msg[n_written], 1 );
+	}while(n_written < len && n_written > 0);
+}
+
+/* Return number of bytes actually read.
+ * If 0, errno will contain the reason.
+*/
+size_t read_port(void *const data, size_t const size, int fd)
+{
+    ssize_t           r;
+
+    do {
+        r = read(fd, data, size);
+    } while (r == (ssize_t)-1 && errno == EINTR);
+    if (r > (ssize_t)0)
+        return (size_t)r;
+
+    if (r == (ssize_t)-1)
+        return (size_t)0;
+
+    if (r == (ssize_t)0) {
+        errno = 0;
+        return (size_t)0;
+    }
+
+    /* r < -1, should never happen. */
+    errno = EIO;
+    return (size_t)0;
+}
+
+void *read_serial(void *obj)
+{
+	char buffer[512] = {0};
+	size_t result;
+	struct userdata *ud;
+
+	assert(obj);
+	ud = (struct userdata *) obj;
+
+	if (ud->verbose)
+		printf("read_serial thread is started\n");
+
+	while (!needQuit(&(ud->mxq)))
+	{
+		// Data received from serial, parse and forward it to mosquito broker
+		result = read_port(buffer, sizeof(buffer), ud->fd_serial);
+		if (result)
+		{
+			if (ud->verbose)
+			{
+				printf("Received from moteino: ");
+				fwrite(buffer, 1, result, stdout);
+				printf("\n");
+			}
+		}
+
+		if (result > 0)
+		{
+			/* Sleep for a millisec, then retry */
+			usleep(1000);
+			continue;
+		}
+
+		fprintf(stderr,	"Error: read_serial thread is FAILED\n");
+		/* Failure. */
+		return NULL;
+	}
+
+	fprintf(stderr,	"Error: read_serial thread is FAILED\n");
+	return NULL;
+}
+
+int open_serial(const char *serial_port)
+{
+	int fd = open(serial_port, O_RDWR | O_NOCTTY);
+
+	struct termios tty;
+	struct termios tty_old;
+	memset(&tty, 0, sizeof tty);
+
+	/* Error Handling */
+	if (tcgetattr(fd, &tty) != 0)
+	{
+		fprintf(stderr,	"Error: %d from tcgetattr: %s.\n\n", errno, strerror(errno));
+		return 0;
+	}
+
+	/* Save old tty parameters */
+	tty_old = tty;
+
+	/* Set Baud Rate */
+	cfsetospeed(&tty, (speed_t) SERIAL_BAUDRATE);
+	cfsetispeed(&tty, (speed_t) SERIAL_BAUDRATE);
+
+	/* Setting other Port Stuff */
+	tty.c_cflag &= ~PARENB; // Make 8n1
+	tty.c_cflag &= ~CSTOPB;
+	tty.c_cflag &= ~CSIZE;
+	tty.c_cflag |= CS8;
+
+	tty.c_cflag &= ~CRTSCTS; // no flow control
+	tty.c_cc[VMIN] = 1; // read doesn't block
+	tty.c_cc[VTIME] = 5; // 0.5 seconds read timeout
+	tty.c_cflag |= CREAD | CLOCAL; // turn on READ & ignore ctrl lines
+
+	/* Make raw */
+	cfmakeraw(&tty);
+
+	/* Flush Port, then applies attributes */
+	tcflush(fd, TCIFLUSH);
+	if (tcsetattr(fd, TCSANOW, &tty) != 0)
+	{
+		fprintf(stderr,	"Error: %d from tcsetattr: %s.\n\n", errno, strerror(errno));
+		return 0;
+	}
+
+	return fd;
+}
+
+void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquitto_message *message)
+{
+	struct userdata *ud;
+//	int i;
+//	bool res;
+//	char *token;
+//	char *topic;
+	char msg[32] = {0};
+
+	assert(obj);
+	ud = (struct userdata *)obj;
+
+#if 0
+	topic = strdup(message->topic);
+	assert(topic);
+#endif
+	assert(message->topic);
+
+	if(message->retain) return;
+
+	if(ud->verbose){
+		if(message->payloadlen){
+			printf("%s ", message->topic);
+			fwrite(message->payload, 1, message->payloadlen, stdout);
+			printf("\n");
+		}else{
+			printf("%s (null)\n", message->topic);
+		}
+		fflush(stdout);
+	}else{
+		if(message->payloadlen){
+			fwrite(message->payload, 1, message->payloadlen, stdout);
+			printf("\n");
+			fflush(stdout);
+		}
+	}
+
+	//TODO: parse message payload and send it to appropriate client
+#if 0
+	strtok(topic, "/"); // Skip first '/'
+	token = strtok(topic, "/");
+	if (strstr(token, CONTROLLERS_ID))
+	{
+		token = strtok(topic, "/");
+		if (strstr(token, SHUTTERS_ID))
+		{
+			/* Send message to shutter controller */
+			token = strtok(topic, "/"); // token contain controller id
+			strncpy(msg, message->payload, SHUTTER_CMD_LEN-2);
+			sprintf(msg+SHUTTER_CMD_LEN-2, "%02x", atoi(token));
+			msg[SHUTTER_CMD_LEN] = 0;
+			if(ud->verbose){
+				printf("To Menteino: %s\n", msg);
+			}
+			write_serial(msg, SHUTTER_CMD_LEN, ud->fd_serial);
+		}
+		else
+		{
+			fprintf(stderr,	"Unknown string from mosquitto: %s\n", token);
+		}
+	}
+	else
+	{
+		fprintf(stderr,	"Unknown string from mosquitto: %s\n", token);
+	}
+#endif
+	strncpy(msg, (const char*)message->payload, SHUTTER_CMD_LEN-2);
+	sprintf(msg+SHUTTER_CMD_LEN-2, "%02x", atoi(message->topic));
+	msg[SHUTTER_CMD_LEN] = 0;
+	if(ud->verbose){
+		printf("Sending to Monteino: %s\n", msg);
+	}
+	write_serial(msg, SHUTTER_CMD_LEN, ud->fd_serial);
+
+//	free(topic);
+}
+
+int main(int argc, char* argv[])
+{
+	int rc, i;
+	struct mosquitto *mosq = NULL;
+	char *id = NULL;
+	char *id_prefix = NULL;
+	bool clean_session = true;
+	struct userdata ud;
+	int port = 1883;
+	int keepalive = 60;
+	char *bind_address = NULL;
+
+	bool insecure = false;
+	char *cafile = NULL;
+	char *capath = NULL;
+	char *certfile = NULL;
+	char *keyfile = NULL;
+	char *tls_version = NULL;
+
+	char *psk = NULL;
+	char *psk_identity = NULL;
+
+	char *ciphers = NULL;
+	bool debug = false;
+	char *host = "localhost";
+
+	char *serial_port = NULL;
+
+	pthread_t th;
+
+
+	memset(&ud, 0, sizeof(struct userdata));
+
+	for (i = 1; i < argc; i++)
+	{
+		if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--port"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: -p argument given but no port specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				port = atoi(argv[i + 1]);
+				if (port < 1 || port > 65535)
+				{
+					fprintf(stderr, "Error: Invalid port given: %d\n", port);
+					print_usage();
+					return 1;
+				}
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "-A"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: -A argument given but no address specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				bind_address = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "--cafile"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: --cafile argument given but no file specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				cafile = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "--capath"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: --capath argument given but no directory specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				capath = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "--cert"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: --cert argument given but no file specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				certfile = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "--ciphers"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: --ciphers argument given but no ciphers specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				ciphers = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug"))
+		{
+			debug = true;
+		}
+		else if (!strcmp(argv[i], "--help"))
+		{
+			print_usage();
+			return 0;
+		}
+		else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--host"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: -h argument given but no host specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				host = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "--insecure"))
+		{
+			insecure = true;
+		}
+		else if (!strcmp(argv[i], "-i") || !strcmp(argv[i], "--id"))
+		{
+			if (id_prefix)
+			{
+				fprintf(stderr,
+						"Error: -i and -I argument cannot be used together.\n\n");
+				print_usage();
+				return 1;
+			}
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: -i argument given but no id specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				id = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "--key"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: --key argument given but no file specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				keyfile = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "--psk"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: --psk argument given but no key specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				psk = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "--psk-identity"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: --psk-identity argument given but no identity specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				psk_identity = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "-t") || !strcmp(argv[i], "--topic"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: -t argument given but no topic specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				ud.topic_count++;
+				ud.topics = (char**)realloc(ud.topics, ud.topic_count * sizeof(char *));
+				ud.topics[ud.topic_count - 1] = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "--tls-version"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: --tls-version argument given but no version specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				tls_version = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "-u") || !strcmp(argv[i], "--username"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: -u argument given but no username specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				ud.username = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--verbose"))
+		{
+			ud.verbose = 1;
+		}
+		else if (!strcmp(argv[i], "-P") || !strcmp(argv[i], "--pw"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: -P argument given but no password specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				ud.password = argv[i + 1];
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "-s") || !strcmp(argv[i], "--serial"))
+		{
+			if (i == argc - 1)
+			{
+				fprintf(stderr,
+						"Error: -s argument given but no serial port specified.\n\n");
+				print_usage();
+				return 1;
+			}
+			else
+			{
+				serial_port = argv[i + 1];
+			}
+			i++;
+		}
+	}
+
+	if (ud.password && !ud.username)
+	{
+		fprintf(stderr,
+				"Warning: Not using password since username not set.\n");
+	}
+	if ((certfile && !keyfile) || (keyfile && !certfile))
+	{
+		fprintf(stderr,
+				"Error: Both certfile and keyfile must be provided if one of them is.\n");
+		print_usage();
+		return 1;
+	}
+	if ((cafile || capath) && psk)
+	{
+		fprintf(stderr,
+					"Error: Only one of --psk or --cafile/--capath may be used at once.\n");
+		return 1;
+	}
+	if (psk && !psk_identity)
+	{
+		fprintf(stderr, "Error: --psk-identity required if --psk used.\n");
+		return 1;
+	}
+	if (serial_port == NULL)
+	{
+		fprintf(stderr, "Error: serial port must be provided. For example -s /dev/ttyUSB0.\n");
+		return 1;
+	}
+
+	// Init serial port to communicate with monteino gateway
+	ud.fd_serial = open_serial(serial_port);
+	assert(ud.fd_serial);
+	pthread_mutex_init(&(ud.mxq),NULL);
+	pthread_mutex_lock(&(ud.mxq));
+	pthread_create(&th,NULL,read_serial,&ud);
+
+	mosq = mosquitto_new(id, clean_session, &ud);
+	if (!mosq)
+	{
+		switch (errno)
+		{
+		case ENOMEM:
+			fprintf(stderr, "Error: Out of memory.\n");
+			break;
+		case EINVAL:
+			fprintf(stderr, "Error: Invalid id and/or clean_session.\n");
+			break;
+		}
+		mosquitto_lib_cleanup();
+		return 1;
+	}
+	mosquitto_connect_callback_set(mosq, my_connect_callback);
+	mosquitto_message_callback_set(mosq, my_message_callback);
+	if(debug){
+		mosquitto_subscribe_callback_set(mosq, my_subscribe_callback);
+	}
+	rc = mosquitto_connect_bind(mosq, host, port, keepalive, bind_address);
+
+	rc = mosquitto_loop_forever(mosq, -1, 1);
+
+	mosquitto_destroy(mosq);
+	mosquitto_lib_cleanup();
+
+	if (rc)
+	{
+		fprintf(stderr, "Error: %s\n", mosquitto_strerror(rc));
+	}
+
+	/* unlock mxq to tell the thread to terminate, then join the thread */
+	pthread_mutex_unlock(&(ud.mxq));
+	pthread_join(th,NULL);
+	return 0;
+}
