@@ -59,19 +59,17 @@
 #include <SPI.h>           //comes with Arduino
 
 #define GATEWAYID           1  //assumed 1 in general
-#define LED_RM             15  //digital pin for MIDDLE RED LED
-#define LED_GM             18  //digital pin for MIDDLE GREEN LED
-#define LED_RT             16  //digital pin for TOP RED LED
-#define LED_GT             19  //digital pin for TOP GREEN LED
-#define LED_RB             14  //digital pin for BOTTOM RED LED
-#define LED_GB             17  //digital pin for BOTTOM GREEN LE
-#define SSR                 7  //digital pin connected to Solid State Relay (SSR)
+#define LED_BTN1           14
+#define LED_BTN2           15
+
+#define RELAY1             6
+#define RELAY2             7
 
 #define BTNCOUNT            3  //1 or 3 (2 also possible)
-#define BTN_SYNC            5  //digital pin of middle button
-#define BTN2                6  //digital pin of top button
-#define BTN1                4  //digital pin of bottom button
-#define BTNINDEX_SSR        1  //index in btn[] array which is associated with the SolidStateRelay (SSR)
+#define BTN_SYNC            14  //digital pin of sync button
+#define BTN2                4  //digital pin of button no 1
+#define BTN1                5  //digital pin of bottom no 2
+//#define BTNINDEX_SSR        1  //index in btn[] array which is associated with the SolidStateRelay (SSR)
 
 #define BUTTON_BOUNCE_MS  200  //timespan before another button change can occur
 #define SYNC_ENTER       3000  //time required to hold a button before SwitchMote enters [SYNC mode]
@@ -104,16 +102,12 @@
 #define RELEASED            1
 
 struct configuration {
-  byte frequency;
-  byte isHW;
+  byte check_virgin;
   byte nodeID;
   byte networkID;
-  char encryptionKey[16];
-  byte separator1;
+  byte separator1;          //separators needed to keep strings from overlapping
   char description[10];
   byte separator2;
-  //byte buttons?
-  //byte DEBUG?
 } CONFIG;
 
 void action(byte whichButtonIndex, byte whatMode, boolean notifyGateway=true); //compiler wants this prototype here because of the optional parameter
@@ -136,11 +130,11 @@ long syncStart=0;
 long now=0;
 byte btnIndex=0; // as the sketch loops this index will loop through the available physical buttons
 byte mode[] = {OFF,OFF,OFF}; //could use single bytes for efficiency but keeping it separate for clarity
-byte btn[] = {BTNT, BTNM, BTNB};
+byte btn[] = {BTN1, BTN2, BTN_SYNC};
+byte btnIndexRelay[] = {RELAY1, RELAY2};
 byte btnLastState[]={RELEASED,RELEASED,RELEASED};
 unsigned long btnLastPress[]={0,0,0};
-byte btnLEDRED[] = {LED_RT, LED_RM, LED_RB};
-byte btnLEDGRN[] = {LED_GT, LED_GM, LED_GB};
+byte btnLED[] = {LED_BTN1, LED_BTN2};
 char * buff="justAnEmptyString";
 
 void setup(void)
@@ -149,13 +143,11 @@ void setup(void)
     Serial.begin(SERIAL_BAUD);
   #endif
   EEPROM.readBlock(0, CONFIG);
-  if (CONFIG.frequency!=RF69_433MHZ && CONFIG.frequency!=RF69_868MHZ && CONFIG.frequency!=RF69_915MHZ) // virgin CONFIG, expected [4,8,9]
+  if (CONFIG.check_virgin!=CHECK_VIRGIN_VALUE) // virgin CONFIG, expected [0x55]
   {
-    DEBUG(CONFIG.frequency);
     DEBUGln("No valid config found in EEPROM, use the CONFIG sketch to load valid setting");
     while(1);
-  }
-  
+  }  
   //if SYNC_INFO[0] == 255 it means it's virgin EEPROM memory, needs initialization (one time ever)
   if (EEPROM.read(SYNC_EEPROM_ADDR+SYNC_MAX_COUNT)==255) eraseSYNC();  
   EEPROM.readBlock<byte>(SYNC_EEPROM_ADDR, SYNC_TO, SYNC_MAX_COUNT);
