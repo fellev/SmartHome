@@ -39,12 +39,12 @@
 #define ENCRYPTKEY      "sampleEncryptKey" //has to be same 16 characters/bytes on all nodes, not more not less!
 #define IS_RFM69HW    //uncomment only for RFM69HW! Leave out if you have RFM69W!
 #define ACK_TIME      30  // # of ms to wait for an ack
-#define RETRY_NUM     8
+#define RETRY_NUM     0
 
 #define HALLSENSOR1          A0
-#define HALLSENSOR1_EN       16
+//#define HALLSENSOR1_EN       16
 #define HALLSENSOR2          A1
-#define HALLSENSOR2_EN       17
+//#define HALLSENSOR2_EN       17
 
 #define RELAY_DIR_PIN         6  //direction relay - selecting the direction of the shutter (Open or Close)
 #define RELAY_PWR_PIN         7  //power relay - connects the direction relay to the power line
@@ -134,6 +134,7 @@ void shutter_motor_control(int cmd)
   {
     case SHUTTER_STOP:
       digitalWrite(RELAY_PWR_PIN, LOW);
+      digitalWrite(RELAY_DIR_PIN, LOW);
       break;
     case SHUTTER_OPEN:
       digitalWrite(RELAY_DIR_PIN, LOW);
@@ -145,6 +146,7 @@ void shutter_motor_control(int cmd)
       break;
     default: 
       digitalWrite(RELAY_PWR_PIN, LOW);
+      digitalWrite(RELAY_DIR_PIN, LOW);
       break;
   }
 }
@@ -283,7 +285,7 @@ void setup(void)
 
   pinMode(LED, OUTPUT);
   
-  radio.initialize(FREQUENCY,NODEID,NETWORKID);
+  radio.initialize(FREQUENCY,CONFIG.nodeID,CONFIG.networkID);
 #ifdef IS_RFM69HW
   radio.setHighPower(); //uncomment only for RFM69HW!
 #endif
@@ -522,10 +524,10 @@ void loop()
 boolean hallSensorRead(byte which)
 {
   //while(millis()-lastStatusTimestamp<STATUS_CHANGE_MIN);
-  digitalWrite(which ? HALLSENSOR2_EN : HALLSENSOR1_EN, HIGH); //turn sensor ON
-  delay(1); //wait a little
+//  digitalWrite(which ? HALLSENSOR2_EN : HALLSENSOR1_EN, HIGH); //turn sensor ON
+//  delay(1); //wait a little
   byte reading = digitalRead(which ? HALLSENSOR2 : HALLSENSOR1);
-  digitalWrite(which ? HALLSENSOR2_EN : HALLSENSOR1_EN, LOW); //turn sensor OFF
+//  digitalWrite(which ? HALLSENSOR2_EN : HALLSENSOR1_EN, LOW); //turn sensor OFF
   return reading==0;
 }
 

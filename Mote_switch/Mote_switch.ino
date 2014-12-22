@@ -70,7 +70,7 @@
 #define LED_BTN2            6
 #define LED_ONBOARD         9   //pin connected to onboard LED
 #define LED_PULSE_PERIOD    5000   //5s seems good value for pulsing/blinking (not too fast/slow)
-#define LED_SYNC_BLINK_DC   80  //Led blink duty cycle during sync mode
+#define LED_SYNC_BLINK_DC   90  //Led blink duty cycle during sync mode
 
 
 #define REALY_CNT           2
@@ -83,7 +83,7 @@
 #define BTN1                14  //digital pin of bottom no 2
 //#define BTNINDEX_SSR        1  //index in btn[] array which is associated with the SolidStateRelay (SSR)
 
-#define BUTTON_BOUNCE_MS  300  //timespan before another button change can occur
+#define BUTTON_BOUNCE_MS  150  //timespan before another button change can occur
 #define SYNC_ENTER       3000  //time required to hold a button before SwitchMote enters [SYNC mode]
 #define SYNC_TIME        2000  //max time spent in SYNC mode before returning to normal operation (you got this much time to SYNC 2 SMs, increase if need more time to walk)
 #define SYNC_MAX_COUNT     10  //max number of SYNC entries (increase for more interactions)
@@ -96,7 +96,7 @@
 #define SYNC_DIGIT_SYNCBTN  2 //third digit indicates the button that should be requested to be "pressed" on the target
 #define SYNC_DIGIT_SYNCMODE 3 //fourth digit indicates the mode that should be requested on the target
 
-#define SERIAL_EN             //comment this out when deploying to an installed SM to save a few KB of sketch size
+//#define SERIAL_EN             //comment this out when deploying to an installed SM to save a few KB of sketch size
 #define SERIAL_BAUD    115200
 #ifdef SERIAL_EN
   #define DEBUG(input)   {Serial.print(input); delay(1);}
@@ -210,6 +210,7 @@ byte btnState=RELEASED;
 byte btnSyncState;
 boolean isSyncMode=0;
 boolean ignorePress=false;
+boolean ignoreRelease=false;
 void loop()
 {
   //on each loop pass check the next button
@@ -237,8 +238,9 @@ void loop()
     }
     else if (btnState == RELEASED && btnSyncState == PRESSED) //if normal button press, do the SSR/LED action and notify sync-ed SwitchMotes
     {
-//      ignorePress=false;
-      action(btnIndex, mode[btnIndex]==ON ? OFF : ON, false);
+      if (!ignoreRelease)
+        action(btnIndex, mode[btnIndex]==ON ? OFF : ON, false);
+      ignoreRelease=false;
 //      checkSYNC();
     }
   }
@@ -284,6 +286,7 @@ void loop()
     else { DEBUGln("NO SYNC REPLY ..");}
 
     isSyncMode = true;
+    ignoreRelease = true;
     DEBUGln("SYNC MODE ON");
     displaySYNC();
     syncStart = now;
