@@ -2,8 +2,7 @@
 //                                          Mote Switch sample sketch
 // *************************************************************************************************************
 // Author: Felix Laevsky
-// Original author: Copyright Felix Rusu (2014), felix@lowpowerlab.com
-// http://lowpowerlab.com/
+// Original author: Felix Rusu (2014), felix@lowpowerlab.com http://lowpowerlab.com/
 // *************************************************************************************************************
 // License
 // *************************************************************************************************************
@@ -58,22 +57,35 @@
 #include <WirelessHEX69.h> //get it here: https://github.com/LowPowerLab/WirelessProgramming
 #include <SPI.h>           //comes with Arduino
 
+#define CHECK_VIRGIN_VALUE  0x55
+#define IS_RFM69HW          //uncomment only for RFM69HW! Leave out if you have RFM69W!
 #define GATEWAYID           1  //assumed 1 in general
-#define LED_BTN1           14
-#define LED_BTN2           15
+#define NETWORKID           100
+#define ENCRYPTKEY          "sampleEncryptKey" //has to be same 16 characters/bytes on all nodes, not more not less!
+#define FREQUENCY           RF69_433MHZ
+//#define FREQUENCY         RF69_868MHZ
+//#define FREQUENCY         RF69_915MHZ //Match this with the version of your Moteino! (others: RF69_433MHZ, RF69_868MHZ)
 
-#define RELAY1             6
-#define RELAY2             7
+#define LED_BTN1            5
+#define LED_BTN2            6
+#define LED_ONBOARD         9   //pin connected to onboard LED
+#define LED_PULSE_PERIOD    5000   //5s seems good value for pulsing/blinking (not too fast/slow)
+#define LED_SYNC_BLINK_DC   90  //Led blink duty cycle during sync mode
 
-#define BTNCOUNT            3  //1 or 3 (2 also possible)
-#define BTN_SYNC            14  //digital pin of sync button
-#define BTN2                4  //digital pin of button no 1
-#define BTN1                5  //digital pin of bottom no 2
+
+#define REALY_CNT           2
+#define RELAY1              17
+#define RELAY2              18
+
+#define BTNCOUNT            2  //1 or 3 (2 also possible) Sync button is not in count
+#define BTN_SYNC            16  //digital pin of sync button
+#define BTN2                15  //digital pin of button no 1
+#define BTN1                14  //digital pin of bottom no 2
 //#define BTNINDEX_SSR        1  //index in btn[] array which is associated with the SolidStateRelay (SSR)
 
-#define BUTTON_BOUNCE_MS  200  //timespan before another button change can occur
+#define BUTTON_BOUNCE_MS  150  //timespan before another button change can occur
 #define SYNC_ENTER       3000  //time required to hold a button before SwitchMote enters [SYNC mode]
-#define SYNC_TIME       20000  //max time spent in SYNC mode before returning to normal operation (you got this much time to SYNC 2 SMs, increase if need more time to walk)
+#define SYNC_TIME        2000  //max time spent in SYNC mode before returning to normal operation (you got this much time to SYNC 2 SMs, increase if need more time to walk)
 #define SYNC_MAX_COUNT     10  //max number of SYNC entries (increase for more interactions)
 #define SYNC_EEPROM_ADDR   64  //SYNC_TO and SYNC_INFO data starts at this EEPROM address
 #define ERASE_HOLD       6000  //time required to hold a button before SYNC data is erased
@@ -84,7 +96,7 @@
 #define SYNC_DIGIT_SYNCBTN  2 //third digit indicates the button that should be requested to be "pressed" on the target
 #define SYNC_DIGIT_SYNCMODE 3 //fourth digit indicates the mode that should be requested on the target
 
-#define SERIAL_EN             //comment this out when deploying to an installed SM to save a few KB of sketch size
+//#define SERIAL_EN             //comment this out when deploying to an installed SM to save a few KB of sketch size
 #define SERIAL_BAUD    115200
 #ifdef SERIAL_EN
   #define DEBUG(input)   {Serial.print(input); delay(1);}
@@ -105,9 +117,8 @@ struct configuration {
   byte check_virgin;
   byte nodeID;
   byte networkID;
-  byte separator1;          //separators needed to keep strings from overlapping
   char description[10];
-  byte separator2;
+  byte separator1;
 } CONFIG;
 
 void action(byte whichButtonIndex, byte whatMode, boolean notifyGateway=true); //compiler wants this prototype here because of the optional parameter
@@ -118,24 +129,27 @@ void action(byte whichButtonIndex, byte whatMode, boolean notifyGateway=true); /
 /////////////////////////////////////////////////////////////////////////////
 SPIFlash flash(8, 0xEF30);
 //SYNC data is stored in 2 arrays:
-byte SYNC_TO[SYNC_MAX_COUNT];  // stores the address of the remote SM(s) that this SM has to notify/send request to
+byte SYNC_TO[SYNC_MAX_COUNT];  // stores the address of the remote Switch(s) that this Switch has to notify/send request to
 int SYNC_INFO[SYNC_MAX_COUNT]; // stores the buttons and modes of this and the remote SM as last 4 digits:
-                               //   - this SM button # (0,1,2) = least significant digit (SYNC_DIGIT_BTN=0)
+                               //   - this SM button # (0,1) = least significant digit (SYNC_DIGIT_BTN=0)
                                //   - this button mode (0,1) = second digit ((SYNC_DIGIT_THISMODE=1)
-                               //   - remote SM button # (0,1,2) = 3rd digit from right (SYNC_DIGIT_SYNCBTN=2)
+                               //   - remote SM button # (0,1) = 3rd digit from right (SYNC_DIGIT_SYNCBTN=2)
                                //   - remote SM mode (0,1) = most significant digit (SYNC_DIGIT_SYNCMODE=3)
                                // the 4 pieces of information require an int (a byte only has up to 3 digits)
 RFM69 radio;
 long syncStart=0;
 long now=0;
 byte btnIndex=0; // as the sketch loops this index will loop through the available physical buttons
-byte mode[] = {OFF,OFF,OFF}; //could use single bytes for efficiency but keeping it separate for clarity
-byte btn[] = {BTN1, BTN2, BTN_SYNC};
+byte mode[] = {OFF,OFF}; //could use single bytes for efficiency but keeping it separate for clarity
+byte btn[] = {BTN1, BTN2};
 byte btnIndexRelay[] = {RELAY1, RELAY2};
-byte btnLastState[]={RELEASED,RELEASED,RELEASED};
-unsigned long btnLastPress[]={0,0,0};
+byte btnLastState[]={RELEASED,RELEASED};
+unsigned long btnLastPress[]={0,0};
 byte btnLED[] = {LED_BTN1, LED_BTN2};
 char * buff="justAnEmptyString";
+int ledPulseValue=0;
+boolean ledPulseDirection=false; //false=down, true=up
+unsigned long ledPulseTimestamp=0;
 
 void setup(void)
 {
@@ -153,16 +167,15 @@ void setup(void)
   EEPROM.readBlock<byte>(SYNC_EEPROM_ADDR, SYNC_TO, SYNC_MAX_COUNT);
   EEPROM.readBlock<byte>(SYNC_EEPROM_ADDR+SYNC_MAX_COUNT, (byte *)SYNC_INFO, SYNC_MAX_COUNT*2); //int=2bytes so need to cast to byte array
 
-  radio.initialize(CONFIG.frequency,CONFIG.nodeID,CONFIG.networkID);
+  radio.initialize(FREQUENCY,CONFIG.nodeID,CONFIG.networkID);
   radio.sleep();
   //radio.setPowerLevel(10);
-  if (CONFIG.isHW) radio.setHighPower(); //use with RFM69HW ONLY!
-  if (CONFIG.encryptionKey[0]!=0) radio.encrypt(CONFIG.encryptionKey);
+#ifdef IS_RFM69HW
+  radio.setHighPower(); //uncomment only for RFM69HW!
+#endif
+  radio.encrypt(ENCRYPTKEY);
 
   DEBUG("\r\nNODEID:");DEBUGln(CONFIG.nodeID);
-  DEBUG("NETWORKID:");DEBUGln(CONFIG.networkID);
-  DEBUG("EncryptKey:");DEBUGln(CONFIG.encryptionKey);
-  DEBUG("isHW:");DEBUGln(CONFIG.isHW);
   DEBUG("SYNC_INFO: ");
   for(byte i = 0; i<SYNC_MAX_COUNT; i++)
   {
@@ -173,29 +186,31 @@ void setup(void)
     DEBUG(" ");
   }
 
-  pinMode(LED_RM, OUTPUT);pinMode(LED_GM, OUTPUT);
-  pinMode(LED_RT, OUTPUT);pinMode(LED_GT, OUTPUT);
-  pinMode(LED_RB, OUTPUT);pinMode(LED_GB, OUTPUT);
+  pinMode(LED_BTN1, OUTPUT);
+  pinMode(LED_BTN2, OUTPUT);
+  pinMode(LED_ONBOARD, OUTPUT);
   // by writing HIGH while in INPUT mode, the internal pullup is activated
   // the button will read 1 when RELEASED (because of the pullup)
   // the button will read 0 when PRESSED (because it's shorted to GND)
-  pinMode(BTNM, INPUT);digitalWrite(BTNM, HIGH); //activate pullup
-  pinMode(BTNT, INPUT);digitalWrite(BTNT, HIGH); //activate pullup
-  pinMode(BTNB, INPUT);digitalWrite(BTNB, HIGH); //activate pullup
-  pinMode(SSR, OUTPUT);
-  blinkLED(LED_RM,LED_PERIOD_ERROR,LED_PERIOD_ERROR,3);
+  pinMode(BTN1, INPUT);digitalWrite(BTN1, HIGH); //activate pullup
+  pinMode(BTN2, INPUT);digitalWrite(BTN2, HIGH); //activate pullup
+  pinMode(BTN_SYNC, INPUT);digitalWrite(BTN_SYNC, HIGH); //activate pullup
+  pinMode(RELAY1, OUTPUT);pinMode(RELAY2, OUTPUT);
+  blinkLED(LED_BTN1,LED_PERIOD_ERROR,LED_PERIOD_ERROR,3);
+  blinkLED(LED_BTN2,LED_PERIOD_ERROR,LED_PERIOD_ERROR,3);
   delay(500);
   DEBUGln("\r\nListening for ON/OFF commands...\n");
 
   //initialize LEDs according to default modes
   action(btnIndex, mode[btnIndex], false);btnIndex++;
-  action(btnIndex, mode[btnIndex], false);btnIndex++;
   action(btnIndex, mode[btnIndex], false);
 }
 
 byte btnState=RELEASED;
+byte btnSyncState;
 boolean isSyncMode=0;
 boolean ignorePress=false;
+boolean ignoreRelease=false;
 void loop()
 {
   //on each loop pass check the next button
@@ -205,24 +220,33 @@ void loop()
     if (btnIndex>BTNCOUNT-1) btnIndex=0;
   }
   btnState = digitalRead(btn[btnIndex]);
+  btnSyncState = digitalRead(BTN_SYNC);
   now = millis();
   
   if (btnState != btnLastState[btnIndex] && now-btnLastPress[btnIndex] >= BUTTON_BOUNCE_MS) //button event happened
   {
+    DEBUG("BTN_SYNC ");
+    DEBUGln(btnSyncState == PRESSED ? "PRESSED" : "RELEASED");
     btnLastState[btnIndex] = btnState;
-    if (btnState == PRESSED) btnLastPress[btnIndex] = now;    
-
-    //if normal button press, do the SSR/LED action and notify sync-ed SwitchMotes
-    if (btnState == RELEASED && !isSyncMode)
+    btnLastPress[btnIndex] = now;
+    if (btnState == PRESSED && !isSyncMode)
     {
       ignorePress=false;
-      action(btnIndex, mode[btnIndex]==ON ? OFF : ON);
-      checkSYNC();
+      if (btnSyncState == RELEASED) action(btnIndex, mode[btnIndex]==ON ? OFF : ON);
+      checkSYNC();	
+
+    }
+    else if (btnState == RELEASED && btnSyncState == PRESSED) //if normal button press, do the SSR/LED action and notify sync-ed SwitchMotes
+    {
+      if (!ignoreRelease)
+        action(btnIndex, mode[btnIndex]==ON ? OFF : ON, false);
+      ignoreRelease=false;
+//      checkSYNC();
     }
   }
 
   //enter SYNC mode when a button pressed for more than SYNC_ENTER ms
-  if (isSyncMode==false && btnState == PRESSED && now-btnLastPress[btnIndex] >= SYNC_ENTER && !ignorePress)
+  if (isSyncMode==false && btnSyncState==PRESSED && btnState == PRESSED && now-btnLastPress[btnIndex] >= SYNC_ENTER && !ignorePress)
   {
     // first broadcast SYNC token to sync with another SwitchMote that is in SYNC mode
     // "SYNC?" means "is there anyone wanting to Synchronize with me?"
@@ -241,12 +265,12 @@ void loop()
 
       //ACK received, check payload
       if (radio.DATALEN==7 && radio.DATA[0]=='S' && radio.DATA[1]=='Y' && radio.DATA[2]=='N' && radio.DATA[3]=='C' && radio.DATA[5]==':'
-          && radio.DATA[4]>='0' && radio.DATA[4]<='2' && (radio.DATA[6]=='0' || radio.DATA[6]=='1'))
+          && radio.DATA[4]>='0' && radio.DATA[4]<='1' && (radio.DATA[6]=='0' || radio.DATA[6]=='1'))
       {
         if (addSYNC(radio.SENDERID, radio.DATA[4]-'0', radio.DATA[6]-'0'))
-          blinkLED(btnLEDGRN[btnIndex],LED_PERIOD_OK,LED_PERIOD_OK,3);
+          blinkLED(btnLED[btnIndex],LED_PERIOD_OK,LED_PERIOD_OK,3);
         else 
-          blinkLED(btnLEDRED[btnIndex],LED_PERIOD_ERROR,LED_PERIOD_ERROR,3);
+          blinkLED(btnLED[btnIndex],LED_PERIOD_ERROR,LED_PERIOD_ERROR,3);
 
         action(btnIndex, mode[btnIndex]);
         return; //exit SYNC
@@ -262,32 +286,61 @@ void loop()
     else { DEBUGln("NO SYNC REPLY ..");}
 
     isSyncMode = true;
+    ignoreRelease = true;
     DEBUGln("SYNC MODE ON");
     displaySYNC();
     syncStart = now;
   }
 
   //if button held for more than ERASE_TRIGGER, erase SYNC table
-  if (isSyncMode==true && btnState == PRESSED && now-btnLastPress[btnIndex] >= ERASE_HOLD && !ignorePress)
+  if (isSyncMode==true && btnSyncState==PRESSED && btnState == PRESSED && now-btnLastPress[btnIndex] >= ERASE_HOLD && !ignorePress)
   {
     DEBUG("ERASING SYNC TABLE ... ");
     eraseSYNC();
     isSyncMode = false;
     ignorePress = true;
     DEBUGln("... DONE");
-    blinkLED(btnLEDRED[btnIndex],LED_PERIOD_ERROR,LED_PERIOD_ERROR,3);
+    blinkLED(btnLED[btnIndex],LED_PERIOD_ERROR,LED_PERIOD_ERROR,3);
     action(btnIndex, mode[btnIndex], false);
   }
 
-  //SYNC exit condition
+
   if (isSyncMode)
   {
-    syncBlink(btnLEDRED[btnIndex], btnLEDGRN[btnIndex]);
-    if (now-syncStart >= SYNC_TIME)
+    syncBlink(btnLED[btnIndex], mode[btnIndex]==ON ? LED_SYNC_BLINK_DC : 100 - LED_SYNC_BLINK_DC);
+    if (millis()-(ledPulseTimestamp) > LED_PULSE_PERIOD/256)
+    {
+      ledPulseValue = ledPulseDirection ? ledPulseValue + LED_PULSE_PERIOD/256 : ledPulseValue - LED_PULSE_PERIOD/256;
+
+      if (ledPulseDirection && ledPulseValue > 255)
+      {
+        ledPulseDirection=false;
+        ledPulseValue = 255;
+      }
+      else if (!ledPulseDirection && ledPulseValue < 0)
+      {
+        ledPulseDirection=true;
+        ledPulseValue = 0;
+      }
+      
+      analogWrite(LED_ONBOARD, ledPulseValue);
+      ledPulseTimestamp = millis();
+    }
+    //SYNC exit condition
+    if (btnSyncState == RELEASED && now-syncStart >= SYNC_TIME)
     {
       isSyncMode = false;
       DEBUGln("SYNC MODE OFF");
       action(btnIndex, mode[btnIndex], false);
+    }
+  }
+  else
+  {
+    if (millis()-(ledPulseTimestamp) > LED_PULSE_PERIOD/20)
+    {
+      ledPulseDirection = !ledPulseDirection;
+      digitalWrite(LED_ONBOARD, ledPulseDirection ? HIGH : LOW);
+      ledPulseTimestamp = millis();
     }
   }
 
@@ -302,13 +355,13 @@ void loop()
 
     // wireless programming token check
     // DO NOT REMOVE, or SwitchMote will not be wirelessly programmable any more!
-    CheckForWirelessHEX(radio, flash, true, LED_RM);
+    CheckForWirelessHEX(radio, flash, true, LED_ONBOARD);
 
     //respond to SYNC request
     if (isSyncMode && radio.DATALEN == 5
         && radio.DATA[0]=='S' && radio.DATA[1]=='Y' && radio.DATA[2]=='N' && radio.DATA[3] == 'C' && radio.DATA[4]=='?')
     {
-      sprintf(buff,"SYNC%d:%d",btnIndex, mode[btnIndex]); //respond to SYNC request with this SM's button and mode information
+      sprintf(buff,"SYNC%d:%d",btnIndex, mode[btnIndex]); //respond to SYNC request with this Switch's button and mode information
       radio.sendACK(buff, strlen(buff));
       DEBUG(" - SYNC ACK sent : ");
       DEBUGln(buff);
@@ -317,23 +370,25 @@ void loop()
       return; //continue loop
     }
     
-    //listen for relay requests: SSR:0 or SSR:1 commands
-    if (radio.DATALEN == 5
-        && radio.DATA[0]=='S' && radio.DATA[1]=='S' && radio.DATA[2]=='R' && radio.DATA[3] == ':'
-        && (radio.DATA[4]=='0' || radio.DATA[4]=='1'))
+#if 0
+    //listen for relay requests: SSR0:0, SSR0:1. SSR1:0 or SSR1:1 commands
+    if (radio.DATALEN == 6
+        && radio.DATA[0]=='S' && radio.DATA[1]=='S' && radio.DATA[2]=='R' && (radio.DATA[3]=='0' || radio.DATA[3]=='1') && radio.DATA[4] == ':'
+        && (radio.DATA[5]=='0' || radio.DATA[5]=='1'))
     {
-      mode[BTNINDEX_SSR] = radio.DATA[4]=='1'?ON:OFF;
+      mode[radio.DATA[3]-'0'] = radio.DATA[5]=='1'?ON:OFF;
       if (radio.ACK_REQUESTED) radio.sendACK(); //send ACK sooner when a ON/OFF + ACK is requested
-      action(BTNINDEX_SSR, mode[BTNINDEX_SSR], radio.SENDERID!=GATEWAYID);
+      action(radio.DATA[3]-'0', mode[radio.DATA[3]-'0'], radio.SENDERID!=GATEWAYID);
       //at this point we could call checkSYNC() again to notify the SYNC subscribed SwitchMotes but that could cause a chain reaction
       //so for simplicity sake we are only sending SYNC ON/OFF requests when the physical button is used
       //alternatively a special/aumented ON/OFF packet command could be used to indicate checkSYNC() should be called
     }
+#endif
     
-    //listen for BTNx:y commands where x={0,1,2}, y={0,1}
+    //listen for BTNx:y commands where x={0,1}, y={0,1}
     if (radio.DATALEN == 6
         && radio.DATA[0]=='B' && radio.DATA[1]=='T' && radio.DATA[2]=='N' && radio.DATA[4] == ':'
-        && (radio.DATA[3]>='0' && radio.DATA[3]<='2') && (radio.DATA[5]=='0' || radio.DATA[5]=='1'))
+        && (radio.DATA[3]>='0' && radio.DATA[3]<='1') && (radio.DATA[5]=='0' || radio.DATA[5]=='1'))
     {
       mode[radio.DATA[3]-'0'] = (radio.DATA[5]=='1'?ON:OFF);
       if (radio.ACKRequested()) radio.sendACK(); //send ACK sooner when a ON/OFF + ACK is requested
@@ -360,19 +415,19 @@ void action(byte whichButtonIndex, byte whatMode, boolean notifyGateway)
   DEBUG("]:");
   DEBUG(btn[whichButtonIndex]);
   DEBUG(" - ");
-  DEBUG(btn[whichButtonIndex]==BTNT?"TOP:":btn[whichButtonIndex]==BTNM?"MAIN:":btn[whichButtonIndex]==BTNB?"BOTTOM:":"UNKNOWN");
+  DEBUG(btn[whichButtonIndex]==BTN1?"BTN1":btn[whichButtonIndex]==BTN2?"BTN2":"UNKNOWN");
   DEBUG(whatMode==ON?"ON ":"OFF");
   mode[whichButtonIndex] = whatMode;
-  digitalWrite(btnLEDRED[whichButtonIndex], whatMode == ON ? LOW : HIGH);
-  digitalWrite(btnLEDGRN[whichButtonIndex], whatMode == ON ? HIGH : LOW);
-  if (whichButtonIndex==BTNINDEX_SSR)
-    digitalWrite(SSR, whatMode == ON ? HIGH : LOW);
+  digitalWrite(btnLED[whichButtonIndex], whatMode == ON ? HIGH : LOW);
+  digitalWrite(btnIndexRelay[whichButtonIndex], whatMode == ON ? HIGH : LOW);
   if (notifyGateway)
   {
+#if 0
     if (btnIndex==BTNINDEX_SSR)
       sprintf(buff, "SSR:%d",whatMode);
     else
-      sprintf(buff, "BTN%d:%d", whichButtonIndex,whatMode);
+#endif
+    sprintf(buff, "BTN%d:%d", whichButtonIndex,whatMode);
     if (radio.sendWithRetry(GATEWAYID, buff, strlen(buff)))
       {DEBUGln("..OK");}
     else {DEBUGln("..NOK");}
@@ -381,14 +436,20 @@ void action(byte whichButtonIndex, byte whatMode, boolean notifyGateway)
 
 long blinkLastCycle=0;
 boolean blinkState=0;
-void syncBlink(byte LED1, byte LED2)
+// dutyCycle should be between 0 to 100
+void syncBlink(byte LED1, byte dutyCycle)
 {
-  if (now-blinkLastCycle>=60)
+  if (blinkState && now-blinkLastCycle>=dutyCycle)
   {
     blinkLastCycle=now;
-    blinkState=!blinkState;
+    blinkState=0;
     digitalWrite(LED1,blinkState);
-    digitalWrite(LED2,!blinkState);
+  }
+  else if (!blinkState && now-blinkLastCycle>=(100 - dutyCycle))
+  {
+    blinkLastCycle=now;
+    blinkState=1;
+    digitalWrite(LED1,blinkState);
   }
 }
 
@@ -435,7 +496,7 @@ boolean addSYNC(byte targetAddr, byte targetButton, byte targetMode)
 }
 
 //checks the SYNC table for any necessary requests to other SwitchMotes
-boolean checkSYNC()
+void checkSYNC()
 {
   for (byte i=0; i < SYNC_MAX_COUNT; i++)
   {
