@@ -50,7 +50,7 @@
 #define RELAY_PWR_PIN         7  //power relay - connects the direction relay to the power line
 #define RELAY_PULSE_MS      250  //just enough that the opener will pick it up
 
-#define DOOR_MOVEMENT_TIME 14000 // this has to be at least as long as the max between [door opening time, door closing time]
+#define DOOR_MOVEMENT_TIME 20000 // this has to be at least as long as the max between [door opening time, door closing time]
                                  // my door opens and closes in about 12s
 #define STATUS_CHANGE_MIN  1500  // this has to be at least as long as the delay 
                                  // between a opener button press and door movement start
