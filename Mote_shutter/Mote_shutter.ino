@@ -36,7 +36,7 @@
 #define FREQUENCY     RF69_433MHZ
 //#define FREQUENCY     RF69_868MHZ
 //#define FREQUENCY       RF69_915MHZ //Match this with the version of your Moteino! (others: RF69_433MHZ, RF69_868MHZ)
-#define ENCRYPTKEY      "sampleEncryptKey" //has to be same 16 characters/bytes on all nodes, not more not less!
+#define ENCRYPTKEY     "sampleEncryptKey" //")nXLceHCQkaU{-5@" //has to be same 16 characters/bytes on all nodes, not more not less!
 #define IS_RFM69HW    //uncomment only for RFM69HW! Leave out if you have RFM69W!
 #define ACK_TIME      30  // # of ms to wait for an ack
 #define RETRY_NUM     0
@@ -45,6 +45,8 @@
 //#define HALLSENSOR1_EN       16
 #define HALLSENSOR2          A1
 //#define HALLSENSOR2_EN       17
+
+#define LED_ONBOARD         9   //pin connected to onboard LED
 
 #define RELAY_DIR_PIN         6  //direction relay - selecting the direction of the shutter (Open or Close)
 #define RELAY_PWR_PIN         7  //power relay - connects the direction relay to the power line
@@ -82,7 +84,8 @@
 #define STATUS_CLOSING       1
 #define STATUS_OPENING       2
 #define STATUS_OPEN          3
-#define STATUS_UNKNOWN       4 
+#define STATUS_STOPPED_BY_USER 4
+#define STATUS_UNKNOWN       5
 
 #define LED                  9   //pin connected to onboard LED
 #define LED_PULSE_PERIOD  5000   //5s seems good value for pulsing/blinking (not too fast/slow)
@@ -278,8 +281,6 @@ void setup(void)
   pinMode(RELAY_PWR_PIN, OUTPUT);digitalWrite(RELAY_PWR_PIN, LOW);
   pinMode(HALLSENSOR1, INPUT);digitalWrite(HALLSENSOR1, HIGH); //activate pullup
   pinMode(HALLSENSOR2, INPUT);digitalWrite(HALLSENSOR2, HIGH); //activate pullup
-  pinMode(HALLSENSOR1_EN, OUTPUT);
-  pinMode(HALLSENSOR2_EN, OUTPUT);
   pinMode(BTNO, INPUT);digitalWrite(BTNO, HIGH); //activate pullup
   pinMode(BTNC, INPUT);digitalWrite(BTNC, HIGH); //activate pullup
 
@@ -292,7 +293,7 @@ void setup(void)
   radio.encrypt(ENCRYPTKEY);
 
   char buff[50];
-  sprintf(buff, "GarageMote : %d Mhz...", FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);
+  sprintf(buff, "Mote Shutter : %d Mhz...", FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);
   DEBUGln(buff);
 
   if (hallSensorRead(HALLSENSOR_OPENSIDE)==true)
@@ -443,7 +444,7 @@ void loop()
         }
         //else radio.Send(requester, "INVALID", 7);
       }
-      if (radio.DATA[0]=='C' && radio.DATA[1]=='L' && radio.DATA[2]=='S')
+      else if (radio.DATA[0]=='C' && radio.DATA[1]=='L' && radio.DATA[2]=='S')
       {
         if (millis()-(lastStatusTimestamp) > STATUS_CHANGE_MIN && (STATUS == STATUS_OPEN || STATUS == STATUS_OPENING || STATUS == STATUS_UNKNOWN)){
           newStatus = STATUS_CLOSING;
@@ -451,7 +452,14 @@ void loop()
         }
         //else radio.Send(requester, "INVALID", 7);
       }
-      if (radio.DATA[0]=='S' && radio.DATA[1]=='T' && radio.DATA[2]=='S')
+      else if (radio.DATA[0]=='S' && radio.DATA[1]=='T' && radio.DATA[2]=='O')
+      {
+        if (millis()-(lastStatusTimestamp) > STATUS_CHANGE_MIN && (STATUS == STATUS_OPEN || STATUS == STATUS_CLOSED)){
+          newStatus = STATUS_STOPPED_BY_USER;
+          bMode = NORMAL_MODE;
+        }
+      }      
+      else if (radio.DATA[0]=='S' && radio.DATA[1]=='T' && radio.DATA[2]=='S')
       {
         reportStatusRequest = true;
       }
@@ -459,7 +467,7 @@ void loop()
     
     // wireless programming token check
     // DO NOT REMOVE, or GarageMote will not be wirelessly programmable any more!
-    CheckForWirelessHEX(radio, flash, true);
+    CheckForWirelessHEX(radio, flash, true, LED_ONBOARD);
 
     //first send any ACK to request
     DEBUG("   [RX_RSSI:");DEBUG(radio.RSSI);DEBUG("]");
