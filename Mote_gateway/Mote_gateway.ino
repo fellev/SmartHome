@@ -24,7 +24,7 @@
 #define FREQUENCY   RF69_433MHZ
 //#define FREQUENCY   RF69_868MHZ
 //#define FREQUENCY     RF69_915MHZ
-#define ENCRYPTKEY    "sampleEncryptKey" //has to be same 16 characters/bytes on all nodes, not more not less!
+#define ENCRYPTKEY    ")nXLceHCQkaU{-5@" //"sampleEncryptKey" has to be same 16 characters/bytes on all nodes, not more not less!
 #define IS_RFM69HW  //uncomment only for RFM69HW! Leave out if you have RFM69W!
 #define LED           9
 #define SERIAL_BAUD   115200
@@ -72,7 +72,7 @@ void loop() {
         Serial.println("ok ... ");
       else Serial.println("nothing ... ");
     }
-    if (input[0]=='S' && input[1]=='H' && input[2]=='T' && input[3]=='C' && input[4]=='L' && input[5]=='S')
+    else if (input[0]=='S' && input[1]=='H' && input[2]=='T' && input[3]=='C' && input[4]=='L' && input[5]=='S')
     {
       nodeid = val2(&input[6]);
       Serial.print("ID:");Serial.print(nodeid, DEC);
@@ -81,7 +81,7 @@ void loop() {
         Serial.println("ok ... ");
       else Serial.println("nothing ... ");
     }
-    if (input[0]=='S' && input[1]=='H' && input[2]=='T' && input[3]=='S' && input[4]=='T' && input[5]=='O')
+    else if (input[0]=='S' && input[1]=='H' && input[2]=='T' && input[3]=='S' && input[4]=='T' && input[5]=='O')
     {
       nodeid = val2(&input[6]);
       Serial.print("ID:");Serial.print(nodeid, DEC);
@@ -90,7 +90,7 @@ void loop() {
         Serial.println("ok ... ");
       else Serial.println("nothing ... ");
     }
-    if (input[0]=='S' && input[1]=='H' && input[2]=='T' && input[3]=='S' && input[4]=='T' && input[5]=='S')
+    else if (input[0]=='S' && input[1]=='H' && input[2]=='T' && input[3]=='S' && input[4]=='T' && input[5]=='S')
     {
       nodeid = val2(&input[6]);
       Serial.print("ID:");Serial.print(nodeid, DEC);
@@ -98,6 +98,15 @@ void loop() {
       if (radio.sendWithRetry(nodeid, "STS", 3, RETRY_NUM, ACK_TIME))
         Serial.println("ok ... ");
       else Serial.println("nothing ... ");
+    }
+    else if (input[0]=='R' && input[1]=='G' && input[2]=='B' && input[5]=='C' && input[6]=='L' && input[7]=='R')
+    {
+      nodeid = val2(&input[3]);
+      Serial.print("ID:");Serial.print(nodeid, DEC);
+      Serial.print("RGB CLR ... ");
+      if (radio.sendWithRetry(nodeid, &input[5], 6, RETRY_NUM, ACK_TIME))
+        Serial.println("ok ... ");
+      else Serial.println("nothing ... ");      
     }
 
     //if (input == 'i')

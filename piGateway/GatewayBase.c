@@ -1,10 +1,11 @@
 /*
- MQTT Gateway. receiving data from the mosquitto broker and sent it to monteino
+ MQTT Gateway. receiving data from the mosquitto broker and sent it to Moteino
  by Felix Laevsky
 
  Date:  24-11-2014
  File: GatewayBase.c
  This app receives data from Mosquitto relay and forwards it to Monteino which send the command via RFM wireless transmitter
+ to Moteino clients
 
  */
 
@@ -25,7 +26,9 @@
  *    messages: "CLOSED", "CLOSING", "OPENING", "OPEN", "UNKNOWN"
  * 2. [ACK-sent]
  * */
-
+/******************************************************************************
+ * Includes
+ * ****************************************************************************/
 #include <assert.h>
 #include <errno.h>
 #include <stdio.h>
@@ -36,8 +39,12 @@
 #include <unistd.h>
 #include <termios.h>    // POSIX terminal control definitions
 #include <fcntl.h>      // File control definitions
+#include <stdint.h>
 
 
+/******************************************************************************
+ * Private Defines
+ * ****************************************************************************/
 
 #define VERSION "0.01"
 #define CONTROLLERS_ID "CONTROLLERS"
@@ -45,21 +52,80 @@
 
 #define SERIAL_BAUDRATE B115200
 #define SHUTTER_CMD_LEN 8
+#define RBG_LED_STRIP_CMD_LEN 11
+#define MAX_LED_COLOR_VALUE	  255
 
+#define MAX_CONTROLLER_NUM 99
+
+#define RGB_LED_STRIP_RED_BIT	0
+#define RGB_LED_STRIP_GREEN_BIT	1
+#define RGB_LED_STRIP_BLUE_BIT	2
+
+#define TOPICS_NUM	2
+
+/******************************************************************************
+ * Private Types
+ * ****************************************************************************/
 /* This struct is used to pass data to callbacks.
  * An instance "ud" is created in main() and populated, then passed to
  * mosquitto_new(). */
 struct userdata
 {
-	char **topics;
-	int topic_count;
-	int verbose;
-	char *username;
-	char *password;
-	int fd_serial;
-	pthread_mutex_t mxq; /* mutex used as quit flag */
+    char **topics;
+    int topic_count;
+    int verbose;
+    char *username;
+    char *password;
+    int fd_serial;
+    pthread_mutex_t mxq; /* mutex used as quit flag */
 };
 
+struct s_rgb_value
+{
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t status;
+};
+
+union u_device_value
+{
+    struct s_rgb_value rgb_value;
+    int value;
+};
+
+enum e_device_type
+{
+    E_SHUTTER,
+    E_LIGTH_RGB,
+};
+
+struct s_devicedata
+{
+    enum e_device_type device_type;
+    union u_device_value value;
+};
+
+const char* device_tipics[TOPICS_NUM] =
+{
+    [E_SHUTTER] = "/CONTROLLERS/SHUTTER/",
+    [E_LIGTH_RGB] = "/CONTROLLERS/RGB/"
+};
+
+/******************************************************************************
+ * Variables
+ * ****************************************************************************/
+struct s_rgb_value device_rgb_led_strip[MAX_CONTROLLER_NUM+1];
+
+/******************************************************************************
+ * Prototypes
+ * ****************************************************************************/
+void write_serial(uint8_t *msg, int len, int fd);
+
+
+/******************************************************************************
+ * Methods
+ * ****************************************************************************/
 void print_usage(void)
 {
 	int major, minor, revision;
@@ -127,6 +193,46 @@ void print_usage(void)
 	printf(" -b: provide baud rate for serial port for Monteino Gateway\n");
 }
 
+int send_command_to_shutter(void *obj, const char* cmd, unsigned int controllerID)
+{
+	struct userdata *ud;
+	char msg[32] = {0};
+
+	assert(obj);
+	ud = (struct userdata *)obj;
+
+	strncpy(msg, cmd, SHUTTER_CMD_LEN-2);
+	sprintf(msg+SHUTTER_CMD_LEN-2, "%02x", controllerID);
+	msg[SHUTTER_CMD_LEN] = 0;
+	if(ud->verbose){
+		printf("Sending to Monteino: %s\n", msg);
+	}
+	write_serial((uint8_t*)msg, SHUTTER_CMD_LEN, ud->fd_serial);
+
+	return 0;
+}
+
+int send_command_to_rgb_led_strip(void *obj, struct s_rgb_value *value, unsigned int controllerID)
+{
+	struct userdata *ud;
+	uint8_t msg[32] = {0};
+
+	assert(value);
+	assert(obj);
+	ud = (struct userdata *)obj;
+
+	sprintf((char*)msg, "RGB%02xCLR", controllerID);
+	msg[8] = value->red;
+	msg[9] = value->green;
+	msg[10] = value->blue;
+	if(ud->verbose){
+		printf("Sending to Monteino: CLR 0x%02x 0x%02x 0x%02x\n", msg[8], msg[9], msg[10]);
+	}
+	write_serial(msg, RBG_LED_STRIP_CMD_LEN, ud->fd_serial);
+
+	return 0;
+}
+
 void my_connect_callback(struct mosquitto *mosq, void *obj, int result)
 {
 	int i;
@@ -154,10 +260,10 @@ void my_connect_callback(struct mosquitto *mosq, void *obj, int result)
 void my_subscribe_callback(struct mosquitto *mosq, void *obj, int mid, int qos_count, const int *granted_qos)
 {
 	int i;
-	struct userdata *ud;
+//	struct userdata *ud;
 
-	assert(obj);
-	ud = (struct userdata *)obj;
+//	assert(obj);
+//	ud = (struct userdata *)obj;
 
 	printf("Subscribed (mid: %d): %d", mid, granted_qos[0]);
 	for(i=1; i<qos_count; i++){
@@ -181,7 +287,7 @@ int needQuit(pthread_mutex_t *mtx)
   return 1;
 }
 
-void write_serial(char *msg, int len, int fd)
+void write_serial(uint8_t *msg, int len, int fd)
 {
 	int n_written = 0;
 
@@ -263,7 +369,7 @@ int open_serial(const char *serial_port)
 	int fd = open(serial_port, O_RDWR | O_NOCTTY);
 
 	struct termios tty;
-	struct termios tty_old;
+//	struct termios tty_old;
 	memset(&tty, 0, sizeof tty);
 
 	/* Error Handling */
@@ -274,7 +380,7 @@ int open_serial(const char *serial_port)
 	}
 
 	/* Save old tty parameters */
-	tty_old = tty;
+// 	tty_old = tty;
 
 	/* Set Baud Rate */
 	cfsetospeed(&tty, (speed_t) SERIAL_BAUDRATE);
@@ -312,7 +418,7 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 //	bool res;
 //	char *token;
 //	char *topic;
-	char msg[32] = {0};
+//	char msg[32] = {0};
 
 	assert(obj);
 	ud = (struct userdata *)obj;
@@ -371,13 +477,65 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 		fprintf(stderr,	"Unknown string from mosquitto: %s\n", token);
 	}
 #endif
-	strncpy(msg, (const char*)message->payload, SHUTTER_CMD_LEN-2);
-	sprintf(msg+SHUTTER_CMD_LEN-2, "%02x", atoi(message->topic));
-	msg[SHUTTER_CMD_LEN] = 0;
-	if(ud->verbose){
-		printf("Sending to Monteino: %s\n", msg);
+	if (strncmp ( message->topic, device_tipics[E_SHUTTER], strlen(device_tipics[E_SHUTTER]) ) == 0)
+	{
+		const char* controllerIdStr = &(((const char*)message->topic)[strlen(device_tipics[E_SHUTTER])]);
+		send_command_to_shutter(obj, (const char*)message->payload, atoi(controllerIdStr));
+
 	}
-	write_serial(msg, SHUTTER_CMD_LEN, ud->fd_serial);
+	else if (strncmp ( message->topic, device_tipics[E_LIGTH_RGB], strlen(device_tipics[E_LIGTH_RGB]) ) == 0)
+	{
+		const char* controllerIdStr = &(((const char*)message->topic)[strlen(device_tipics[E_LIGTH_RGB])]);
+		unsigned int controllerId = atoi(controllerIdStr);
+		if (controllerId >= 0 && controllerId <= MAX_CONTROLLER_NUM)
+		{
+			int tmp;
+			tmp = atoi((const char*)message->payload);
+			if (tmp < 0 || tmp > 100)
+			{
+				if (ud->verbose)
+				{
+					printf("Invalid RGB strip led color value: %d. should be between 0 to 100\n", tmp);
+				}
+				return;
+			}
+			tmp = tmp*MAX_LED_COLOR_VALUE/100;
+			const char* color = &controllerIdStr[4];
+			if (strncmp(color, "RED", 3) == 0)
+			{
+
+				device_rgb_led_strip[controllerId].red = tmp;
+				device_rgb_led_strip[controllerId].status |= RGB_LED_STRIP_RED_BIT;
+			}
+			else if (strncmp(color, "GREEN", 5) == 0)
+			{
+				device_rgb_led_strip[controllerId].green = tmp;
+				device_rgb_led_strip[controllerId].status |= RGB_LED_STRIP_GREEN_BIT;
+			}
+			else if (strncmp(color, "BLUE", 4) == 0)
+			{
+				device_rgb_led_strip[controllerId].blue = tmp;
+				device_rgb_led_strip[controllerId].status |= RGB_LED_STRIP_BLUE_BIT;
+			}
+
+			if ((device_rgb_led_strip[controllerId].status &
+			   (RGB_LED_STRIP_RED_BIT | RGB_LED_STRIP_GREEN_BIT | RGB_LED_STRIP_BLUE_BIT)) ==
+			   (RGB_LED_STRIP_RED_BIT | RGB_LED_STRIP_GREEN_BIT | RGB_LED_STRIP_BLUE_BIT))
+			{
+				device_rgb_led_strip[controllerId].status = 0;
+				send_command_to_rgb_led_strip(obj, &device_rgb_led_strip[controllerId], controllerId);
+			}
+
+		}
+		else if (ud->verbose)
+		{
+			printf("Invalid RGB led strip controller: %ud\n", controllerId);
+		}
+	}
+	else if (ud->verbose)
+	{
+		printf("Unknown topic: %s\n", message->topic);
+	}
 
 //	free(topic);
 }
@@ -394,17 +552,17 @@ int main(int argc, char* argv[])
 	int keepalive = 60;
 	char *bind_address = NULL;
 
-	bool insecure = false;
+// 	bool insecure = false;
 	char *cafile = NULL;
 	char *capath = NULL;
 	char *certfile = NULL;
 	char *keyfile = NULL;
-	char *tls_version = NULL;
+// 	char *tls_version = NULL;
 
 	char *psk = NULL;
 	char *psk_identity = NULL;
 
-	char *ciphers = NULL;
+// 	char *ciphers = NULL;
 	bool debug = false;
 	char *host = "localhost";
 
@@ -414,6 +572,7 @@ int main(int argc, char* argv[])
 
 
 	memset(&ud, 0, sizeof(struct userdata));
+	memset(device_rgb_led_strip, 0, sizeof(device_rgb_led_strip));
 
 	for (i = 1; i < argc; i++)
 	{
@@ -498,6 +657,7 @@ int main(int argc, char* argv[])
 			}
 			i++;
 		}
+#if 0
 		else if (!strcmp(argv[i], "--ciphers"))
 		{
 			if (i == argc - 1)
@@ -513,6 +673,7 @@ int main(int argc, char* argv[])
 			}
 			i++;
 		}
+#endif
 		else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug"))
 		{
 			debug = true;
@@ -537,10 +698,12 @@ int main(int argc, char* argv[])
 			}
 			i++;
 		}
+#if 0
 		else if (!strcmp(argv[i], "--insecure"))
 		{
 			insecure = true;
 		}
+#endif
 		else if (!strcmp(argv[i], "-i") || !strcmp(argv[i], "--id"))
 		{
 			if (id_prefix)
@@ -625,6 +788,7 @@ int main(int argc, char* argv[])
 			}
 			i++;
 		}
+#if 0
 		else if (!strcmp(argv[i], "--tls-version"))
 		{
 			if (i == argc - 1)
@@ -640,6 +804,7 @@ int main(int argc, char* argv[])
 			}
 			i++;
 		}
+#endif
 		else if (!strcmp(argv[i], "-u") || !strcmp(argv[i], "--username"))
 		{
 			if (i == argc - 1)
