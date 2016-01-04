@@ -1,0 +1,55 @@
+Group All
+Group LivingRoom	(All)
+Group BedRoom 		(All)
+Group Office		(All)
+Group ChildsRoom	(All)
+Group Shutters 	(All)
+Group Weather 	(All)
+Group Status 	(All)
+
+Group GF_Living 	"Living Room" 	<video> 	(gGF)
+Group GF_Kitchen 	"Kitchen" 		<kitchen> 	(gGF)
+Group GF_Toilet 	"Toilet" 		<bath> 		(gGF)
+Group GF_Corridor 	"Corridor" 		<corridor> 	(gGF)
+
+Group FF_Bath 		"Bathroom" 		<bath> 		(gFF)
+Group FF_Office 	"Office" 		<office> 	(gFF)
+Group FF_Child 		"Child's Room" 		<boy1> 		(gFF)
+Group FF_Bed 		"Bedroom" 		<bedroom> 	(gFF)
+Group FF_Corridor 	"Corridor" 		<corridor> 	(gFF)
+
+/* active groups */
+Group:Switch:OR(ON, OFF) 		Lights 		"All Lights [(%d)]" 								(All)
+Group:Switch:OR(ON, OFF) 		Heating 	"No. of Active Heatings [(%d)]" 	<heating> 		(All)
+Group:Number:AVG 				Temperature	"Avg. Room Temperature [%.1f °C]" 	<temperature>	(Status)
+Group:Contact:OR(OPEN, CLOSED) 	Windows 	"Open windows [(%d)]"				<contact>		(All)
+
+/* Lights */
+Dimmer        Light_R                                                                          {mqtt=">[mymosquitto:/CONTROLLERS/RGB/004/RED:state:*:default]"}
+Dimmer        Light_G                                                                          {mqtt=">[mymosquitto:/CONTROLLERS/RGB/004/GREEN:state:*:default]"}
+Dimmer        Light_B                                                                          {mqtt=">[mymosquitto:/CONTROLLERS/RGB/004/BLUE:state:*:default]"}
+Color         Light_RGB                         "RGB Dimmer"             (LivingRoom, Lights)
+
+/* Rollershutters */
+Switch Shutter_all (Shutters)
+Rollershutter Shutter_GF_Toilet 		"Toilet"		(GF_Toilet, Shutters)
+Rollershutter Shutter_GF_Kitchen 		"Kitchen"		(GF_Kitchen, Shutters)
+Rollershutter Shutter_GF_Living 		"Livingroom"		(GF_Living, Shutters)
+Rollershutter Shutter_FF_Bed 			"Bedroom"		(FF_Bed, Shutters) {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/001:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/001:state:default]"}
+Rollershutter Shutter_FF_Bed255			"Bedroom255"		(FF_Bed, Shutters) {mqtt=">[mymosquitto:255:command:UP:SHTOPN],>[mymosquitto:255:command:DOWN:SHTCLS],>[mymosquitto:255:command:STOP:SHTSTO]"}
+Rollershutter Shutter_ChildsRoom		"Child's Room"		(ChildsRoom, Shutters) {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/002:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/002:state:default]"}
+Rollershutter Shutter_BedRoom			"Bed Room"		(BedRoom, Shutters) {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/001:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/001:state:default]"}
+Rollershutter Shutter_Office			"Office"		(Office, Shutters) {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/099:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/099:state:default]"}
+Rollershutter Shutter_LivingRoom		"LivingRoom"		(LivingRoom, Shutters) {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/003:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/003:state:default]"}
+
+Group Weather_Chart													(Weather)
+Number Weather_Temperature 		"Outside Temperature [%.1f °C]"	<temperature> (Weather_Chart) { http="<[http://weather.yahooapis.com/forecastrss?w=1967838&u=c:60000:XSLT(yahoo_weather_temperature.xsl)]" }
+Number Weather_Humidity 		"Outside Humidity [%.1f %%]"	<temperature> (Weather) { http="<[http://weather.yahooapis.com/forecastrss?w=1967838&u=c:60000:XSLT(yahoo_weather_humidity.xsl)]" }
+Number Weather_Humidex			"Humidex [SCALE(humidex.scale):%s]" 			(Weather)
+Number Weather_Temp_Max 		"Todays Maximum [%.1f °C]"	<temperature> (Weather_Chart)
+Number Weather_Temp_Min 		"Todays Minimum [%.1f °C]"	<temperature> (Weather_Chart)
+Number Weather_Chart_Period		"Chart Period"
+DateTime Weather_LastUpdate		"Last Update [%1$ta %1$tR]"	<clock>
+
+/* NTP binding demo item */
+DateTime		Date			"Date [%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berlin:de_DE" }

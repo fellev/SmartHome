@@ -1,0 +1,22 @@
+import org.openhab.core.library.types.*
+
+
+rule "Set RGB value"
+when
+        Item Light_RGB changed
+then
+        var HSBType hsbValue = Light_RGB.state as HSBType
+        postUpdate( Light_R, hsbValue.red.intValue )
+        postUpdate( Light_G, hsbValue.green.intValue )
+        postUpdate( Light_B, hsbValue.blue.intValue )
+end
+
+rule "Set Demo RGB value"
+when
+        Item Demo_RGBLight changed
+then
+        var HSBType hsbValue = Demo_RGBLight.state as HSBType
+        postUpdate( Demo_Light_R, hsbValue.red.intValue )
+        postUpdate( Demo_Light_G, hsbValue.green.intValue )
+        postUpdate( Demo_Light_B, hsbValue.blue.intValue )
+end

@@ -1,0 +1,11 @@
+Switch  alarmSunday     "Sunday"     <switch>  (gAlaramWeekdays)
+Switch  alarmMonday     "Monday"     <switch>  (gAlaramWeekdays)
+Switch  alarmTuesday    "Tuesday"    <switch>  (gAlaramWeekdays)
+Switch  alarmWednesday  "Wednesday"  <switch>  (gAlaramWeekdays)
+Switch  alarmThursday   "Thursday"   <switch>  (gAlaramWeekdays)
+Switch  alarmFriday     "Friday"     <switch>  (gAlaramWeekdays)
+Switch  alarmSaturday   "Saturday"   <switch>  (gAlaramWeekdays)
+String alarmTimeMessage "%s"
+
+Number alarmTimeHour   "Hour [%d]" <clock> (gAlarmTime)
+Number alarmTimeMinute "Minute [%d]" <clock> (gAlarmTime)

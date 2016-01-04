@@ -1,0 +1,95 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.openhab.action.squeezebox.*
+
+import java.util.concurrent.locks.ReentrantLock
+
+var Timer timer1 = null
+var java.util.concurrent.locks.ReentrantLock lock1 = new java.util.concurrent.locks.ReentrantLock()
+
+rule "Initialization"
+ when 
+   System started
+ then
+     if (alarmTimeHour.state == Uninitialized || alarmTimeMinute.state == Uninitialized) {
+        postUpdate(alarmTimeHour,  8)
+        postUpdate(alarmTimeMinute, 0)
+        postUpdate(alarmSunday,     ON)
+        postUpdate(alarmMonday,   ON)
+        postUpdate(alarmTuesday,   ON)
+        postUpdate(alarmWednesday, ON)
+        postUpdate(alarmThursday,    ON)
+        postUpdate(alarmFriday,    OFF)
+        postUpdate(alarmSaturday,    OFF)
+     }
+ end
+ 
+rule "Alarm"
+when
+    Item alarmTimeHour changed or 
+    Item alarmTimeMinute changed or 
+    System started
+then
+  lock1.lock()
+  try {
+
+  var String msg = ""
+  var hour = alarmTimeHour.state as DecimalType
+  var minute = alarmTimeMinute.state as DecimalType
+  
+  logDebug("alarmclock.rules", "Alarm rule - Start")
+
+  if (hour < 10) { msg = "0" } 
+  msg = msg + alarmTimeHour.state.format("%d") + ":"
+
+  if (minute < 10) { msg = msg + "0" }
+  msg = msg + alarmTimeMinute.state.format("%d")
+  postUpdate(alarmTimeMessage,msg)
+
+  var int alarmtime1
+  alarmtime1 = (alarmTimeHour.state as DecimalType).intValue * 60 + 
+              (alarmTimeMinute.state as DecimalType).intValue
+  alarmtime1 = alarmtime1.intValue
+
+  var int nowtime
+  nowtime = now.getMinuteOfDay
+  nowtime = nowtime.intValue
+
+  var int delta1
+  if (timer1 != null) {
+    timer1.cancel
+    timer1 = null
+  }
+
+  delta1 = (alarmtime1 - nowtime)
+  delta1 = delta1.intValue
+
+  if (nowtime > alarmtime1) { delta1 = delta1 + 1440 }
+  
+  logDebug("alarmclock.rules", "Create timer with delta = " + delta1 )
+
+  timer1 = createTimer(now.plusMinutes(delta1)) [|
+    var Number day = now.getDayOfWeek
+    logDebug("alarmclock.rules", "Timer1 Callback - Start")
+    logDebug("alarmclock.rules", "Timer1 Callback - dayOfWeek=" + day)
+    if (((day == 7) && (alarmSunday.state == ON))     ||
+        ((day == 1) && (alarmMonday.state == ON))   ||
+        ((day == 2) && (alarmTuesday.state == ON))   ||
+        ((day == 3) && (alarmWednesday.state == ON)) ||
+        ((day == 4) && (alarmThursday.state == ON))    ||
+        ((day == 5) && (alarmFriday.state == ON))    ||
+        ((day == 6) && (alarmSaturday.state == ON))
+        ) {
+
+        logDebug("alarmclock.rules", "Timer1 Callback - sendCommand")
+        sendCommand(Shutter_FF_Bed, UP)
+
+        }
+       timer1.reschedule(now.plusHours(24))
+     ]
+    }
+  } finally  {
+     lock1.unlock()
+  }
+end

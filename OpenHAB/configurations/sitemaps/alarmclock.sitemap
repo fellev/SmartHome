@@ -1,0 +1,21 @@
+sitemap alarmclock
+{
+    Frame label="System" {
+
+        Text label="Alarm [%s]" item=alarmTimeMessage icon="clock" {
+            Frame label="Time" {
+                Setpoint item=alarmTimeHour minValue=0 maxValue=23 step=1
+                Setpoint item=alarmTimeMinute minValue=0 maxValue=55 step=1
+            }
+            Frame label="Weekdays" {
+                Switch item=alarmSunday
+                Switch item=alarmMonday
+                Switch item=alarmTuesday
+                Switch item=alarmWednesday
+                Switch item=alarmThursday
+                Switch item=alarmFriday
+                Switch item=alarmSaturday
+            }
+        }
+    }   
+}
