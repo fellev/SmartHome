@@ -12,7 +12,8 @@
 
 #include <RFM69.h>
 #include <SPI.h>
-#include <SPIFlash.h>
+#include <SPIFlashA.h>
+#include "periph_cfg.h"
 
 //*****************************************************************************************************************************
 // ADJUST THE SETTINGS BELOW DEPENDING ON YOUR HARDWARE/SITUATION!
@@ -33,7 +34,7 @@
 //*****************************************************************************************************************************
 
 RFM69 radio;
-SPIFlash flash(8, 0xEF30); //EF40 for 16mbit windbond chip
+SPIFlashA flash(SPI_CS, MANUFACTURER_ID); //EF40 for 16mbit windbond chip
 byte readSerialLine(char* input, char endOfLineChar=10, byte maxLength=64, uint16_t timeout=50);
 
 void setup() {

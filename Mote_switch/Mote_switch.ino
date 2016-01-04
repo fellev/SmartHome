@@ -53,9 +53,10 @@
 
 #include <EEPROMex.h>      //get it here: http://playground.arduino.cc/Code/EEPROMex
 #include <RFM69.h>         //get it here: http://github.com/lowpowerlab/rfm69
-#include <SPIFlash.h>      //get it here: http://github.com/lowpowerlab/spiflash
+#include <SPIFlashA.h>      //get it here: http://github.com/lowpowerlab/spiflash
 #include <WirelessHEX69.h> //get it here: https://github.com/LowPowerLab/WirelessProgramming
 #include <SPI.h>           //comes with Arduino
+#include "periph_cfg.h"
 
 #define CHECK_VIRGIN_VALUE  0x55
 #define IS_RFM69HW          //uncomment only for RFM69HW! Leave out if you have RFM69W!
@@ -127,7 +128,8 @@ void action(byte whichButtonIndex, byte whatMode, boolean notifyGateway=true); /
 // SPI_CS          - CS pin attached to SPI flash chip (8 in case of Moteino)
 // MANUFACTURER_ID - OPTIONAL, 0xEF30 for windbond 4mbit flash (Moteino OEM)
 /////////////////////////////////////////////////////////////////////////////
-SPIFlash flash(8, 0xEF30);
+SPIFlashA flash(SPI_CS, MANUFACTURER_ID);
+
 //SYNC data is stored in 2 arrays:
 byte SYNC_TO[SYNC_MAX_COUNT];  // stores the address of the remote Switch(s) that this Switch has to notify/send request to
 int SYNC_INFO[SYNC_MAX_COUNT]; // stores the buttons and modes of this and the remote SM as last 4 digits:

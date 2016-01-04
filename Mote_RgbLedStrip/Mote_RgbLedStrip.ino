@@ -12,18 +12,22 @@
  * **************************************************************************/
 
 #include <RFM69.h>         //get it here: http://github.com/lowpowerlab/rfm69
-#include <SPIFlash.h>      //get it here: http://github.com/lowpowerlab/spiflash
 #include <WirelessHEX69.h> //get it here: https://github.com/LowPowerLab/WirelessProgramming
 #include <SPI.h>           //comes with Arduino IDE (www.arduino.cc)
+#include <SPIFlashA.h>      //get it here: http://github.com/lowpowerlab/spiflash
 #include <avr/wdt.h>       //watchdog library
-#include <EEPROMex.h>      //get it here: http://playground.arduino.cc/Code/EEPROMex
+#include <EEPROM.h>
+#include "EEPROMAnything.h"
+#include "periph_cfg.h"
 
 
 /*****************************************************************************
  * Defines
  * **************************************************************************/
 
-#define DEBUG_EN
+//#define DEBUG_EN
+
+#define DEVICE_TYPE_NAME        "RGB LED CONTROLLER"
 
 #define CHECK_VIRGIN_VALUE      0x55
 #define GATEWAYID               1
@@ -40,7 +44,12 @@
 
 #define GPIO_BTNPWR             4  //digital pin for Power OFF/ON of the led strip
 #define GPIO_LED_RED            3  //PWM pin for red led
-#define GPIO_LED_GREEN          5  //PWM pin for green led
+
+#if (DEVICE_BOARD == BOARD_MINI_WIRELESS_MOTEINO_COMPATIBLE)
+#define GPIO_LED_GREEN          7  //PWM pin for green led
+#elif (DEVICE_BOARD == BOARD_MINI_WIRELESS_MOTEINO)
+#define GPIO_LED_GREEN          5
+#endif
 #define GPIO_LED_BLUE           6  //PWM pin for blue led
 #define GPIO_LED_ONBOARD        9  //pin connected to onboard LED
 
@@ -55,8 +64,8 @@
 #define BTNPWR_INDEX            0
 
 #define BUTTON_BOUNCE_MS            200  //timespan before another button change can occur
-#define PRESSED                     1
-#define RELEASED                    0
+#define PRESSED                     0
+#define RELEASED                    1
 #define ON                          1
 #define OFF                         0
 
@@ -65,7 +74,7 @@
 #define FADE_OUT_STEP_VALUE         (-5)
 #define COLOR_UPDATE_INTERVAL_MS    30
 #define COLOR_UPDATE_INTERVAL_VAL   10
-#define COLOR_SAVE_INTERVAL_MS      300000 // 5 min
+#define COLOR_SAVE_INTERVAL_MS      5000 // 5 sec
 
 #define SERIAL_BAUD                 115200
 
@@ -172,11 +181,79 @@ boolean ledPulseDirection=false;
 // SPI_CS          - CS pin attached to SPI flash chip (8 in case of Moteino)
 // MANUFACTURER_ID - OPTIONAL, 0xEF30 for windbond 4mbit flash (Moteino OEM)
 /////////////////////////////////////////////////////////////////////////////
-SPIFlash flash(8, 0xEF30);
+SPIFlashA flash(SPI_CS, MANUFACTURER_ID);
 
 /*****************************************************************************
  * Methods
  * **************************************************************************/
+#ifdef DEBUG_EN
+byte flashBuffer[90];                // Define a read buffer for readBytes() tests
+void printDeviceInfo()
+{
+  Serial.println();
+  Serial.println("-----------------------------------------------");
+  Serial.println(DEVICE_TYPE_NAME);
+  Serial.println("-----------------------------------------------");
+  Serial.println( "Compiled: " __DATE__ ", " __TIME__ ", " __VERSION__);
+  Serial.println("-----------------------------------------------");
+  Serial.print("Node ID: ");Serial.println(CONFIG.nodeID);
+  Serial.print("Network ID: ");Serial.println(CONFIG.networkID);
+  Serial.print("Description: ");Serial.println(CONFIG.description);
+  Serial.print("RF Frequency: ");Serial.print(FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);Serial.println(" Mhz");
+}
+
+void spiFlashTest()
+{
+    /* 3. Bulk Erase of the chip 
+    *    ====================== */
+    /*
+    Serial.println ("Test 3: Bulk Erase of the chip - WARNING this may take about 45s");
+    Serial.print ("Read address 16777215 (HEX): ");         
+    Serial.println (flash.readByte(16777215),HEX);          // Read last location of the Flash Memory         
+    Serial.println ("Write address 16777215 (HEX) AA ");
+    flash.writeByte(16777215,0xAA);                         // Write to this location (should work if this location was previously erased)
+    Serial.print ("Read address 16777215 (HEX): ");
+    Serial.println (flash.readByte(16777215),HEX);          // Verify that the location was correctly written
+    Serial.println ("Erasing 16MBytes ");
+    long start = millis();                                  // Start time before starting the Erase
+    flash.bulkErase();                                      // Initiate a the erase
+        while(flash.busy());                              // Wait until finished
+        Serial.print("DONE after (ms): ");Serial.println (millis()-start);  // Print the erasure time
+    Serial.print ("Read address 16777215 (HEX): ");
+    Serial.println (flash.readByte(16777215),HEX);          // Verify that the location is well erased
+    */
+    
+    flash.blockErase32K(0);
+
+    Serial.println ("Test 10: Read - Write - Read 44 Bytes into buffer");
+    Serial.print ("Read Bulk: "); 
+    flash.readBytes (0,flashBuffer,44);
+    for (int i = 0; i <44; i++)
+    {
+    Serial.print((char) flashBuffer[i]);
+    }
+    Serial.println ();
+    Serial.println ("Erasing 4K to write:");
+    flash.blockErase4K(0);
+    Serial.print ("Verify Erasure: ");
+    flash.readBytes (0,flashBuffer,44);
+    for (int i = 0; i <44; i++)
+    {
+    Serial.print((char) flashBuffer[i]);
+    }
+    Serial.println ();
+    Serial.println ("Write Bulk: The quick brown fox jumps over the lazy dog");
+    flash.writeBytes (0,"The quick brown fox jumps over the lazy dog",44);
+    while (flash.busy());
+    Serial.print ("Read Bulk:  ");
+    flash.readBytes (0,flashBuffer,44);
+    for (int i = 0; i <44; i++)
+    {
+    Serial.print((char) flashBuffer[i]);
+    }
+    Serial.println ();    
+}
+#endif //DEBUG_EN
 
 void GPIO_Init(void)
 {
@@ -197,11 +274,6 @@ void Radio_Init(void)
     radio.setHighPower(); //uncomment only for RFM69HW!
 #endif
     radio.encrypt(ENCRYPTKEY);
-#ifdef DEBUG_EN
-    char buff[50];
-    sprintf(buff, "Mote RGB Led Strip controller : %d Mhz...", FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);
-    DEBUGln(buff);
-#endif
 }
 
 void setup(void)
@@ -214,10 +286,10 @@ void setup(void)
     Serial.begin(SERIAL_BAUD);
     
     //Read leds pwm values from eeprom
-    EEPROM.readBlock(LEDS_PWM_VALUES_ADDR, ledIndexPwmValueNew);
+    EEPROM_readAnything(LEDS_PWM_VALUES_ADDR, ledIndexPwmValueNew);
 
     // Read configuration from eeprom
-    EEPROM.readBlock(CONFIGURATION_ADDR, CONFIG);
+    EEPROM_readAnything(CONFIGURATION_ADDR, CONFIG);
     if (CONFIG.check_virgin!=CHECK_VIRGIN_VALUE) // virgin CONFIG, expected [0x55]
     {
         Serial.println("No valid config found in EEPROM, writing defaults");
@@ -231,12 +303,31 @@ void setup(void)
             ledIndexPwmValueNew[i] = LED_PWM_VALUE_OFF;
         }
     }    
-  
+
     GPIO_Init();
 
     Radio_Init();
-
-    wdt_enable (WDTO_1S);
+    
+#ifdef DEBUG_EN
+    printDeviceInfo();
+#endif
+      
+   if (flash.initialize())
+   {
+     DEBUGln("SPI Flash Init OK!");
+   }
+   else
+   {
+     DEBUGln("SPI Flash Init FAIL!");
+   }
+   
+#ifdef DEBUG_EN
+   spiFlashTest();
+#endif
+ 
+   wdt_enable (WDTO_1S);
+    
+   Leds_SetPowerStateNew(POWER_STATE_ON);
 }
 
 
@@ -271,6 +362,9 @@ void loop()
             case 'w':
                 Leds_SetNewColor(255,255,255);
                 break;
+            case 'o':
+                Leds_SetNewColor(0xff,0x77,0x23); //white
+                break;                
             case '0':
                 Leds_SetNewColor(0,0,0);
                 break;
@@ -354,7 +448,7 @@ void Radio_Task(void)
         
         // wireless programming token check
         // DO NOT REMOVE, or GarageMote will not be wirelessly programmable any more!
-        CheckForWirelessHEX(radio, flash, true, GPIO_LED_ONBOARD);
+       CheckForWirelessHEX(radio, flash, true, GPIO_LED_ONBOARD);
 
         //first send any ACK to request
         DEBUG("   [RX_RSSI:");DEBUG(radio.RSSI);DEBUG("]");
@@ -384,7 +478,7 @@ boolean reportStatus()
 
 void Leds_Task(void)
 {
-    boolean isStillFading  = false;
+    boolean isStillFadingCnt  = 0;
     int delta;
     #ifdef DEBUG_EN
     char buff[15];    
@@ -428,15 +522,15 @@ void Leds_Task(void)
                 DEBUGln(buff);
                 #endif
                 
-                if (!(ledsStrip.ledPwmValue[i] == PWM_MAX_VALUE || 
-                    ledsStrip.ledPwmValue[i] == PWM_MIN_VALUE))
-//                if (ledsStrip.ledPwmValue[i] != ledIndexPwmValueNew[i])
+//                if (!(ledsStrip.ledPwmValue[i] == PWM_MAX_VALUE || 
+//                    ledsStrip.ledPwmValue[i] == PWM_MIN_VALUE))
+                if (ledsStrip.ledPwmValue[i] != ledIndexPwmValueNew[i])
                 {
-                    isStillFading = true;
+                    isStillFadingCnt++;
                 }
             }
             fadeDeltaValue = 0;
-            if (isStillFading == false)
+            if (isStillFadingCnt == 0)
             {
                 fadeStateNew = FADE_STATE_OFF;
             }
@@ -481,7 +575,7 @@ void Leds_Task(void)
     {
         colorLastSave = now;
         isLedsColorUpdated = false;
-        EEPROM.writeBlock(LEDS_PWM_VALUES_ADDR, ledIndexPwmValueNew);
+        EEPROM_writeAnything(LEDS_PWM_VALUES_ADDR, ledIndexPwmValueNew);
         DEBUGln("Leds PWM values written to eeprom");
     }
     

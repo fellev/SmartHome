@@ -20,11 +20,13 @@
 // **********************************************************************************
 
 #include <RFM69.h>         //get it here: http://github.com/lowpowerlab/rfm69
-#include <SPIFlash.h>      //get it here: http://github.com/lowpowerlab/spiflash
+#include <SPIFlashA.h>      //get it here: http://github.com/lowpowerlab/spiflash
 #include <WirelessHEX69.h> //get it here: https://github.com/LowPowerLab/WirelessProgramming
 #include <SPI.h>           //comes with Arduino IDE (www.arduino.cc)
 #include <avr/wdt.h>       //watchdog library
-#include <EEPROMex.h>      //get it here: http://playground.arduino.cc/Code/EEPROMex
+#include <EEPROM.h>
+#include "EEPROMAnything.h"
+#include "periph_cfg.h"
 
 //*****************************************************************************************************************************
 // ADJUST THE SETTINGS BELOW DEPENDING ON YOUR HARDWARE/SITUATION!
@@ -36,7 +38,7 @@
 #define FREQUENCY     RF69_433MHZ
 //#define FREQUENCY     RF69_868MHZ
 //#define FREQUENCY       RF69_915MHZ //Match this with the version of your Moteino! (others: RF69_433MHZ, RF69_868MHZ)
-#define ENCRYPTKEY     "sampleEncryptKey" //")nXLceHCQkaU{-5@" //has to be same 16 characters/bytes on all nodes, not more not less!
+#define ENCRYPTKEY     ")nXLceHCQkaU{-5@" //"sampleEncryptKey" // //has to be same 16 characters/bytes on all nodes, not more not less!
 #define IS_RFM69HW    //uncomment only for RFM69HW! Leave out if you have RFM69W!
 #define ACK_TIME      30  // # of ms to wait for an ack
 #define RETRY_NUM     0
@@ -129,7 +131,7 @@ struct configuration {
 // SPI_CS          - CS pin attached to SPI flash chip (8 in case of Moteino)
 // MANUFACTURER_ID - OPTIONAL, 0xEF30 for windbond 4mbit flash (Moteino OEM)
 /////////////////////////////////////////////////////////////////////////////
-SPIFlash flash(8, 0xEF30);
+SPIFlashA flash(SPI_CS, MANUFACTURER_ID);
 
 void shutter_motor_control(int cmd)
 {
@@ -184,7 +186,7 @@ void handleMenuInput(char c)
         case 'i': Serial.print("\r\nEnter node ID (1-255 + <ENTER>): "); CONFIG.nodeID=0;menu=c; break;
         case 'n': Serial.print("\r\nEnter network ID (0-255 + <ENTER>): "); CONFIG.networkID=0; menu=c; break;
         case 'd': Serial.print("\r\nEnter description (10 chars max + <ENTER>): "); menu=c; break;
-        case 's': Serial.print("\r\nCONFIG saved to EEPROM!"); EEPROM.writeBlock(0, CONFIG); break;
+        case 's': Serial.print("\r\nCONFIG saved to EEPROM!"); EEPROM_writeAnything(0, CONFIG); break;
         case 'E': Serial.print("\r\nErasing EEPROM ... "); menu=c; break;
         case 'r': Serial.print("\r\nRebooting"); resetUsingWatchdog(1); break;
         case  27:  Serial.print("\r\nExiting the menu...\r\n");menu=0;setup_done=true;break;
@@ -266,7 +268,7 @@ void handleMenuInput(char c)
 void setup(void)
 {
   Serial.begin(SERIAL_BAUD);
-  EEPROM.readBlock(0, CONFIG);
+  EEPROM_readAnything(0, CONFIG);
   if (CONFIG.check_virgin!=CHECK_VIRGIN_VALUE) // virgin CONFIG, expected [0x55]
   {
     Serial.println("No valid config found in EEPROM, writing defaults");
@@ -295,6 +297,15 @@ void setup(void)
   char buff[50];
   sprintf(buff, "Mote Shutter : %d Mhz...", FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);
   DEBUGln(buff);
+  
+  if (flash.initialize())
+  {
+    DEBUGln("SPI Flash Init OK!");
+  }
+  else
+  {
+    DEBUGln("SPI Flash Init FAIL!");
+  }
 
   if (hallSensorRead(HALLSENSOR_OPENSIDE)==true)
     setStatus(STATUS_OPEN);
