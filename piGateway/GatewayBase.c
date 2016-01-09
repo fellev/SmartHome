@@ -40,6 +40,7 @@
 #include <termios.h>    // POSIX terminal control definitions
 #include <fcntl.h>      // File control definitions
 #include <stdint.h>
+#include "events.h"
 
 
 /******************************************************************************
@@ -63,6 +64,8 @@
 
 #define TOPICS_NUM	2
 
+#define COMMAND_SEND_TO_CONTROLLER_TIMEOUT  5000
+
 /******************************************************************************
  * Private Types
  * ****************************************************************************/
@@ -78,6 +81,7 @@ struct userdata
     char *password;
     int fd_serial;
     pthread_mutex_t mxq; /* mutex used as quit flag */
+    condition_and_mutex_ts *serial_rx_cm_event;
 };
 
 struct s_rgb_value
@@ -100,6 +104,12 @@ enum e_device_type
     E_LIGTH_RGB,
 };
 
+enum e_gateway_controller_response
+{
+	E_GW_RESPONSE_OK,
+	E_GW_RESPONSE_ERROR
+};
+
 struct s_devicedata
 {
     enum e_device_type device_type;
@@ -112,6 +122,12 @@ const char* device_tipics[TOPICS_NUM] =
     [E_LIGTH_RGB] = "/CONTROLLERS/RGB/"
 };
 
+const char* gw_response[] =
+{
+		[E_GW_RESPONSE_OK] = "ok",
+		[E_GW_RESPONSE_ERROR] = "nothing"
+};
+
 /******************************************************************************
  * Variables
  * ****************************************************************************/
@@ -121,7 +137,7 @@ struct s_rgb_value device_rgb_led_strip[MAX_CONTROLLER_NUM+1];
  * Prototypes
  * ****************************************************************************/
 void write_serial(uint8_t *msg, int len, int fd);
-
+extern ssize_t readline(int fd, void *vptr, size_t maxlen);
 
 /******************************************************************************
  * Methods
@@ -197,9 +213,12 @@ int send_command_to_shutter(void *obj, const char* cmd, unsigned int controllerI
 {
 	struct userdata *ud;
 	char msg[32] = {0};
+	int error_code = 0;
 
 	assert(obj);
 	ud = (struct userdata *)obj;
+
+	event_waitFor( ud->serial_rx_cm_event, 0); // Clear the event
 
 	strncpy(msg, cmd, SHUTTER_CMD_LEN-2);
 	sprintf(msg+SHUTTER_CMD_LEN-2, "%02x", controllerID);
@@ -209,28 +228,42 @@ int send_command_to_shutter(void *obj, const char* cmd, unsigned int controllerI
 	}
 	write_serial((uint8_t*)msg, SHUTTER_CMD_LEN, ud->fd_serial);
 
-	return 0;
+	error_code = event_waitFor( ud->serial_rx_cm_event, COMMAND_SEND_TO_CONTROLLER_TIMEOUT);
+
+	return error_code;
 }
 
 int send_command_to_rgb_led_strip(void *obj, struct s_rgb_value *value, unsigned int controllerID)
 {
 	struct userdata *ud;
 	uint8_t msg[32] = {0};
+	int error_code = 0;
+	unsigned int repeat, count = 0;
 
 	assert(value);
 	assert(obj);
 	ud = (struct userdata *)obj;
 
-	sprintf((char*)msg, "RGB%02xCLR", controllerID);
-	msg[8] = value->red;
-	msg[9] = value->green;
-	msg[10] = value->blue;
-	if(ud->verbose){
-		printf("Sending to Monteino: CLR 0x%02x 0x%02x 0x%02x\n", msg[8], msg[9], msg[10]);
-	}
-	write_serial(msg, RBG_LED_STRIP_CMD_LEN, ud->fd_serial);
+	repeat = (controllerID & 0xFF00) >> 8;
 
-	return 0;
+	event_waitFor( ud->serial_rx_cm_event, 0); // Clear the event
+
+	do
+	{
+		sprintf((char*)msg, "RGB%02xCLR", controllerID & 0x00FF);
+		msg[8] = value->red;
+		msg[9] = value->green;
+		msg[10] = value->blue;
+		if(ud->verbose){
+			printf("Sending to RGB controller ID %d: CLR 0x%02x 0x%02x 0x%02x\n", controllerID & 0x00FF, msg[8], msg[9], msg[10]);
+		}
+		write_serial(msg, RBG_LED_STRIP_CMD_LEN, ud->fd_serial);
+
+		error_code = event_waitFor( ud->serial_rx_cm_event, COMMAND_SEND_TO_CONTROLLER_TIMEOUT);
+		controllerID++;
+	}while(count++ < repeat);
+
+	return error_code;
 }
 
 void my_connect_callback(struct mosquitto *mosq, void *obj, int result)
@@ -303,9 +336,14 @@ size_t read_port(void *const data, size_t const size, int fd)
 {
     ssize_t           r;
 
+/*
     do {
         r = read(fd, data, size);
     } while (r == (ssize_t)-1 && errno == EINTR);
+*/
+    do {
+    	r = readline(fd, data, size);
+    } while (r == (ssize_t)-1);
     if (r > (ssize_t)0)
         return (size_t)r;
 
@@ -327,6 +365,7 @@ void *read_serial(void *obj)
 	char buffer[512] = {0};
 	size_t result;
 	struct userdata *ud;
+	int error_code;
 
 	assert(obj);
 	ud = (struct userdata *) obj;
@@ -345,6 +384,15 @@ void *read_serial(void *obj)
 				printf("Received from moteino: ");
 				fwrite(buffer, 1, result, stdout);
 				printf("\n");
+			}
+			/* Signal to the mosquito thread we have received a response. */
+			error_code = event_signal(ud->serial_rx_cm_event);
+			if (ud->verbose)
+			{
+				if (error_code != 0)
+				{
+					printf("event_signal exit with error %d\n", error_code);
+				}
 			}
 		}
 
@@ -486,8 +534,9 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 	else if (strncmp ( message->topic, device_tipics[E_LIGTH_RGB], strlen(device_tipics[E_LIGTH_RGB]) ) == 0)
 	{
 		const char* controllerIdStr = &(((const char*)message->topic)[strlen(device_tipics[E_LIGTH_RGB])]);
-		unsigned int controllerId = atoi(controllerIdStr);
-		if (controllerId >= 0 && controllerId <= MAX_CONTROLLER_NUM)
+		unsigned int controllerIdFull = atoi(controllerIdStr);
+		unsigned int controllerId = controllerIdFull & 0x00FF;
+		if ((controllerId) >= 0 && (controllerId) <= MAX_CONTROLLER_NUM)
 		{
 			int tmp;
 			tmp = atoi((const char*)message->payload);
@@ -523,7 +572,7 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 			   (RGB_LED_STRIP_RED_BIT | RGB_LED_STRIP_GREEN_BIT | RGB_LED_STRIP_BLUE_BIT))
 			{
 				device_rgb_led_strip[controllerId].status = 0;
-				send_command_to_rgb_led_strip(obj, &device_rgb_led_strip[controllerId], controllerId);
+				send_command_to_rgb_led_strip(obj, &device_rgb_led_strip[controllerId], controllerIdFull);
 			}
 
 		}
@@ -884,6 +933,8 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "Error: serial port must be provided. For example -s /dev/ttyUSB0.\n");
 		return 1;
 	}
+
+	event_create(&ud.serial_rx_cm_event);
 
 	// Init serial port to communicate with monteino gateway
 	ud.fd_serial = open_serial(serial_port);

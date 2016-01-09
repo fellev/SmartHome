@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -g
 LDFLAGS=-g
-SOURCES = GatewayBase.c
+SOURCES = GatewayBase.c events.c readline.c
 OBJECTS=$(SOURCES:.c=.o) 
 INCLUDE_OBJECTS=-lpthread -lmosquitto
 EXECUTABLE=piGatewayBase
