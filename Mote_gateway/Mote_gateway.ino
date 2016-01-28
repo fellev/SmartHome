@@ -30,7 +30,9 @@
 #define LED           9
 #define SERIAL_BAUD   115200
 #define ACK_TIME      30  // # of ms to wait for an ack
+#define AC_ACK_TIME   255
 #define RETRY_NUM     8
+
 //*****************************************************************************************************************************
 
 RFM69 radio;
@@ -106,6 +108,17 @@ void loop() {
       Serial.print("ID:");Serial.print(nodeid, DEC);
       Serial.print("RGB CLR ... ");
       if (radio.sendWithRetry(nodeid, &input[5], 6, RETRY_NUM, ACK_TIME))
+        Serial.println("ok ... ");
+      else Serial.println("nothing ... ");      
+    }
+    else if (input[0]=='A' && input[1]=='C' && input[4]=='C' && input[5]=='F' && input[6]=='G')
+    {
+      int result;
+      nodeid = val2(&input[2]);
+      result = radio.sendWithRetry(nodeid, &input[4], 5, RETRY_NUM, AC_ACK_TIME);
+      Serial.print("ID:");Serial.print(nodeid, DEC);
+      Serial.print(" AC CFG ... ");
+      if (result)
         Serial.println("ok ... ");
       else Serial.println("nothing ... ");      
     }

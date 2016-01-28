@@ -13,19 +13,6 @@
 #define DEVICE_BOARD            BOARD_MINI_WIRELESS_MOTEINO
 /***************************************************************************************/
 
-#define BOARD_REV_0             0
-#define BOARD_REV_1             1
-
-/***************************************************************************************/
-/******************** Board Revision Selection ********************************************/
-/* Currently supported revisions:
- * 1. BOARD_REV_0
- * 2. BOARD_REV_1
- */
-#define BOARD_REV               BOARD_REV_1
-/***************************************************************************************/
-
-
 #if (DEVICE_BOARD == BOARD_MINI_WIRELESS_MOTEINO_COMPATIBLE)
 #define __S125FL127S__
 #define SPI_CS                  5

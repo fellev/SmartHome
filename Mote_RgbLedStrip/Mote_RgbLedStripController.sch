@@ -564,6 +564,74 @@ We've spent an enormous amount of time creating and checking these footprints an
 </deviceset>
 </devicesets>
 </library>
+<library name="transistor-npn">
+<description>&lt;b&gt;NPN Transistors&lt;/b&gt;&lt;p&gt;
+&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
+<packages>
+<package name="TO18">
+<description>&lt;b&gt;TO 18&lt;/b&gt;</description>
+<wire x1="0.9289" y1="2.227" x2="2.227" y2="0.9289" width="0.0508" layer="51" curve="-44.7172"/>
+<wire x1="0.9289" y1="-2.227" x2="2.227" y2="-0.9289" width="0.0508" layer="51" curve="44.7172"/>
+<wire x1="-3.937" y1="-0.508" x2="-3.937" y2="0.508" width="0.127" layer="21"/>
+<wire x1="-2.227" y1="-0.9289" x2="0.929" y2="2.2271" width="0.0508" layer="21" curve="-135.281"/>
+<wire x1="-2.227" y1="-0.9289" x2="-0.9289" y2="-2.227" width="0.0508" layer="51" curve="44.7172"/>
+<wire x1="-3.937" y1="-0.508" x2="-2.8765" y2="-0.508" width="0.127" layer="21"/>
+<wire x1="-0.9289" y1="-2.227" x2="0.9289" y2="-2.227" width="0.0508" layer="21" curve="45.2828"/>
+<wire x1="-3.937" y1="0.508" x2="-2.8765" y2="0.508" width="0.127" layer="21"/>
+<wire x1="2.227" y1="-0.9289" x2="2.227" y2="0.9289" width="0.0508" layer="21" curve="45.2828"/>
+<circle x="0" y="0" radius="2.921" width="0.127" layer="21"/>
+<pad name="1" x="-1.27" y="-1.27" drill="0.8128" shape="octagon"/>
+<pad name="2" x="1.27" y="-1.27" drill="0.8128" shape="octagon"/>
+<pad name="3" x="1.27" y="1.27" drill="0.8128" shape="octagon"/>
+<text x="3.175" y="0" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="3.175" y="-1.905" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-1.905" y="-1.27" size="1.27" layer="51" ratio="10">1</text>
+<text x="0.635" y="-1.27" size="1.27" layer="51" ratio="10">2</text>
+<text x="0" y="0.635" size="1.27" layer="51" ratio="10">3</text>
+</package>
+</packages>
+<symbols>
+<symbol name="NPN">
+<wire x1="2.54" y1="2.54" x2="0.508" y2="1.524" width="0.1524" layer="94"/>
+<wire x1="1.778" y1="-1.524" x2="2.54" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="-2.54" x2="1.27" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="1.27" y1="-2.54" x2="1.778" y2="-1.524" width="0.1524" layer="94"/>
+<wire x1="1.54" y1="-2.04" x2="0.308" y2="-1.424" width="0.1524" layer="94"/>
+<wire x1="1.524" y1="-2.413" x2="2.286" y2="-2.413" width="0.254" layer="94"/>
+<wire x1="2.286" y1="-2.413" x2="1.778" y2="-1.778" width="0.254" layer="94"/>
+<wire x1="1.778" y1="-1.778" x2="1.524" y2="-2.286" width="0.254" layer="94"/>
+<wire x1="1.524" y1="-2.286" x2="1.905" y2="-2.286" width="0.254" layer="94"/>
+<wire x1="1.905" y1="-2.286" x2="1.778" y2="-2.032" width="0.254" layer="94"/>
+<text x="-10.16" y="7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="-10.16" y="5.08" size="1.778" layer="96">&gt;VALUE</text>
+<rectangle x1="-0.254" y1="-2.54" x2="0.508" y2="2.54" layer="94"/>
+<pin name="B" x="-2.54" y="0" visible="off" length="short" direction="pas" swaplevel="1"/>
+<pin name="E" x="2.54" y="-5.08" visible="off" length="short" direction="pas" swaplevel="3" rot="R90"/>
+<pin name="C" x="2.54" y="5.08" visible="off" length="short" direction="pas" swaplevel="2" rot="R270"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="2N2222*" prefix="Q">
+<description>&lt;b&gt;NPN Transistor&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="NPN" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TO18">
+<connects>
+<connect gate="G$1" pin="B" pad="2"/>
+<connect gate="G$1" pin="C" pad="3"/>
+<connect gate="G$1" pin="E" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+<technology name="A"/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -583,10 +651,10 @@ We've spent an enormous amount of time creating and checking these footprints an
 <port name="OUT_G" side="bottom" coord="7.62" direction="io"/>
 <port name="OUT_B" side="bottom" coord="5.08" direction="io"/>
 <port name="IN_R" side="top" coord="10.16" direction="io"/>
-<port name="IN_G" side="top" coord="7.62" direction="io"/>
 <port name="IN_B" side="top" coord="5.08" direction="io"/>
 <port name="PWR" side="right" coord="0" direction="io"/>
 <port name="VSS" side="left" coord="0" direction="io"/>
+<port name="IN_G" side="top" coord="7.62" direction="io"/>
 </ports>
 <variantdefs>
 </variantdefs>
@@ -615,6 +683,12 @@ We've spent an enormous amount of time creating and checking these footprints an
 <part name="SUPPLY5" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY6" library="supply2" deviceset="VCC" device="" value="PWR"/>
 <part name="SUPPLY7" library="supply2" deviceset="GND" device=""/>
+<part name="Q1" library="transistor-npn" deviceset="2N2222*" device="" technology="A"/>
+<part name="Q2" library="transistor-npn" deviceset="2N2222*" device="" technology="A"/>
+<part name="Q3" library="transistor-npn" deviceset="2N2222*" device="" technology="A"/>
+<part name="SUPPLY2" library="supply2" deviceset="GND" device=""/>
+<part name="SUPPLY3" library="supply2" deviceset="GND" device=""/>
+<part name="SUPPLY4" library="supply2" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -633,6 +707,12 @@ We've spent an enormous amount of time creating and checking these footprints an
 <instance part="SUPPLY5" gate="GND" x="170.18" y="48.26" rot="MR0"/>
 <instance part="SUPPLY6" gate="G$1" x="170.18" y="93.98"/>
 <instance part="SUPPLY7" gate="GND" x="170.18" y="30.48"/>
+<instance part="Q1" gate="G$1" x="111.76" y="60.96"/>
+<instance part="Q2" gate="G$1" x="121.92" y="45.72"/>
+<instance part="Q3" gate="G$1" x="132.08" y="30.48"/>
+<instance part="SUPPLY2" gate="GND" x="134.62" y="22.86" rot="MR0"/>
+<instance part="SUPPLY3" gate="GND" x="124.46" y="38.1" rot="MR0"/>
+<instance part="SUPPLY4" gate="GND" x="114.3" y="53.34" rot="MR0"/>
 </instances>
 <busses>
 </busses>
@@ -652,6 +732,18 @@ We've spent an enormous amount of time creating and checking these footprints an
 <segment>
 <portref moduleinst="LQ1" port="VSS"/>
 <pinref part="SUPPLY5" gate="GND" pin="GND"/>
+</segment>
+<segment>
+<pinref part="Q3" gate="G$1" pin="E"/>
+<pinref part="SUPPLY2" gate="GND" pin="GND"/>
+</segment>
+<segment>
+<pinref part="Q2" gate="G$1" pin="E"/>
+<pinref part="SUPPLY3" gate="GND" pin="GND"/>
+</segment>
+<segment>
+<pinref part="Q1" gate="G$1" pin="E"/>
+<pinref part="SUPPLY4" gate="GND" pin="GND"/>
 </segment>
 </net>
 <net name="D10_SS" class="0">
@@ -697,6 +789,11 @@ We've spent an enormous amount of time creating and checking these footprints an
 <wire x1="207.01" y1="132.08" x2="198.12" y2="132.08" width="0.1524" layer="91"/>
 <label x="198.12" y="132.08" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="Q2" gate="G$1" pin="B"/>
+<wire x1="119.38" y1="45.72" x2="96.52" y2="45.72" width="0.1524" layer="91"/>
+<label x="96.52" y="45.72" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="D8" class="0">
 <segment>
@@ -719,11 +816,9 @@ We've spent an enormous amount of time creating and checking these footprints an
 <label x="198.12" y="124.46" size="1.778" layer="95"/>
 </segment>
 <segment>
-<wire x1="157.48" y1="76.2" x2="154.94" y2="76.2" width="0.1524" layer="91"/>
-<label x="144.78" y="76.2" size="1.778" layer="95"/>
-<portref moduleinst="LQ1" port="IN_B"/>
-<wire x1="154.94" y1="76.2" x2="144.78" y2="76.2" width="0.1524" layer="91"/>
-<junction x="154.94" y="76.2"/>
+<pinref part="Q3" gate="G$1" pin="B"/>
+<wire x1="129.54" y1="30.48" x2="96.52" y2="30.48" width="0.1524" layer="91"/>
+<label x="96.52" y="30.48" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="D5" class="0">
@@ -731,13 +826,6 @@ We've spent an enormous amount of time creating and checking these footprints an
 <pinref part="DIGITALSIDE" gate="G$1" pin="9"/>
 <wire x1="207.01" y1="121.92" x2="198.12" y2="121.92" width="0.1524" layer="91"/>
 <label x="198.12" y="121.92" size="1.778" layer="95"/>
-</segment>
-<segment>
-<wire x1="157.48" y1="78.74" x2="154.94" y2="78.74" width="0.1524" layer="91"/>
-<label x="144.78" y="78.74" size="1.778" layer="95"/>
-<portref moduleinst="LQ1" port="IN_G"/>
-<wire x1="154.94" y1="78.74" x2="144.78" y2="78.74" width="0.1524" layer="91"/>
-<junction x="154.94" y="78.74"/>
 </segment>
 </net>
 <net name="D4" class="0">
@@ -754,11 +842,9 @@ We've spent an enormous amount of time creating and checking these footprints an
 <label x="198.12" y="116.84" size="1.778" layer="95"/>
 </segment>
 <segment>
-<wire x1="157.48" y1="81.28" x2="154.94" y2="81.28" width="0.1524" layer="91"/>
-<label x="144.78" y="81.28" size="1.778" layer="95"/>
-<portref moduleinst="LQ1" port="IN_R"/>
-<wire x1="154.94" y1="81.28" x2="144.78" y2="81.28" width="0.1524" layer="91"/>
-<junction x="154.94" y="81.28"/>
+<pinref part="Q1" gate="G$1" pin="B"/>
+<wire x1="109.22" y1="60.96" x2="96.52" y2="60.96" width="0.1524" layer="91"/>
+<label x="96.52" y="60.96" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="D1_TX" class="0">
@@ -857,6 +943,39 @@ We've spent an enormous amount of time creating and checking these footprints an
 <pinref part="ANALOGSIDE" gate="G$1" pin="6"/>
 <wire x1="170.18" y1="129.54" x2="161.29" y2="129.54" width="0.1524" layer="91"/>
 <label x="161.29" y="129.54" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$1" class="0">
+<segment>
+<portref moduleinst="LQ1" port="IN_R"/>
+</segment>
+</net>
+<net name="IN_R" class="0">
+<segment>
+<wire x1="157.48" y1="81.28" x2="154.94" y2="81.28" width="0.1524" layer="91"/>
+<pinref part="Q1" gate="G$1" pin="C"/>
+<wire x1="154.94" y1="81.28" x2="114.3" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="81.28" x2="114.3" y2="66.04" width="0.1524" layer="91"/>
+<label x="144.78" y="81.28" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="IN_G" class="0">
+<segment>
+<portref moduleinst="LQ1" port="IN_G"/>
+<label x="144.78" y="78.74" size="1.778" layer="95"/>
+<pinref part="Q2" gate="G$1" pin="C"/>
+<wire x1="154.94" y1="78.74" x2="124.46" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="78.74" x2="124.46" y2="50.8" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="IN_B" class="0">
+<segment>
+<wire x1="157.48" y1="76.2" x2="154.94" y2="76.2" width="0.1524" layer="91"/>
+<label x="144.78" y="76.2" size="1.778" layer="95"/>
+<portref moduleinst="LQ1" port="IN_B"/>
+<pinref part="Q3" gate="G$1" pin="C"/>
+<wire x1="154.94" y1="76.2" x2="134.62" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="134.62" y1="76.2" x2="134.62" y2="35.56" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

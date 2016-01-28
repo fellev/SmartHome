@@ -52,17 +52,25 @@
 #define SHUTTERS_ID "SHUTTERS"
 
 #define SERIAL_BAUDRATE B115200
-#define SHUTTER_CMD_LEN 8
-#define RBG_LED_STRIP_CMD_LEN 11
-#define MAX_LED_COLOR_VALUE	  255
+#define SHUTTER_CMD_LEN 		8
+#define RBG_LED_STRIP_CMD_LEN 	11
+#define AC_CMD_LEN				9
+#define MAX_LED_COLOR_VALUE	  	255
 
 #define MAX_CONTROLLER_NUM 99
 
-#define RGB_LED_STRIP_RED_BIT	0
-#define RGB_LED_STRIP_GREEN_BIT	1
-#define RGB_LED_STRIP_BLUE_BIT	2
+#define RGB_LED_STRIP_RED_BIT	1
+#define RGB_LED_STRIP_GREEN_BIT	2
+#define RGB_LED_STRIP_BLUE_BIT	4
 
-#define TOPICS_NUM	2
+#define AC_MODE_BIT				0x01
+#define AC_POWER_BIT			0x02
+#define AC_FAN_SPEED_BIT		0x04
+#define AC_FAN_ANGLE_BIT		0x08
+#define AC_TEMPERATURE_BIT		0x10
+#define AC_LIGHT_BIT		    0x20
+
+#define TOPICS_NUM				3
 
 #define COMMAND_SEND_TO_CONTROLLER_TIMEOUT  5000
 
@@ -92,6 +100,23 @@ struct s_rgb_value
     uint8_t status;
 };
 
+typedef struct s_ac_config_t
+{
+	uint8_t	mode		: 3;
+	uint8_t power		: 1;
+	uint8_t fan_speed	: 2;
+	uint8_t fan_angle   : 4;
+	uint8_t temperature : 4;
+	uint8_t light       : 1;
+}__attribute__ ((packed)) s_ac_config;
+
+union u_ac_config
+{
+	s_ac_config config;
+	uint8_t		raw_data[2];
+};
+
+
 union u_device_value
 {
     struct s_rgb_value rgb_value;
@@ -102,6 +127,7 @@ enum e_device_type
 {
     E_SHUTTER,
     E_LIGTH_RGB,
+    E_AC
 };
 
 enum e_gateway_controller_response
@@ -118,8 +144,9 @@ struct s_devicedata
 
 const char* device_tipics[TOPICS_NUM] =
 {
-    [E_SHUTTER] = "/CONTROLLERS/SHUTTER/",
-    [E_LIGTH_RGB] = "/CONTROLLERS/RGB/"
+    [E_SHUTTER] =   "/CONTROLLERS/SHUTTER/",
+    [E_LIGTH_RGB] = "/CONTROLLERS/RGB/",
+    [E_AC] =        "/CONTROLLERS/AC/"
 };
 
 const char* gw_response[] =
@@ -132,6 +159,8 @@ const char* gw_response[] =
  * Variables
  * ****************************************************************************/
 struct s_rgb_value device_rgb_led_strip[MAX_CONTROLLER_NUM+1];
+union u_ac_config  device_ac[MAX_CONTROLLER_NUM+1];
+uint16_t 		   device_ac_status[MAX_CONTROLLER_NUM+1];
 
 /******************************************************************************
  * Prototypes
@@ -227,6 +256,40 @@ int send_command_to_shutter(void *obj, const char* cmd, unsigned int controllerI
 		printf("Sending to Monteino: %s\n", msg);
 	}
 	write_serial((uint8_t*)msg, SHUTTER_CMD_LEN, ud->fd_serial);
+
+	error_code = event_waitFor( ud->serial_rx_cm_event, COMMAND_SEND_TO_CONTROLLER_TIMEOUT);
+
+	return error_code;
+}
+
+int send_command_to_ac(void *obj, union u_ac_config *value, unsigned int controllerID)
+{
+	struct userdata *ud;
+	uint8_t msg[32] = {0};
+	int error_code = 0;
+	int i;
+
+	assert(value);
+	assert(obj);
+	ud = (struct userdata *)obj;
+
+	event_waitFor( ud->serial_rx_cm_event, 0); // Clear the event
+
+	sprintf((char*)msg, "AC%02xCFG", controllerID);
+	msg[7] = value->raw_data[0];
+	msg[8] = value->raw_data[1];
+	if(ud->verbose){
+		printf("Sending to AC controller ID %d: ", controllerID);
+		for ( i = 0 ; i < 7 ; i++)
+		{
+			printf("%c", msg[i]);
+		}
+		printf("[0x%02x]", msg[i++]);
+		printf("[0x%02x]", msg[i++]);
+		printf("\n");
+	}
+
+	write_serial((uint8_t*)msg, AC_CMD_LEN, ud->fd_serial);
 
 	error_code = event_waitFor( ud->serial_rx_cm_event, COMMAND_SEND_TO_CONTROLLER_TIMEOUT);
 
@@ -581,6 +644,66 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 			printf("Invalid RGB led strip controller: %ud\n", controllerId);
 		}
 	}
+	else if (strncmp ( message->topic, device_tipics[E_AC], strlen(device_tipics[E_AC]) ) == 0)
+	{
+		const char* controllerIdStr = &(((const char*)message->topic)[strlen(device_tipics[E_AC])]);
+		unsigned int controllerId = atoi(controllerIdStr);
+		if (controllerId > MAX_CONTROLLER_NUM)
+		{
+			printf("Invalid controller ID");
+			return;
+		}
+		const char* config = &controllerIdStr[4];
+		if (strncmp(config, "MODE", 4) == 0)
+		{
+			device_ac[controllerId].config.mode = atoi((const char*)message->payload);
+			device_ac_status[controllerId] |= AC_MODE_BIT;
+		}
+		else if (strncmp(config, "POWER", 5) == 0)
+		{
+			if (strncmp((const char*)message->payload, "ON", 2) == 0)
+				device_ac[controllerId].config.power = 1;
+			else
+				device_ac[controllerId].config.power = 0;
+			device_ac_status[controllerId] |= AC_POWER_BIT;
+		}
+		else if (strncmp(config, "FAN", 3) == 0)
+		{
+			device_ac[controllerId].config.fan_speed = atoi((const char*)message->payload);
+			device_ac_status[controllerId] |= AC_FAN_SPEED_BIT;
+		}
+		else if (strncmp(config, "ANGLE", 5) == 0)
+		{
+			device_ac[controllerId].config.fan_angle = atoi((const char*)message->payload);
+			device_ac_status[controllerId] |= AC_FAN_ANGLE_BIT;
+		}
+		else if (strncmp(config, "TEMPERATURE", 11) == 0)
+		{
+			uint8_t temp = atoi((const char*)message->payload);
+			if (temp < 16) temp = 16;
+			if (temp > 30) temp = 30;
+			temp -= 16;
+			device_ac[controllerId].config.temperature = temp;
+			device_ac_status[controllerId] |= AC_TEMPERATURE_BIT;
+		}
+		else if (strncmp(config, "DISPLAY", 7) == 0)
+		{
+			if (strncmp((const char*)message->payload, "ON", 2) == 0)
+				device_ac[controllerId].config.light = 1;
+			else
+				device_ac[controllerId].config.light = 0;
+			device_ac_status[controllerId] |= AC_LIGHT_BIT;
+		}
+
+		if ((device_ac_status[controllerId] &
+		   (AC_MODE_BIT | AC_POWER_BIT | AC_FAN_SPEED_BIT | AC_FAN_ANGLE_BIT | AC_TEMPERATURE_BIT | AC_LIGHT_BIT)) ==
+		   (AC_MODE_BIT | AC_POWER_BIT | AC_FAN_SPEED_BIT | AC_FAN_ANGLE_BIT | AC_TEMPERATURE_BIT | AC_LIGHT_BIT))
+		{
+			device_ac_status[controllerId] = 0;
+			send_command_to_ac(obj, &device_ac[controllerId], controllerId);
+		}
+
+	}
 	else if (ud->verbose)
 	{
 		printf("Unknown topic: %s\n", message->topic);
@@ -622,6 +745,8 @@ int main(int argc, char* argv[])
 
 	memset(&ud, 0, sizeof(struct userdata));
 	memset(device_rgb_led_strip, 0, sizeof(device_rgb_led_strip));
+	memset(device_ac, 0, sizeof(device_ac));
+	memset(device_ac_status, 0, sizeof(device_ac_status));
 
 	for (i = 1; i < argc; i++)
 	{

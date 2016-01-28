@@ -45,10 +45,14 @@
 #define GPIO_BTNPWR             4  //digital pin for Power OFF/ON of the led strip
 #define GPIO_LED_RED            3  //PWM pin for red led
 
-#if (DEVICE_BOARD == BOARD_MINI_WIRELESS_MOTEINO_COMPATIBLE)
-#define GPIO_LED_GREEN          7  //PWM pin for green led
-#elif (DEVICE_BOARD == BOARD_MINI_WIRELESS_MOTEINO)
+// #if (DEVICE_BOARD == BOARD_MINI_WIRELESS_MOTEINO_COMPATIBLE)
+#if (BOARD_REV == BOARD_REV_1)
+#define GPIO_LED_GREEN          9  //PWM pin for green led
+#define LED_ONBOARD_ENABLED     0
+// #elif (DEVICE_BOARD == BOARD_MINI_WIRELESS_MOTEINO)
+#elif (BOARD_REV == BOARD_REV_0)
 #define GPIO_LED_GREEN          5
+#define LED_ONBOARD_ENABLED     1
 #endif
 #define GPIO_LED_BLUE           6  //PWM pin for blue led
 #define GPIO_LED_ONBOARD        9  //pin connected to onboard LED
@@ -264,7 +268,9 @@ void GPIO_Init(void)
         ledsStrip.ledPwmValue[i] = LED_PWM_VALUE_OFF;
     }
     pinMode(GPIO_BTNPWR, INPUT);digitalWrite(GPIO_BTNPWR, HIGH); //activate pullup
+#if LED_ONBOARD_ENABLED == 1
     pinMode(GPIO_LED_ONBOARD, OUTPUT);
+#endif
 }
 
 void Radio_Init(void)
@@ -448,7 +454,7 @@ void Radio_Task(void)
         
         // wireless programming token check
         // DO NOT REMOVE, or GarageMote will not be wirelessly programmable any more!
-       CheckForWirelessHEX(radio, flash, true, GPIO_LED_ONBOARD);
+        CheckForWirelessHEX(radio, flash, true, GPIO_LED_ONBOARD);
 
         //first send any ACK to request
         DEBUG("   [RX_RSSI:");DEBUG(radio.RSSI);DEBUG("]");
@@ -584,7 +590,9 @@ void Leds_Task(void)
     if ((now-ledPulseTimestamp) > LED_PULSE_PERIOD/20)
     {
         ledPulseDirection = !ledPulseDirection;
+#if LED_ONBOARD_ENABLED == 1        
         digitalWrite(GPIO_LED_ONBOARD, ledPulseDirection ? HIGH : LOW);
+#endif
         ledPulseTimestamp = now;
     }
             
