@@ -46,11 +46,11 @@
 #define SERIAL_BAUD             115200
 #include "config.h"
 #ifdef DEBUG_EN
-  #define DEBUG(input)   {Serial.print(input); delay(1);}
-  #define DEBUGln(input) {Serial.println(input); delay(1);}
+  #define DNG_PRINT(input)   {Serial.print(input); delay(1);}
+  #define DNG_PRINTln(input) {Serial.println(input); delay(1);}
 #else
-  #define DEBUG(input);
-  #define DEBUGln(input);
+  #define DNG_PRINT(input);
+  #define DNG_PRINTln(input);
 #endif
 
 #define CONFIGURATION_ADDR              0
@@ -206,11 +206,11 @@ void setup(void)
       
    if (flash.initialize())
    {
-     DEBUGln("SPI Flash Init OK!");
+     DNG_PRINTln("SPI Flash Init OK!");
    }
    else
    {
-     DEBUGln("SPI Flash Init FAIL!");
+     DNG_PRINTln("SPI Flash Init FAIL!");
    }
    
 #ifdef DEBUG_EN
@@ -246,9 +246,9 @@ void Radio_Task(void)
     {
         boolean reportStatusRequest=false;
         lastRequesterNodeID = radio.SENDERID;
-        DEBUG('[');DEBUG(radio.SENDERID);DEBUG("] ");
+        DNG_PRINT('[');DNG_PRINT(radio.SENDERID);DNG_PRINT("] ");
         for (byte i = 0; i < radio.DATALEN; i++)
-            DEBUG((char)radio.DATA[i]);
+            DNG_PRINT((char)radio.DATA[i]);
         
         if (radio.DATALEN==5 || radio.DATALEN==3) 
         {
@@ -257,12 +257,12 @@ void Radio_Task(void)
             {
                 msg_rcv.raw_data[0] = radio.DATA[3];
                 msg_rcv.raw_data[1] = radio.DATA[4];
-                DEBUG("mode=");DEBUGln(msg_rcv.config.mode);
-                DEBUG("power=");DEBUGln(msg_rcv.config.power);
-                DEBUG("fan_speed=");DEBUGln(msg_rcv.config.fan_speed);
-                DEBUG("fan_angle=");DEBUGln(msg_rcv.config.fan_angle);
-                DEBUG("temperature=");DEBUGln(msg_rcv.config.temperature);
-                DEBUG("light=");DEBUGln(msg_rcv.config.light);
+                DNG_PRINT("mode=");DNG_PRINTln(msg_rcv.config.mode);
+                DNG_PRINT("power=");DNG_PRINTln(msg_rcv.config.power);
+                DNG_PRINT("fan_speed=");DNG_PRINTln(msg_rcv.config.fan_speed);
+                DNG_PRINT("fan_angle=");DNG_PRINTln(msg_rcv.config.fan_angle);
+                DNG_PRINT("temperature=");DNG_PRINTln(msg_rcv.config.temperature);
+                DNG_PRINT("light=");DNG_PRINTln(msg_rcv.config.light);
                 
                 tmulti._power           = (tadiranMulti::Power)msg_rcv.config.power;
                 tmulti._fan             = msg_rcv.config.fan_speed;
@@ -284,11 +284,11 @@ void Radio_Task(void)
         CheckForWirelessHEX(radio, flash, true, GPIO_LED_ONBOARD);
 
         //first send any ACK to request
-        DEBUG("   [RX_RSSI:");DEBUG(radio.RSSI);DEBUG("]");
+        DNG_PRINT("   [RX_RSSI:");DNG_PRINT(radio.RSSI);DNG_PRINT("]");
         if (radio.ACKRequested())
         {
             radio.sendACK();
-            DEBUGln(" - ACK sent.");
+            DNG_PRINTln(" - ACK sent.");
         }        
         
         if (reportStatusRequest)
@@ -296,7 +296,7 @@ void Radio_Task(void)
             reportStatus();    
         }
         
-        DEBUGln();
+        DNG_PRINTln();
     }
 }
 
@@ -306,9 +306,9 @@ boolean reportStatus()
     char buff[8];
     
     byte temperature =  radio.readTemperature(-1); // -1 = user cal factor, adjust for correct ambient
-    DEBUG( "Radio Temp is ");
-    DEBUG(temperature);
-    DEBUGln("C");
+    DNG_PRINT( "Radio Temp is ");
+    DNG_PRINT(temperature);
+    DNG_PRINTln("C");
     
     sprintf(buff, "TMP%04X", temperature);
     return radio.sendWithRetry(lastRequesterNodeID, buff, 7, RETRY_NUM, ACK_TIME);
@@ -316,7 +316,7 @@ boolean reportStatus()
 
 void tadiranMulti::send()
 {   
-    DEBUGln("Send() - started");
+    DNG_PRINTln("Send() - started");
     
     digitalWrite(GPIO_LED_ONBOARD, HIGH);
     

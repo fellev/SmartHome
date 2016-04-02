@@ -25,7 +25,7 @@
  * Defines
  * **************************************************************************/
 
-//#define DEBUG_EN
+#define DEBUG_EN
 
 #define DEVICE_TYPE_NAME        "RGB LED CONTROLLER"
 
@@ -45,11 +45,9 @@
 #define GPIO_BTNPWR             4  //digital pin for Power OFF/ON of the led strip
 #define GPIO_LED_RED            3  //PWM pin for red led
 
-// #if (DEVICE_BOARD == BOARD_MINI_WIRELESS_MOTEINO_COMPATIBLE)
 #if (BOARD_REV == BOARD_REV_1)
 #define GPIO_LED_GREEN          9  //PWM pin for green led
 #define LED_ONBOARD_ENABLED     0
-// #elif (DEVICE_BOARD == BOARD_MINI_WIRELESS_MOTEINO)
 #elif (BOARD_REV == BOARD_REV_0)
 #define GPIO_LED_GREEN          5
 #define LED_ONBOARD_ENABLED     1

@@ -12,4 +12,6 @@ Items {
 	
 	//store alarm settings
 	alarmTimeHour, alarmTimeMinute,alarmSunday,alarmMonday,alarmTuesday,alarmWednesday,alarmThursday,alarmFriday,alarmSaturday,alarmTimeMessage  :  strategy = everyChange, everyMinute, restoreOnStartup
+
+        Light_RGB : strategy = everyChange, everyMinute, restoreOnStartup
 }

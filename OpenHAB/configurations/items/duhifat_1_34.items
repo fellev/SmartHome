@@ -6,15 +6,12 @@ Group ChildsRoom	(All)
 Group Shutters 	(All)
 Group Weather 	(All)
 Group Status 	(All)
+Group Appliance (All)
 
 Group GF_Living 	"Living Room" 	<video> 	(gGF)
 Group GF_Kitchen 	"Kitchen" 		<kitchen> 	(gGF)
-Group GF_Toilet 	"Toilet" 		<bath> 		(gGF)
-Group GF_Corridor 	"Corridor" 		<corridor> 	(gGF)
 
-Group FF_Bath 		"Bathroom" 		<bath> 		(gFF)
-Group FF_Office 	"Office" 		<office> 	(gFF)
-Group FF_Child 		"Child's Room" 		<boy1> 		(gFF)
+Group FF_Child 		"Child's Room" 	<boy1> 		(gFF)
 Group FF_Bed 		"Bedroom" 		<bedroom> 	(gFF)
 Group FF_Corridor 	"Corridor" 		<corridor> 	(gFF)
 
@@ -22,25 +19,39 @@ Group FF_Corridor 	"Corridor" 		<corridor> 	(gFF)
 Group:Switch:OR(ON, OFF) 		Lights 		"All Lights [(%d)]" 								(All)
 Group:Switch:OR(ON, OFF) 		Heating 	"No. of Active Heatings [(%d)]" 	<heating> 		(All)
 Group:Number:AVG 				Temperature	"Avg. Room Temperature [%.1f °C]" 	<temperature>	(Status)
-Group:Contact:OR(OPEN, CLOSED) 	Windows 	"Open windows [(%d)]"				<contact>		(All)
 
 /* Lights */
-Dimmer        Light_R                                                                          {mqtt=">[mymosquitto:/CONTROLLERS/RGB/004/RED:state:*:default]"}
-Dimmer        Light_G                                                                          {mqtt=">[mymosquitto:/CONTROLLERS/RGB/004/GREEN:state:*:default]"}
-Dimmer        Light_B                                                                          {mqtt=">[mymosquitto:/CONTROLLERS/RGB/004/BLUE:state:*:default]"}
-Color         Light_RGB                         "RGB Dimmer"             (LivingRoom, Lights)
+Dimmer        LIVINGROOM_Light_R                                                                       {mqtt=">[mymosquitto:/CONTROLLERS/RGB/260/RED:state:*:default]"}  /* 260 = 0x100 + 0x004 */
+Dimmer        LIVINGROOM_Light_G                                                                       {mqtt=">[mymosquitto:/CONTROLLERS/RGB/260/GREEN:state:*:default]"}
+Dimmer        LIVINGROOM_Light_B                                                                       {mqtt=">[mymosquitto:/CONTROLLERS/RGB/260/BLUE:state:*:default]"}
+Color         LIVINGROOM_Light_RGB              "RGB Dimmer"             (LivingRoom, Lights)
+Switch        LIVINGROOM_Light_RGB_Preset1      "White LED"              (LivingRoom, Lights)
+
+Dimmer        BEDROOM_Light_R                                                                          {mqtt=">[mymosquitto:/CONTROLLERS/RGB/006/RED:state:*:default]"}
+Dimmer        BEDROOM_Light_G                                                                          {mqtt=">[mymosquitto:/CONTROLLERS/RGB/006/GREEN:state:*:default]"}
+Dimmer        BEDROOM_Light_B                                                                          {mqtt=">[mymosquitto:/CONTROLLERS/RGB/006/BLUE:state:*:default]"}
+Color         BEDROOM_Light_RGB                 "RGB Dimmer"             (BedRoom, Lights)
+Switch        BEDROOM_Light_RGB_Preset          "Led"                    (Lights)
+String        BEDROOM_Light_RGB_Color_Preset    "Led Color"              (Lights)
+
+Switch        Z_LivingTable                     "Living Room Table"      (Lights)  {zwave="2:invert_state=true"}
 
 /* Rollershutters */
 Switch Shutter_all (Shutters)
-Rollershutter Shutter_GF_Toilet 		"Toilet"		(GF_Toilet, Shutters)
-Rollershutter Shutter_GF_Kitchen 		"Kitchen"		(GF_Kitchen, Shutters)
-Rollershutter Shutter_GF_Living 		"Livingroom"		(GF_Living, Shutters)
-Rollershutter Shutter_FF_Bed 			"Bedroom"		(FF_Bed, Shutters) {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/001:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/001:state:default]"}
-Rollershutter Shutter_FF_Bed255			"Bedroom255"		(FF_Bed, Shutters) {mqtt=">[mymosquitto:255:command:UP:SHTOPN],>[mymosquitto:255:command:DOWN:SHTCLS],>[mymosquitto:255:command:STOP:SHTSTO]"}
-Rollershutter Shutter_ChildsRoom		"Child's Room"		(ChildsRoom, Shutters) {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/002:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/002:state:default]"}
-Rollershutter Shutter_BedRoom			"Bed Room"		(BedRoom, Shutters) {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/001:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/001:state:default]"}
-Rollershutter Shutter_Office			"Office"		(Office, Shutters) {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/099:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/099:state:default]"}
-Rollershutter Shutter_LivingRoom		"LivingRoom"		(LivingRoom, Shutters) {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/003:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/003:state:default]"}
+Rollershutter Shutter_ChildsRoom		"Child's Room"	(ChildsRoom, Shutters)      {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/002:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/002:state:default]"}
+Rollershutter Shutter_BedRoom			"Bed Room"		(BedRoom, Shutters)         {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/001:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/001:state:default]"}
+Rollershutter Shutter_Office			"Office"		(Office, Shutters)          {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/099:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/099:state:default]"}
+Rollershutter Shutter_LivingRoom		"LivingRoom"	(LivingRoom, Shutters)      {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/003:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/003:state:default]"}
+
+
+/* Air Conditioner */
+String Air_Conditioner_Mode_Living          "Mode"              <settings>          (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/MODE:state:*:default]"} 
+Switch Air_Conditioner_Power_Living         "Power"             <air_conditioner>   (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/POWER:state:*:default]"} 
+String Air_Conditioner_FanSpeed_Living      "Fan Speed"         <fan>               (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/FAN:state:*:default]"} 
+String Air_Conditioner_FanAngle_Living      "Fan Angle"         <angle>             (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/ANGLE:state:*:default]"} 
+String Air_Conditioner_Temperature_Living   "Temperature"       <temperature>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/TEMPERATURE:state:*:default]"} 
+Switch Air_Conditioner_Screen_Living        "Display"           <display>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/DISPLAY:state:*:default]"} 
+/* Switch Air_Conditioner_Timer_Living        "Timer"  <clock> (Appliance) */
 
 Group Weather_Chart													(Weather)
 Number Weather_Temperature 		"Outside Temperature [%.1f °C]"	<temperature> (Weather_Chart) { http="<[http://weather.yahooapis.com/forecastrss?w=1967838&u=c:60000:XSLT(yahoo_weather_temperature.xsl)]" }
