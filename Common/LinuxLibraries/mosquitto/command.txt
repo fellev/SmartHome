@@ -1,0 +1,1 @@
+make CC=arm-bcm2708-linux-gnueabi-gcc CXX=arm-bcm2708-linux-gnueabi-g++ AR=arm-bcm2708-linux-gnueabi-ar LD=arm-bcm2708-linux-gnueabi-ld
