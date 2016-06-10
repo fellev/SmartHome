@@ -59,9 +59,9 @@
 
 #define MAX_CONTROLLER_NUM 99
 
-#define RGB_LED_STRIP_RED_BIT	1
-#define RGB_LED_STRIP_GREEN_BIT	2
-#define RGB_LED_STRIP_BLUE_BIT	4
+#define RGB_LED_STRIP_RED_MASK     1
+#define RGB_LED_STRIP_GREEN_MASK   2
+#define RGB_LED_STRIP_BLUE_MASK    4
 
 #define AC_MODE_BIT				0x01
 #define AC_POWER_BIT			0x02
@@ -69,8 +69,6 @@
 #define AC_FAN_ANGLE_BIT		0x08
 #define AC_TEMPERATURE_BIT		0x10
 #define AC_LIGHT_BIT		    0x20
-
-#define TOPICS_NUM				3
 
 #define COMMAND_SEND_TO_CONTROLLER_TIMEOUT  5000
 
@@ -127,7 +125,9 @@ enum e_device_type
 {
     E_SHUTTER,
     E_LIGTH_RGB,
-    E_AC
+    E_AC,
+    E_SWITCH,
+    E_NUM_OF_DEVICE_TYPES
 };
 
 enum e_gateway_controller_response
@@ -142,11 +142,12 @@ struct s_devicedata
     union u_device_value value;
 };
 
-const char* device_tipics[TOPICS_NUM] =
+const char* device_tipics[E_NUM_OF_DEVICE_TYPES] =
 {
     [E_SHUTTER] =   "/CONTROLLERS/SHUTTER/",
     [E_LIGTH_RGB] = "/CONTROLLERS/RGB/",
-    [E_AC] =        "/CONTROLLERS/AC/"
+    [E_AC] =        "/CONTROLLERS/AC/",
+    [E_SWITCH]=     "/CONTROLLERS/SWITCH/"
 };
 
 const char* gw_response[] =
@@ -617,27 +618,21 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 			{
 
 				device_rgb_led_strip[controllerId].red = tmp;
-				device_rgb_led_strip[controllerId].status |= RGB_LED_STRIP_RED_BIT;
+				device_rgb_led_strip[controllerId].status = RGB_LED_STRIP_RED_MASK;
 			}
-			else if (strncmp(color, "GREEN", 5) == 0)
+			else if ((strncmp(color, "GREEN", 5) == 0) &&
+					 (device_rgb_led_strip[controllerId].status == RGB_LED_STRIP_RED_MASK))
 			{
 				device_rgb_led_strip[controllerId].green = tmp;
-				device_rgb_led_strip[controllerId].status |= RGB_LED_STRIP_GREEN_BIT;
+				device_rgb_led_strip[controllerId].status |= RGB_LED_STRIP_GREEN_MASK;
 			}
-			else if (strncmp(color, "BLUE", 4) == 0)
+			else if ((strncmp(color, "BLUE", 4) == 0) &&
+					device_rgb_led_strip[controllerId].status == (RGB_LED_STRIP_GREEN_MASK | RGB_LED_STRIP_RED_MASK))
 			{
 				device_rgb_led_strip[controllerId].blue = tmp;
-				device_rgb_led_strip[controllerId].status |= RGB_LED_STRIP_BLUE_BIT;
-			}
-
-			if ((device_rgb_led_strip[controllerId].status &
-			   (RGB_LED_STRIP_RED_BIT | RGB_LED_STRIP_GREEN_BIT | RGB_LED_STRIP_BLUE_BIT)) ==
-			   (RGB_LED_STRIP_RED_BIT | RGB_LED_STRIP_GREEN_BIT | RGB_LED_STRIP_BLUE_BIT))
-			{
 				device_rgb_led_strip[controllerId].status = 0;
 				send_command_to_rgb_led_strip(obj, &device_rgb_led_strip[controllerId], controllerIdFull);
 			}
-
 		}
 		else if (ud->verbose)
 		{
@@ -704,6 +699,10 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 		}
 
 	}
+	else if (strncmp ( message->topic, device_tipics[E_SWITCH], strlen(device_tipics[E_SWITCH]) ) == 0)
+	{
+		//TODO: add switch device command handler
+    }
 	else if (ud->verbose)
 	{
 		printf("Unknown topic: %s\n", message->topic);
