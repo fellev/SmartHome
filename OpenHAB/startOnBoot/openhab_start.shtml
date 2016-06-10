@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<!--
+	Landed by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Start OpenHAB - Home Automation For Geeks</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="Learn how to make a custom home automation system using a Raspberry Pi, Arduino, and free open-source software" />
+		<meta name="keywords" content="home automation,raspberry pi,openhab,geek,geeks" />
+		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.scrolly.min.js"></script>
+		<script src="js/jquery.dropotron.min.js"></script>
+		<script src="js/jquery.scrollex.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+		<noscript>
+			<link rel="stylesheet" href="css/skel.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-xlarge.css" />
+		</noscript>
+		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+	</head>
+	<body>
+
+		<!-- Header -->
+		<header id="header">
+	<h1 id="logo"><a href="/index.shtml">Home Automation for geeks</a></h1>
+	<nav id="nav">
+		<ul>
+			<li><a href="/index.shtml">Home</a></li>
+			<li><a href="/forum">Forum</a></li>
+			<li>
+				<a href="" class="button special">Menu</a>
+				<ul>
+					<li><a href="/project/project.shtml">An Introduction Project</a></li>
+					<li><a href="/guides.shtml">Guides</a></li>
+					<li><a href="/onlinehelp.shtml">Find Help Online</a></li>
+					<li><a href="/sitemap.shtml">Site Map</a></li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+</header>
+
+		<!-- Main -->
+			<div id="main" class="wrapper style1">
+				<div class="container">
+					<header class="major">
+						<h2>Start OpenHAB</h2>
+						<p>Start It Up</p>
+					</header>
+					<div class="row 150%">
+						<div class="8u 12u$(medium)">
+
+							<!-- Content -->
+							<section id="content">
+								<header>
+									<h3>On this page</h3>
+								</header>
+								<p>
+									<ul>
+										<li><a href="#test">Test It!</a></li>
+										<li><a href="#start">Auto Start On Boot</a></li>
+									</ul>
+								</p>
+							</section>
+							
+							<section id="content">
+								<header>
+									<h3><a name="test">Test It!</a></h3>
+								</header>
+								<p>
+									You start OpenHAB with this command:
+<pre><code>sudo /opt/openhab/start.sh</code></pre>
+									This will take a minute or two to start up, and it will write out everything that's happening. If all went well it should look like this:
+								</p>
+								<p class="inlineimage">
+									<img src="images/mobaxterm_openhab.jpg" alt="OpenHAB starting" /><br />
+									OpenHAB starting up. You might not see the lines with [DEBUG] as those are optional and need to be enabled.
+								</p>
+								<p>
+									Now you can open a web browser at <strong>http://192.168.1.80:8080/openhab.app</strong> (replace 192.168.1.80 with your Pi's IP) and see the temperature update automatically!
+								</p>
+								<p>
+									<strong>Exiting:</strong> You can exit OpenHAB using CTRL+C. This will also make the site unavailable again.
+								</p>
+							</section>
+							
+							<section id="content">
+								<header>
+									<h3><a name="start">Auto Start On Boot</a></h3>
+								</header>
+								<p>
+									You'll probably want both <i>OpenHAB</i> to start up automatically when you reboot your Pi, so you don't have to worry about them.
+								</p>
+								<p>
+									You can download <a href="code/openhab.txt" target="_blank">this startup script</a> and paste the contents into a file in /etc/init.d:
+<pre><code>sudo nano /etc/init.d/openhab</code></pre>
+								</p>
+								<p>
+									Then make the script executable:
+<pre><code>sudo chmod 777 /etc/init.d/openhab</code></pre>
+								</p>
+								<p>
+									Now you have access to a few useful commands for starting OpenHAB in the background, seeing the status, and stopping or restarting it:
+<pre><code>sudo /etc/init.d/openhab start
+/etc/init.d/openhab status
+sudo /etc/init.d/openhab stop
+sudo /etc/init.d/openhab restart</code></pre>
+								</p>
+								<p>
+									To make this script start up by default on boot:
+<pre><code>sudo update-rc.d openhab defaults</code></pre>
+								</p>
+								<p>
+									If you ever want to undo this, run:
+<pre><code>sudo update-rc.d -f openhab remove</code></pre>
+								</p>
+								<p>
+									Now after you reboot your Pi OpenHAB will automatically start up in the background. Remember OpenHAB needs a few minutes to start everything up.
+								</p>
+							</section>
+							
+							<section>
+								<header>
+									<h3>Back</h3>
+								</header>
+								<p>
+									Back to the Guides
+								</p>
+								<a href="guides.shtml" class="button special">Guides</a>
+							</section>
+
+						</div>
+						<div class="4u$ 12u$(medium)">
+
+							<!-- Sidebar -->
+							<section id="sidebar">
+								<section>
+									<header>
+										<h3>This Page</h3>
+									</header>
+									<p>
+										<img src="images/projectschema_openhab.png" />
+									</p>
+									<p>
+										Created 2015-02-01<br />
+										
+										Last Updated 2015-04-21
+									</p>
+								</section>
+								
+								<section>
+									<header>
+										<h3>
+											Ads
+											<span style="font-size: 0.5em;">(to help pay for hosting)</span>
+										</h3>
+									</header>
+									<p>
+										<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Right Bar -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:160px;height:90px"
+     data-ad-client="ca-pub-1603626411675464"
+     data-ad-slot="3354552638"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<hr />
+<script type="text/javascript" language="javascript">
+  amzn_assoc_ad_type = "contextual";
+  amzn_assoc_tracking_id = "homeautomforg-20";
+  amzn_assoc_marketplace = "amazon";
+  amzn_assoc_region = "US";
+  amzn_assoc_placement = "N7IGE5LXQQSKQLM5";
+  amzn_assoc_linkid = "N7IGE5LXQQSKQLM5";
+  amzn_assoc_emphasize_categories = "";
+  amzn_assoc_fallback_products = "B008XVAVAW, B009UKZV0A, B003MWQ30E, B00KMHXFAI, B0013V1SRY, B00IVPU786";
+  amzn_assoc_width = "180";
+  amzn_assoc_height = "150";
+</script>
+<script type="text/javascript" language="javascript" src="//z-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&Operation=GetScript&ID=OneJS&WS=1&MarketPlace=US&source=ac"></script>
+									</p>
+								</section>
+							</section>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<!-- Footer -->
+		<footer id="footer">
+	<ul class="icons">
+		<li><a href="mailto:contact@homeautomationforgeeks.com" class="icon alt fa-envelope"><span class="label">Email</span></a></li>
+		<li><a href="/forum" class="icon alt fa-users"><span class="label">Need Help? Check out the forum!</span></a></li>
+	</ul>
+	<ul class="copyright">
+		<li>&copy; Home Automation for geeks.</li><li>Photos: <a href="http://www.pixabay.com">Pixabay</a> and HAFG</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+	</ul>
+</footer>
+
+	</body>
+</html>
