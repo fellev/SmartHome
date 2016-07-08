@@ -98,3 +98,21 @@ then
         postUpdate( Air_Conditioner_Screen_Living,      Air_Conditioner_Screen_Living.state)
 end
 
+rule "ChildsRoom AC"
+when
+        Item Air_Conditioner_Power_ChildsRoom changed or 
+        Item Air_Conditioner_Mode_ChildsRoom changed or
+        Item Air_Conditioner_FanSpeed_ChildsRoom changed or
+        Item Air_Conditioner_FanAngle_ChildsRoom changed or
+        Item Air_Conditioner_Temperature_ChildsRoom changed or
+        Item Air_Conditioner_Screen_ChildsRoom changed
+then
+//        logInfo("Air Conditioner ChildsRoom",receivedCommand + "" +Air_Conditioner_Mode_ChildsRoom )
+        postUpdate( Air_Conditioner_Power_ChildsRoom,       Air_Conditioner_Power_ChildsRoom.state)
+        postUpdate( Air_Conditioner_Mode_ChildsRoom,        Air_Conditioner_Mode_ChildsRoom.state)
+        postUpdate( Air_Conditioner_FanSpeed_ChildsRoom,    Air_Conditioner_FanSpeed_ChildsRoom.state)
+        postUpdate( Air_Conditioner_FanAngle_ChildsRoom,    Air_Conditioner_FanAngle_ChildsRoom.state)
+        postUpdate( Air_Conditioner_Temperature_ChildsRoom, Air_Conditioner_Temperature_ChildsRoom.state)
+        postUpdate( Air_Conditioner_Screen_ChildsRoom,      Air_Conditioner_Screen_ChildsRoom.state)
+end
+

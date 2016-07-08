@@ -38,10 +38,10 @@ Switch        Z_LivingTable                     "Living Room Table"      (Lights
 
 /* Rollershutters */
 Switch Shutter_all (Shutters)
-Rollershutter Shutter_ChildsRoom		"Child's Room"	(ChildsRoom, Shutters)      {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/002:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/002:state:default]"}
-Rollershutter Shutter_BedRoom			"Bed Room"		(BedRoom, Shutters)         {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/001:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/001:state:default]"}
-Rollershutter Shutter_Office			"Office"		(Office, Shutters)          {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/099:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/099:state:default]"}
-Rollershutter Shutter_LivingRoom		"LivingRoom"	(LivingRoom, Shutters)      {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/003:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/003:state:default]"}
+Rollershutter Shutter_ChildsRoom                "Child's Room"  (ChildsRoom, Shutters)      {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/002:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/002:state:default]"}
+Rollershutter Shutter_BedRoom                   "Bed Room"      (BedRoom, Shutters)         {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/001:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/001:state:default]"}
+Rollershutter Shutter_Office                    "Office"        (Office, Shutters)          {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/099:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/099:state:default]"}
+Rollershutter Shutter_LivingRoom                "LivingRoom"    (LivingRoom, Shutters)      {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/003:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/003:state:default]"}
 
 
 /* Air Conditioner */
@@ -52,6 +52,14 @@ String Air_Conditioner_FanAngle_Living      "Fan Angle"         <angle>         
 String Air_Conditioner_Temperature_Living   "Temperature"       <temperature>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/TEMPERATURE:state:*:default]"} 
 Switch Air_Conditioner_Screen_Living        "Display"           <display>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/DISPLAY:state:*:default]"} 
 /* Switch Air_Conditioner_Timer_Living        "Timer"  <clock> (Appliance) */
+
+String Air_Conditioner_Mode_ChildsRoom          "Mode"              <settings>          (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/MODE:state:*:default]"} 
+Switch Air_Conditioner_Power_ChildsRoom         "Power"             <air_conditioner>   (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/POWER:state:*:default]"} 
+String Air_Conditioner_FanSpeed_ChildsRoom      "Fan Speed"         <fan>               (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/FAN:state:*:default]"} 
+String Air_Conditioner_FanAngle_ChildsRoom      "Fan Angle"         <angle>             (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/ANGLE:state:*:default]"} 
+String Air_Conditioner_Temperature_ChildsRoom   "Temperature"       <temperature>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/TEMPERATURE:state:*:default]"} 
+Switch Air_Conditioner_Screen_ChildsRoom        "Display"           <display>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/DISPLAY:state:*:default]"} 
+
 
 Group Weather_Chart													(Weather)
 Number Weather_Temperature              "Outside Temperature [%.2f °C]" {weather="locationId=home, type=temperature, property=current"}
