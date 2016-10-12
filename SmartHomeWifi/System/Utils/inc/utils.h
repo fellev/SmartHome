@@ -23,7 +23,7 @@ public:
 	* \retval String in UTF8 format
 	*******************************************************************************/
 	static String htmlEncodedToUtf8(String inputStr) {
-		int inCnt = 0, outCnt = 0;
+		unsigned int inCnt = 0, outCnt = 0;
 		String out = inputStr;
 
 		for ( inCnt = 0 ; inCnt < inputStr.length() ; inCnt++, outCnt++) {

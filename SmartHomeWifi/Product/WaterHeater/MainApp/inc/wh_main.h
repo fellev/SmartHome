@@ -11,6 +11,7 @@
 #include "common_data.h"
 #include "product_main.h"
 #include "DebugUtils.h"
+#include "eeprom_config.h"
 
 
 
