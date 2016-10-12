@@ -1,0 +1,15 @@
+/*
+ * hw_config.h
+ *
+ *  Created on: Oct 12, 2016
+ *      Author: felix
+ */
+
+#ifndef PRODUCT_WATERHEATER_CONFIGURATIONS_HW_HW_CONFIG_H_
+#define PRODUCT_WATERHEATER_CONFIGURATIONS_HW_HW_CONFIG_H_
+
+
+
+
+
+#endif /* PRODUCT_WATERHEATER_CONFIGURATIONS_HW_HW_CONFIG_H_ */

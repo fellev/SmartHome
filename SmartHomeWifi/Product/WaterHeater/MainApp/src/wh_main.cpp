@@ -14,6 +14,7 @@
 #include <EEPROM.h>
 #include "EEPROMAnything.h"
 #include "utils.h"
+#include <PubSubClient.h>
 
 /***************************************************************************/
 /**    DEFINITIONS                                                        **/
@@ -41,6 +42,7 @@ void f_systemBootWifiConnected_whMain(void);
 void f_SystemBootLaunchApServer_whMain(String wifiInRange);
 void f_whMainLaunchWeb(E_WH_MAIN_WEB_TYPE webtype, String param = String());
 int f_whLoadWebPage(E_WH_MAIN_WEB_TYPE webtype, String param);
+void f_whMainMqttCallback(char* topic, byte* payload, unsigned int length);
 
 /***************************************************************************/
 /**    EXTERNAL PROTOTYPES                                                **/
@@ -52,6 +54,8 @@ int f_whLoadWebPage(E_WH_MAIN_WEB_TYPE webtype, String param);
 
 S_PRODUCT_CONFIG gProductConfig;
 WiFiServer server(80);
+WiFiClient espClient;
+PubSubClient client(espClient);
 //char ap_ssid[32];
 //const char* ap_passwd = "U4nnA%p*:Q=m4#cJ";
 String st;
@@ -66,10 +70,12 @@ void setup() {
 	f_systemBootWifiConnected_p = f_systemBootWifiConnected_whMain;
 	f_SystemBootLaunchApServer_p = f_SystemBootLaunchApServer_whMain;
 	f_systemBootSetup();
+	client.setServer(gProductConfig.mqtt_server, 1883);
+	client.setCallback(f_whMainMqttCallback);
 }
 
 void f_systemBootWifiConnected_whMain(void) {
-	f_whMainLaunchWeb(D_WH_MAIN_WEB_TYPE_TEST);
+//	f_whMainLaunchWeb(D_WH_MAIN_WEB_TYPE_TEST);
 }
 
 void f_SystemBootLaunchApServer_whMain(String wifiInRange) {
@@ -240,7 +246,61 @@ int f_whLoadWebPage(E_WH_MAIN_WEB_TYPE webtype, String param) {
   return(20);
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void f_whMainMqttCallback(char* topic, byte* payload, unsigned int length) {
+  DEBUG_PRINT("Message arrived [");
+  DEBUG_PRINT(topic);
+  DEBUG_PRINT("] ");
+  for (unsigned int i=0;i<length;i++) {
+    DEBUG_PRINT((char)payload[i]);
+  }
+  DEBUG_PRINTLN();
+  if (payload[0] == 'O' && payload[1] == 'N') {
+	  //Power ON
+	  DEBUG_PRINTLN("Power ON command received");
 
+  }
+  else if (payload[0] == 'O' && payload[1] == 'F' && payload[2] == 'F') {
+	  //Power OFF
+	  DEBUG_PRINTLN("Power OFF command received");
+  }
+#if defined(DEBUG)
+  else if (strncmp((const char*)payload, "cleareeprom", 11) == 0)
+  {
+      DEBUG_PRINTLN("clearing eeprom");
+      client.publish(gProductConfig.out_topic,"clearing eeprom");
+      delay(1000);
+      memset(gProductConfig_p, 0, sizeof(*gProductConfig_p));
+      EEPROM_writeAnything(EEPROM_ADDR_CONFIGURATION, *gProductConfig_p);
+      EEPROM.commit();
+  }
+#endif
+}
+
+void f_whMainMqttReconnect() {
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    DEBUG_PRINT("Attempting MQTT connection...");
+    // Attempt to connect
+    // If you do not want to use a username and password, change next line to
+    // if (client.connect("ESP8266Client")) {
+    if (client.connect("ESP8266Client")) {
+      DEBUG_PRINTLN("connected");
+      client.publish(gProductConfig.out_topic,"hello world");
+      // ... and resubscribe
+      client.subscribe(gProductConfig.in_topic);
+    } else {
+      DEBUG_PRINT("failed, rc=");
+      DEBUG_PRINT(client.state());
+      DEBUG_PRINTLN(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
+
+void loop() {
+	  if (!client.connected()) {
+		  f_whMainMqttReconnect();
+	  }
+	  client.loop();
 }
