@@ -115,6 +115,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.2000680788" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
 							</tool>
@@ -138,6 +139,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.1759707082" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
 							</tool>

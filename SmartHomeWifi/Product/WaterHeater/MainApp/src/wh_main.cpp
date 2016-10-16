@@ -16,11 +16,12 @@
 #include "utils.h"
 #include <PubSubClient.h>
 #include "esp12e_gpio.h"
+#include "SimpleTimer.h"
 
 /***************************************************************************/
 /**    DEFINITIONS                                                        **/
 /***************************************************************************/
-#define D_WH_MAIN_WEB_FORM_INPUT_NUM                			12
+#define D_WH_MAIN_WEB_FORM_INPUT_NUM                			10
 
 /* GPIO */
 #define D_WH_MAIN_PIN_WAHTER_HEATER_RELAY                       5
@@ -31,6 +32,14 @@
 #define D_WH_MAIN_BUTTON_PRESSED                                0
 #define D_WH_MAIN_RELEASED                                      1
 #define D_WH_MAIN_BUTTON_BOUNCE_MS                              400  //timespan before another button change can occur
+
+/* MQTT */
+#define D_WH_MAIN_MQTT_TOPIC_PREFIX_IN	                        ("/CONTROLLERS/" PRODUCT_NAME "/H2D/")
+#define D_WH_MAIN_MQTT_TOPIC_PREFIX_OUT                         ("/CONTROLLERS/" PRODUCT_NAME "/D2H/")
+#define D_WH_MAIN_MQTT_TOPIC_MAX_SIZE							70
+
+/* Timers */
+#define D_WH_MAIN_SEND_STATUS_RATE                              (1000*60)
 
 /***************************************************************************/
 /**    MACROS                                                             **/
@@ -60,7 +69,7 @@ void f_SystemBootLaunchApServer_whMain(String wifiInRange);
 void f_whMainLaunchWeb(E_WH_MAIN_WEB_TYPE webtype, String param = String());
 int f_whLoadWebPage(E_WH_MAIN_WEB_TYPE webtype, String param);
 void f_whMainMqttCallback(char* topic, byte* payload, unsigned int length);
-void f_whMainPowerControl(byte mode);
+void f_whMainPowerControl(byte mode, int offTimeMin = 0, bool sendStatus = true);
 void f_whMainGpioInit(void);
 void f_whMainMqttInit(void);
 String f_whMainAppendNumber(String in_str, byte num);
@@ -88,13 +97,17 @@ byte btnState=D_WH_MAIN_RELEASED;
 
 /* RTC */
 long now=0;
+long countdownTimerSec = 0;
+SimpleTimer timer;
+int timerIdPower=0, timerIdStatus=0;
 
 /* Power state*/
 byte pwrState = D_WH_MAIN_POWER_CONTROL_OFF;
 
 /* MQTT */
-char mqttOutTopic[69];
-char mqttInTopic[69];
+char mqttOutTopic[D_WH_MAIN_MQTT_TOPIC_MAX_SIZE];
+char mqttInTopic[D_WH_MAIN_MQTT_TOPIC_MAX_SIZE];
+
 
 
 /***************************************************************************/
@@ -108,11 +121,16 @@ void setup() {
 	f_SystemBootLaunchApServer_p = f_SystemBootLaunchApServer_whMain;
 	f_systemBootSetup();
 	f_whMainMqttInit();
+//	f_whMainTimerInit();
 }
 
+//void f_whMainTimerInit(void) {
+//	timer.setInterval(1000, f_whMainTimerCallbackOneSec);
+//}
+
 void f_whMainMqttInit(void) {
-    f_whMainAppendNumber(String(gProductConfig.out_topic), gProductConfig.nodeID).toCharArray(mqttOutTopic, sizeof(mqttOutTopic));
-    f_whMainAppendNumber(String(gProductConfig.in_topic), gProductConfig.nodeID).toCharArray(mqttInTopic, sizeof(mqttInTopic));
+    f_whMainAppendNumber(String(D_WH_MAIN_MQTT_TOPIC_PREFIX_OUT), gProductConfig.nodeID).toCharArray(mqttOutTopic, sizeof(mqttOutTopic)-1);
+    f_whMainAppendNumber(String(D_WH_MAIN_MQTT_TOPIC_PREFIX_IN), gProductConfig.nodeID).toCharArray(mqttInTopic, sizeof(mqttInTopic)-1);
     DEBUG_PRINT("MQTT out topic: "); DEBUG_PRINTLN(mqttOutTopic);
     DEBUG_PRINT("MQTT in topic: "); DEBUG_PRINTLN(mqttInTopic);
 	client.setServer(gProductConfig.mqtt_server, 1883);
@@ -214,10 +232,6 @@ int f_whLoadWebPage(E_WH_MAIN_WEB_TYPE webtype, String param) {
              "<input name='mqtt_user' length=32> " /*Input 8*/
              "<label>Password: </label>"
              "<input name='mqtt_passwd' type='password' length=32><p>" /*Input 9*/
-             "<label>MQTT IN Topic:  </label>"
-             "<input name='in_topic' length=64 size=64><p>" /*Input 10*/
-             "<label>MQTT OUT Topic: </label>"
-             "<input name='out_topic' length=64 size=64><p>" /*Input 11*/
              "<input type='submit'></form>";
         s += "</html>\r\n\r\n";
         DEBUG_PRINTLN("Sending 200");
@@ -248,8 +262,6 @@ int f_whLoadWebPage(E_WH_MAIN_WEB_TYPE webtype, String param) {
         inputs[8].toCharArray(gProductConfig_p->mqtt_user, sizeof(gProductConfig_p->mqtt_user));
         inputs[9] = Utils::htmlEncodedToUtf8(inputs[9]);
         inputs[9].toCharArray(gProductConfig_p->mqtt_passwd, sizeof(gProductConfig_p->mqtt_passwd));
-        Utils::htmlEncodedToUtf8(inputs[10]).toCharArray(gProductConfig_p->in_topic, sizeof(gProductConfig_p->in_topic));
-        Utils::htmlEncodedToUtf8(inputs[11]).toCharArray(gProductConfig_p->out_topic, sizeof(gProductConfig_p->out_topic));
 
         EEPROM_writeAnything(EEPROM_ADDR_CONFIGURATION, *gProductConfig_p);
 
@@ -269,7 +281,7 @@ int f_whLoadWebPage(E_WH_MAIN_WEB_TYPE webtype, String param) {
         DEBUG_PRINTLN("Sending 404");
       }
   }
-#if defined(DEBUG)
+#if 0 //defined(DEBUG)
   else
   {
       if (req == "/")
@@ -302,6 +314,30 @@ int f_whLoadWebPage(E_WH_MAIN_WEB_TYPE webtype, String param) {
   return(20);
 }
 
+//void f_whMainTimerCallbackOneSec() {
+//
+//	  if (countdownTimerSec) {
+//		  countdownTimerSec--;
+//	  } else {
+//		  if (pwrSt
+//		  f_whMainPowerControl((byte)D_WH_MAIN_POWER_CONTROL_OFF);
+//	  }
+//}
+
+void f_whMainPowerTimerTimeout() {
+	f_whMainPowerControl((byte)D_WH_MAIN_POWER_CONTROL_OFF);
+}
+
+void f_whMainPowerTimerStatusSend() {
+	char msgBuf[8] = {0};
+	int remainTime = timer.getTimeToNextCall(timerIdPower);
+	remainTime = remainTime / (60*1000) + (((remainTime % 1000) > 500) ? 1 : 0);
+	String msg = String("TMR") + String(remainTime, DEC);
+	msg.toCharArray(msgBuf, sizeof(msgBuf));
+	client.publish(mqttOutTopic, msgBuf);
+	DEBUG_PRINT("Timer status: "); DEBUG_PRINTLN(msgBuf);
+}
+
 void f_whMainMqttCallback(char* topic, byte* payload, unsigned int length) {
   DEBUG_PRINT("Message arrived [");
   DEBUG_PRINT(topic);
@@ -310,16 +346,22 @@ void f_whMainMqttCallback(char* topic, byte* payload, unsigned int length) {
     DEBUG_PRINT((char)payload[i]);
   }
   DEBUG_PRINTLN();
-  if (length == 2 && payload[0] == 'O' && payload[1] == 'N') {
+  if (length == 2 && payload[0] == 'O' && payload[1] == 'N') { /* ON */
 	  //Power ON
 	  DEBUG_PRINTLN("Power ON command received");
 	  f_whMainPowerControl((byte)D_WH_MAIN_POWER_CONTROL_ON);
 
   }
-  else if (length == 3 && payload[0] == 'O' && payload[1] == 'F' && payload[2] == 'F') {
+  else if (length == 3 && payload[0] == 'O' && payload[1] == 'F' && payload[2] == 'F') { /* OFF */
 	  //Power OFF
 	  DEBUG_PRINTLN("Power OFF command received");
 	  f_whMainPowerControl((byte)D_WH_MAIN_POWER_CONTROL_OFF);
+  }
+  else if (length > 3 && length < 8 && payload[0] == 'T' && payload[1] == 'M' && payload[2] == 'R') { /*TMPxxxx: xxxx Timer number of second before turn off*/
+	  char buf[5] = {0};
+	  memcpy(buf, &payload[3], length - 3);
+	  int timeout = atol(buf);
+	  f_whMainPowerControl((byte)D_WH_MAIN_POWER_CONTROL_ON, timeout);
   }
 #if defined(DEBUG)
   else if (strncmp((const char*)payload, "cleareeprom", 11) == 0)
@@ -335,10 +377,12 @@ void f_whMainMqttCallback(char* topic, byte* payload, unsigned int length) {
 }
 
 String f_whMainAppendNumber(String in_str, byte num) {
-	if (in_str[in_str.length()] != '/') in_str += "/";
-	if (gProductConfig.nodeID < 100) in_str += "0";
-	if (gProductConfig.nodeID < 10) in_str += "0";
-	in_str += String(gProductConfig.nodeID, DEC);
+	if (in_str.length() > 0) {
+		if (in_str.charAt(in_str.length()-1) != '/') in_str += "/";
+		if (gProductConfig.nodeID < 100) in_str += "0";
+		if (gProductConfig.nodeID < 10) in_str += "0";
+		in_str += String(gProductConfig.nodeID, DEC);
+	}
 	return(in_str);
 }
 
@@ -366,14 +410,18 @@ void f_whMainMqttReconnect() {
   }
 }
 
-void f_whMainPowerControl(byte mode) {
+void f_whMainPowerControl(byte mode, int offTimeMin, bool sendStatus) {
+	timer.deleteTimer(timerIdPower);
+	timer.deleteTimer(timerIdStatus);
+
 	if (mode == (uint8_t)D_WH_MAIN_POWER_CONTROL_OFF)
 	{
 		DEBUG_PRINTLN("Power OFF");
 		digitalWrite(D_WH_MAIN_PIN_WAHTER_HEATER_RELAY, LOW);
 		digitalWrite(D_HW_CONFIG_LED_ESP8266, HIGH);
 		pwrState = mode;
-		client.publish(mqttOutTopic,"OFF");
+		if (sendStatus)
+			client.publish(mqttOutTopic,"OFF");
 	}
 	else if (mode == (uint8_t)D_WH_MAIN_POWER_CONTROL_ON)
 	{
@@ -381,7 +429,15 @@ void f_whMainPowerControl(byte mode) {
 		digitalWrite(D_WH_MAIN_PIN_WAHTER_HEATER_RELAY, HIGH);
 		digitalWrite(D_HW_CONFIG_LED_ESP8266, LOW);
 		pwrState = mode;
-		client.publish(mqttOutTopic,"ON");
+		if (sendStatus)
+			client.publish(mqttOutTopic,"ON");
+
+		if (offTimeMin > 0) {
+			timerIdPower = timer.setTimeout(offTimeMin*1000*60, f_whMainPowerTimerTimeout);
+			timerIdStatus = timer.setInterval(D_WH_MAIN_SEND_STATUS_RATE, f_whMainPowerTimerStatusSend);
+			f_whMainPowerTimerStatusSend();
+			DEBUG_PRINT("Set timer to "); DEBUG_PRINT(offTimeMin, DEC); DEBUG_PRINTLN(" min");
+		}
 	}
 
 }
@@ -411,5 +467,8 @@ void loop() {
 	  client.loop();
 
 	  now = millis();
+
+	  timer.run();
+
 	  f_whMainHandleButtons();
 }

@@ -10,7 +10,7 @@
 
 #include <Arduino.h>
 
-#define PRODUCT_NAME "Water_Heater"
+#define PRODUCT_NAME "WATER_HEATER"
 
 typedef struct TAG_S_PRODUCT_CONFIG {
   byte check_virgin;
@@ -20,8 +20,6 @@ typedef struct TAG_S_PRODUCT_CONFIG {
   byte mqtt_server[4];
   char mqtt_user[32];
   char mqtt_passwd[32];
-  char in_topic[64];
-  char out_topic[64];
   char router_ssid[32];
   char router_passwd[64];
 } S_PRODUCT_CONFIG, *S_PRODUCT_CONFIG_PTR;

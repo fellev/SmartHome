@@ -62,6 +62,11 @@
 			<location>/home/felix/.arduino15/packages/esp8266/hardware/esp8266/2.1.0/libraries/ESP8266WiFi</location>
 		</link>
 		<link>
+			<name>libraries/SimpleTimer</name>
+			<type>2</type>
+			<location>/home/felix/Arduino/libraries/SimpleTimer</location>
+		</link>
+		<link>
 			<name>libraries/pubsubclient-2.6</name>
 			<type>2</type>
 			<location>/home/felix/Arduino/libraries/pubsubclient-2.6</location>
