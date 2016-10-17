@@ -12,6 +12,7 @@
 #include "product_main.h"
 #include "DebugUtils.h"
 #include "eeprom_config.h"
+#include "hw_config.h"
 
 
 

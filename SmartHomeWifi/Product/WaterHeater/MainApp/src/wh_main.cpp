@@ -23,10 +23,6 @@
 /***************************************************************************/
 #define D_WH_MAIN_WEB_FORM_INPUT_NUM                			10
 
-/* GPIO */
-#define D_WH_MAIN_PIN_WAHTER_HEATER_RELAY                       5
-#define D_WH_MAIN_PIN_POWER_BUTTON                              4
-
 /* Buttons */
 #define D_WH_MAIN_BTNCOUNT                                      1
 #define D_WH_MAIN_BUTTON_PRESSED                                0
@@ -40,6 +36,10 @@
 
 /* Timers */
 #define D_WH_MAIN_SEND_STATUS_RATE                              (1000*60)
+#define D_WH_MAIN_UNALLOCATED_TIMER                             SimpleTimer::MAX_TIMERS
+
+/* Leds */
+#define D_WH_MAIN_LED_PULSE_PERIOD                              5000   //5s seems good value for pulsing/blinking (not too fast/slow)
 
 /***************************************************************************/
 /**    MACROS                                                             **/
@@ -90,7 +90,7 @@ String st;
 
 /* Buttons */
 byte btnIndex=0; // as the sketch loops this index will loop through the available physical buttons
-byte btn[] = {D_WH_MAIN_PIN_POWER_BUTTON};
+byte btn[] = {D_HW_CONFIG_GPIO_PIN_POWER_BUTTON};
 byte btnLastState[]={D_WH_MAIN_RELEASED};
 unsigned long btnLastPress[]={0,0};
 byte btnState=D_WH_MAIN_RELEASED;
@@ -99,14 +99,23 @@ byte btnState=D_WH_MAIN_RELEASED;
 long now=0;
 long countdownTimerSec = 0;
 SimpleTimer timer;
-int timerIdPower=0, timerIdStatus=0;
+int timerIdPower=D_WH_MAIN_UNALLOCATED_TIMER, timerIdStatus=D_WH_MAIN_UNALLOCATED_TIMER;
 
 /* Power state*/
 byte pwrState = D_WH_MAIN_POWER_CONTROL_OFF;
+byte pwrStateOld = D_WH_MAIN_POWER_CONTROL_OFF;
 
 /* MQTT */
 char mqttOutTopic[D_WH_MAIN_MQTT_TOPIC_MAX_SIZE];
 char mqttInTopic[D_WH_MAIN_MQTT_TOPIC_MAX_SIZE];
+
+/* Leds */
+bool isLedsNeedUpdate = false;
+byte ledBlinksRequestedNum = 0;
+byte ledBlinkCount = 0;
+bool ledPulseDirection = true;
+int ledPulseValue=0;
+unsigned long ledPulseTimestamp=0;
 
 
 
@@ -143,9 +152,9 @@ void f_whMainGpioInit(void) {
 	pinMode(D_HW_CONFIG_LED_ESP8266, OUTPUT);
 	digitalWrite(D_HW_CONFIG_LED_ESP8266, HIGH);
 #endif
-	pinMode(D_WH_MAIN_PIN_WAHTER_HEATER_RELAY, OUTPUT);
-	digitalWrite(D_WH_MAIN_PIN_WAHTER_HEATER_RELAY, LOW);
-	pinMode(D_WH_MAIN_PIN_POWER_BUTTON, INPUT_PULLUP);digitalWrite(D_WH_MAIN_PIN_POWER_BUTTON, HIGH); //activate pullup
+	pinMode(D_HW_CONFIG_GPIO_PIN_WAHTER_HEATER_RELAY, OUTPUT);digitalWrite(D_HW_CONFIG_GPIO_PIN_WAHTER_HEATER_RELAY, LOW);
+	pinMode(D_HW_CONFIG_GPIO_PIN_POWER_BUTTON, INPUT_PULLUP); digitalWrite(D_HW_CONFIG_GPIO_PIN_POWER_BUTTON, HIGH); //activate pullup
+	pinMode(D_HW_CONFIG_GPIO_PIN_LED_POWER_STATUS, OUTPUT);   digitalWrite(D_HW_CONFIG_GPIO_PIN_LED_POWER_STATUS, LOW);
 }
 
 void f_systemBootWifiConnected_whMain(void) {
@@ -413,12 +422,12 @@ void f_whMainMqttReconnect() {
 void f_whMainPowerControl(byte mode, int offTimeMin, bool sendStatus) {
 	timer.deleteTimer(timerIdPower);
 	timer.deleteTimer(timerIdStatus);
+	timerIdPower = timerIdStatus = D_WH_MAIN_UNALLOCATED_TIMER;
 
 	if (mode == (uint8_t)D_WH_MAIN_POWER_CONTROL_OFF)
 	{
 		DEBUG_PRINTLN("Power OFF");
-		digitalWrite(D_WH_MAIN_PIN_WAHTER_HEATER_RELAY, LOW);
-		digitalWrite(D_HW_CONFIG_LED_ESP8266, HIGH);
+		digitalWrite(D_HW_CONFIG_GPIO_PIN_WAHTER_HEATER_RELAY, LOW);
 		pwrState = mode;
 		if (sendStatus)
 			client.publish(mqttOutTopic,"OFF");
@@ -426,8 +435,7 @@ void f_whMainPowerControl(byte mode, int offTimeMin, bool sendStatus) {
 	else if (mode == (uint8_t)D_WH_MAIN_POWER_CONTROL_ON)
 	{
 		DEBUG_PRINTLN("Power ON");
-		digitalWrite(D_WH_MAIN_PIN_WAHTER_HEATER_RELAY, HIGH);
-		digitalWrite(D_HW_CONFIG_LED_ESP8266, LOW);
+		digitalWrite(D_HW_CONFIG_GPIO_PIN_WAHTER_HEATER_RELAY, HIGH);
 		pwrState = mode;
 		if (sendStatus)
 			client.publish(mqttOutTopic,"ON");
@@ -460,6 +468,47 @@ void f_whMainHandleButtons() {
 	  }
 }
 
+void f_whMainHandleLeds() {
+
+	if ((ledBlinksRequestedNum*2) > ledBlinkCount) {
+	    if (millis()-(ledPulseTimestamp) > D_WH_MAIN_LED_PULSE_PERIOD/256)
+	    {
+	      ledPulseValue = ledPulseDirection ? ledPulseValue + D_WH_MAIN_LED_PULSE_PERIOD/256 : ledPulseValue - D_WH_MAIN_LED_PULSE_PERIOD/256;
+
+	      if (ledPulseDirection && ledPulseValue > 255)
+	      {
+	        ledPulseDirection=false;
+	        ledPulseValue = 255;
+	        ledBlinkCount++;
+	      }
+	      else if (!ledPulseDirection && ledPulseValue < 0)
+	      {
+	        ledPulseDirection=true;
+	        ledPulseValue = 0;
+	        ledBlinkCount++;
+	      }
+
+	      analogWrite(D_HW_CONFIG_GPIO_PIN_LED_POWER_STATUS, ledPulseValue);
+	      ledPulseTimestamp = millis();
+	    }
+	} else if (isLedsNeedUpdate) {
+		if (pwrState == D_WH_MAIN_POWER_CONTROL_ON) {
+			digitalWrite(D_HW_CONFIG_GPIO_PIN_LED_POWER_STATUS, HIGH);
+		} else {
+			digitalWrite(D_HW_CONFIG_GPIO_PIN_LED_POWER_STATUS, LOW);
+		}
+	}
+
+	if (isLedsNeedUpdate) {
+		isLedsNeedUpdate = false;
+		if (pwrState == D_WH_MAIN_POWER_CONTROL_ON) {
+			digitalWrite(D_HW_CONFIG_LED_ESP8266, LOW);
+		} else {
+			digitalWrite(D_HW_CONFIG_LED_ESP8266, HIGH);
+		}
+	}
+}
+
 void loop() {
 	  if (!client.connected()) {
 		  f_whMainMqttReconnect();
@@ -471,4 +520,12 @@ void loop() {
 	  timer.run();
 
 	  f_whMainHandleButtons();
+
+	  if (pwrStateOld != pwrState) {
+		  pwrStateOld = pwrState;
+		  isLedsNeedUpdate = true;
+	  }
+
+	  f_whMainHandleLeds();
+
 }
