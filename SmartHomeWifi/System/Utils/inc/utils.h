@@ -13,6 +13,10 @@
 #include <stdint.h>
 #include <string.h>
 
+#define D_UTILS_MASK_SET_BIT(mask,bit)                  (mask |= (1<<bit))
+#define D_UTILS_MASK_CLR_BIT(mask,bit)                  (mask &= ~(1<<bit))
+#define D_UTILS_MASK_GET_BIT(mask,bit)                  ((mask >> bit) & 0x01)
+
 class Utils {
 public:
 	/***************************************************************************//**

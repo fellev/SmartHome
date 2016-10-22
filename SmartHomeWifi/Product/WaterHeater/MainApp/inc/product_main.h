@@ -17,7 +17,8 @@ typedef struct TAG_S_PRODUCT_CONFIG {
   byte nodeID;
   char description[10];
   byte separator1;          //separators needed to keep strings from overlapping
-  byte mqtt_server[4];
+  byte mqtt_server_ip[4];
+  uint16_t mqtt_server_port;
   char mqtt_user[32];
   char mqtt_passwd[32];
   char router_ssid[32];

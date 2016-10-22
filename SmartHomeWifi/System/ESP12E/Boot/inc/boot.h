@@ -41,5 +41,6 @@
 void f_systemBootSetup();
 extern void (*f_systemBootWifiConnected_p)(void);
 extern void (*f_SystemBootLaunchApServer_p)(String wifiInRange);
+void f_systemBootSetupAP(void);
 
 #endif /* SYSTEM_BOOT_INC_BOOT_H_ */
