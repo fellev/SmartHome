@@ -26,7 +26,6 @@
 /***************************************************************************/
 /**    DEFINITIONS                                                        **/
 /***************************************************************************/
-#define D_SYS_BOOT_WIFI_AP_SSID_DEFAULT              PRODUCT_NAME"_AP"
 
 /***************************************************************************/
 /**    MACROS                                                             **/
@@ -108,7 +107,7 @@ void f_systemBootSetup() {
 		}
 
   }
-  f_systemBootSetupAP();
+  f_systemBootSetupAP(WIFI_STA);
 }
 
 int f_systemBootTestWifi(void) {
@@ -124,10 +123,10 @@ int f_systemBootTestWifi(void) {
   return(10);
 }
 
-void f_systemBootSetupAP(void) {
+void f_systemBootSetupAP(WiFiMode_t wifiMode) {
   String st;
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
+  WiFi.mode(wifiMode);
+//  WiFi.disconnect();
   delay(100);
   int n = WiFi.scanNetworks();
   DEBUG_PRINTLN("scan done");

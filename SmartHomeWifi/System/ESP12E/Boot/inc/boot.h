@@ -17,6 +17,7 @@
 /***************************************************************************/
 /**    DEFINITIONS                                                        **/
 /***************************************************************************/
+#define D_SYS_BOOT_WIFI_AP_SSID_DEFAULT              PRODUCT_NAME"_AP"
 
 /***************************************************************************/
 /**    MACROS                                                             **/
@@ -41,6 +42,6 @@
 void f_systemBootSetup();
 extern void (*f_systemBootWifiConnected_p)(void);
 extern void (*f_SystemBootLaunchApServer_p)(String wifiInRange);
-void f_systemBootSetupAP(void);
+void f_systemBootSetupAP(WiFiMode_t wifiMode = WIFI_STA);
 
 #endif /* SYSTEM_BOOT_INC_BOOT_H_ */
