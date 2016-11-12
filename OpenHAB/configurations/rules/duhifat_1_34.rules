@@ -116,3 +116,16 @@ then
         postUpdate( Air_Conditioner_Screen_ChildsRoom,      Air_Conditioner_Screen_ChildsRoom.state)
 end
 
+rule "Water Heater On With Timer"
+    when
+        Item WaterHeater_Power received command 
+    then
+        if(receivedCommand == ON)
+        {
+	    postUpdate( WaterHeater_Timer_Post, String::format("TMR%s",WaterHeater_Set_Timer.state) )
+        }
+        else if(receivedCommand == OFF)
+        {
+            postUpdate( WaterHeater_Timer_Post, "OFF")
+        }
+end
