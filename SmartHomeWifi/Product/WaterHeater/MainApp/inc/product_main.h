@@ -23,6 +23,7 @@ typedef struct TAG_S_PRODUCT_CONFIG {
   char mqtt_passwd[32];
   char router_ssid[32];
   char router_passwd[64];
+  uint16_t timer_manual_time;
 } S_PRODUCT_CONFIG, *S_PRODUCT_CONFIG_PTR;
 
 

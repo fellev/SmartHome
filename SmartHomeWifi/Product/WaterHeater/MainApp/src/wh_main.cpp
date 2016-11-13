@@ -347,6 +347,7 @@ int f_whLoadWebPage(E_WH_MAIN_WEB_TYPE webtype, String param) {
 				inputs[10] = Utils::htmlEncodedToUtf8(inputs[10]);
 				inputs[10].toCharArray(gProductConfig_p->mqtt_passwd,
 						sizeof(gProductConfig_p->mqtt_passwd));
+				gProductConfig_p->timer_manual_time = D_WH_MAIN_POWER_ON_TIME_DEFAULT;
 
 				EEPROM_writeAnything(EEPROM_ADDR_CONFIGURATION, *gProductConfig_p);
 
@@ -420,48 +421,59 @@ void f_whMainPowerTimerStatusSend() {
 		remainTime = timer.getTimeToNextCall(timerIdPower);
 		remainTime = remainTime / (60*1000) + (((remainTime % 1000) > 500) ? 1 : 0);
 	}
-	String msg = String("TMR") + String(remainTime, DEC);
+	String msg = String(remainTime, DEC);
 	msg.toCharArray(msgBuf, sizeof(msgBuf));
 	client.publish(f_whMainMqttGetTopic(D_WH_MAIN_MQTT_TOPIC_TEMPLATE_TIMER), msgBuf);
 	DEBUG_PRINT("Timer status: "); DEBUG_PRINTLN(msgBuf);
 }
 
 void f_whMainMqttCallback(char* topic, byte* payload, unsigned int length) {
-  DEBUG_PRINT("Message arrived [");
-  DEBUG_PRINT(topic);
-  DEBUG_PRINT("] ");
-  for (unsigned int i=0;i<length;i++) {
-    DEBUG_PRINT((char)payload[i]);
-  }
-  DEBUG_PRINTLN();
-  if (length == 2 && payload[0] == 'O' && payload[1] == 'N') { /* ON */
-	  //Power ON
-	  DEBUG_PRINTLN("Power ON command received");
-	  f_whMainPowerControl((byte)D_WH_MAIN_POWER_CONTROL_ON);
-  }
-  else if (length == 3 && payload[0] == 'O' && payload[1] == 'F' && payload[2] == 'F') { /* OFF */
-	  //Power OFF
-	  DEBUG_PRINTLN("Power OFF command received");
-	  f_whMainPowerControl((byte)D_WH_MAIN_POWER_CONTROL_OFF);
-  }
-  else if (length > 3 && length < 8 && payload[0] == 'T' && payload[1] == 'M' && payload[2] == 'R') { /*TMPxxxx: xxxx Timer number of second before turn off*/
-	  char buf[5] = {0};
-	  memcpy(buf, &payload[3], length - 3);
-	  int time = atol(buf);
-	  f_whMainPowerControl((byte)D_WH_MAIN_POWER_CONTROL_ON, time);
-  }
+	DEBUG_PRINT("Message arrived [");
+	DEBUG_PRINT(topic);
+	DEBUG_PRINT("] ");
+	for (unsigned int i = 0; i < length; i++) {
+		DEBUG_PRINT((char )payload[i]);
+	}
+	DEBUG_PRINTLN();
+	if (length == 2 && payload[0] == 'O' && payload[1] == 'N') { /* ON */
+		//Power ON
+		DEBUG_PRINTLN("Power ON command received");
+		f_whMainPowerControl((byte) D_WH_MAIN_POWER_CONTROL_ON);
+	} else if (length == 3 && payload[0] == 'O' && payload[1] == 'F'
+			&& payload[2] == 'F') { /* OFF */
+		//Power OFF
+		DEBUG_PRINTLN("Power OFF command received");
+		f_whMainPowerControl((byte) D_WH_MAIN_POWER_CONTROL_OFF);
+	} else if (length > 3 && length < 8 && payload[0] == 'T'
+			&& payload[1] == 'M' && payload[2] == 'R') { /*TMRxxxx: xxxx Timer number of minutes before turn off*/
+		char buf[5] = { 0 };
+		memcpy(buf, &payload[3], length - 3);
+		int time = atol(buf);
+		f_whMainPowerControl((byte) D_WH_MAIN_POWER_CONTROL_ON, time);
+	} else if (length > 4 && length < 9 && payload[0] == 'S'
+			&& payload[1] == 'T' && payload[2] == 'M' && payload[3] == 'R') { /*STMRxxxx: xxxx Set new value for manual timer. Number of minutes before turn off*/
+		char buf[5] = { 0 };
+		memcpy(buf, &payload[4], length - 3);
+		int time = atol(buf);
+		if (gProductConfig_p->timer_manual_time != time) {
+			gProductConfig_p->timer_manual_time = time;
+			EEPROM_writeAnything(EEPROM_ADDR_CONFIGURATION, *gProductConfig_p);
+			EEPROM.commit();
+		}
+	}
 //#if defined(DEBUG)
-  else if (strncmp((const char*)payload, "cleareeprom", 11) == 0)
-  {
-      DEBUG_PRINTLN("clearing eeprom");
-      client.publish(f_whMainMqttGetTopic(D_WH_MAIN_MQTT_TOPIC_TEMPLATE_STATUS),"clearing eeprom");
-      delay(1000);
-      memset(gProductConfig_p, 0, sizeof(*gProductConfig_p));
-      EEPROM_writeAnything(EEPROM_ADDR_CONFIGURATION, *gProductConfig_p);
-      EEPROM.commit();
-      delay(1000);
-      ESP.restart();
-  }
+	else if (strncmp((const char*) payload, "cleareeprom", 11) == 0) {
+		DEBUG_PRINTLN("clearing eeprom");
+		client.publish(
+				f_whMainMqttGetTopic(D_WH_MAIN_MQTT_TOPIC_TEMPLATE_STATUS),
+				"clearing eeprom");
+		delay(1000);
+		memset(gProductConfig_p, 0, sizeof(*gProductConfig_p));
+		EEPROM_writeAnything(EEPROM_ADDR_CONFIGURATION, *gProductConfig_p);
+		EEPROM.commit();
+		delay(1000);
+		ESP.restart();
+	}
 //#endif
 }
 
@@ -557,7 +569,7 @@ void f_whMainHandleButtons() {
 	    btnLastPress[btnIndex] = now;
 	    if (btnState == D_WH_MAIN_BUTTON_PRESSED)
 	    {
-		  f_whMainPowerControl(pwrState == D_WH_MAIN_POWER_CONTROL_OFF ? D_WH_MAIN_POWER_CONTROL_ON : D_WH_MAIN_POWER_CONTROL_OFF, D_WH_MAIN_POWER_ON_TIME_DEFAULT);
+		  f_whMainPowerControl(pwrState == D_WH_MAIN_POWER_CONTROL_OFF ? D_WH_MAIN_POWER_CONTROL_ON : D_WH_MAIN_POWER_CONTROL_OFF, gProductConfig_p->timer_manual_time);
 	    }
 	    if (btnHoldEnabled) {
 	    	btnHoldEnabled = false;
