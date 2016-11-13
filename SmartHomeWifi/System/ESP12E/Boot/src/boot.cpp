@@ -75,6 +75,13 @@ void f_systemBootSetup() {
 #endif
   EEPROM.begin(512);
   delay(10);
+#if defined(D_BOOT_EEPROM_ERASE)
+	DEBUG_PRINTLN("clearing eeprom");
+	for (unsigned int i = 0; i < EEPROM_ADDR_END; ++i) {
+		EEPROM.write(i, 0);
+	}
+	EEPROM.commit();
+#endif
   DEBUG_PRINTLN();
   DEBUG_PRINTLN();
   DEBUG_PRINTLN("Startup");
