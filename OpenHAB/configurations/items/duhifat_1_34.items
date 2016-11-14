@@ -42,7 +42,7 @@ Number        WaterHeater_Time_Left         "Timer [%d]"         <timer>        
 String        WaterHeater_Set_Timer         "Set Timer"          <timer>        (Appliance)     /* {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"} */
 String        WaterHeater_Timer_Post        "Timer Post"         <timer>        (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"}
 String        WaterHeater_Power_Post        "Power Post"         <power>        (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"}
-Switch        WaterHeater_Power_Status      "Power Status [%s]"  <power_status> (Appliance)     {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H:state:default]"}
+Switch        WaterHeater_Power_Status      "Power Status [%s]"  <power_status> (Appliance)     {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/PWR:state:default]"}
 
 /* Rollershutters */
 Switch Shutter_all (Shutters)
