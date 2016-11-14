@@ -129,3 +129,14 @@ rule "Water Heater On With Timer"
             postUpdate( WaterHeater_Timer_Post, "OFF")
         }
 end
+
+rule "Water Heater Off from device"
+    when
+	Item WaterHeater_Power_Status changed
+    then
+	if(WaterHeater_Power_Status.state == OFF)
+	{
+	  sendCommand( WaterHeater_Power, "OFF")
+	  sendCommand( WaterHeater_Time_Left, 0)
+	}
+end

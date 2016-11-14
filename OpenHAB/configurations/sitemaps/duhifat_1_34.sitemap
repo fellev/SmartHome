@@ -36,7 +36,7 @@ sitemap duhifat_1_34 label="Main Menu"
     }
     
     Frame label="Shelly's Room" {
-        Text item=Air_Conditioner_Power_ChildRoom label="Air Conditioner Childs Room" icon="climate" {
+        Text item=Air_Conditioner_Power_ChildsRoom label="Air Conditioner Childs Room" icon="climate" {
                 Frame {
                     Switch      item=Air_Conditioner_Power_ChildsRoom  
                     Selection   item=Air_Conditioner_Mode_ChildsRoom   mappings=[0='Auto', 1='Cool', 2='Dry', 3='Fan', 4='Heat']

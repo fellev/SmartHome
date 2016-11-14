@@ -37,12 +37,12 @@ String        BEDROOM_Light_RGB_Color_Preset    "Led Color"              (Lights
 Switch        Z_LivingTable                     "Living Room Table"      (Lights)  {zwave="2:invert_state=true"}
 
 /* Water Heater */
-Switch        WaterHeater_Power             "Power"              <power>       (Appliance)     /* {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/PWR:state:default]"} */
-Number        WaterHeater_Time_Left         "Timer [%d]"         <timer>       (Appliance)     {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/TMR:state:default]"}
-String        WaterHeater_Set_Timer         "Set Timer"          <timer>       (Appliance)     /* {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"} */
-String        WaterHeater_Timer_Post        "Timer Post"         <timer>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"}
-String        WaterHeater_Power_Post        "Power Post"         <power>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"}
-Switch        WaterHeater_Power_Status      "Power Status [%s]"  <power_status> (Appliance)     {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/PWR:state:default]"}
+Switch        WaterHeater_Power             "Power"              <power>        (Appliance)     /* {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/PWR:state:default]"} */
+Number        WaterHeater_Time_Left         "Timer [%d]"         <timer>        (Appliance)     {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/TMR:state:default]"}
+String        WaterHeater_Set_Timer         "Set Timer"          <timer>        (Appliance)     /* {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"} */
+String        WaterHeater_Timer_Post        "Timer Post"         <timer>        (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"}
+String        WaterHeater_Power_Post        "Power Post"         <power>        (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"}
+Switch        WaterHeater_Power_Status      "Power Status [%s]"  <power_status> (Appliance)     {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H:state:default]"}
 
 /* Rollershutters */
 Switch Shutter_all (Shutters)
@@ -74,6 +74,13 @@ String Air_Conditioner_FanSpeed_ChildsRoom      "Fan Speed"         <fan>       
 String Air_Conditioner_FanAngle_ChildsRoom      "Fan Angle"         <angle>             (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/ANGLE:state:*:default]"}
 String Air_Conditioner_Temperature_ChildsRoom   "Temperature"       <temperature>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/TEMPERATURE:state:*:default]"}
 Switch Air_Conditioner_Screen_ChildsRoom        "Display"           <display>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/DISPLAY:state:*:default]"}
+
+String Air_Conditioner_Mode_Office          "Mode"              <settings>          (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/MODE:state:*:default]"}
+Switch Air_Conditioner_Power_Office         "Power"             <air_conditioner>   (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/POWER:state:*:default]"}
+String Air_Conditioner_FanSpeed_Office      "Fan Speed"         <fan>               (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/FAN:state:*:default]"}
+String Air_Conditioner_FanAngle_Office      "Fan Angle"         <angle>             (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/ANGLE:state:*:default]"}
+String Air_Conditioner_Temperature_Office   "Temperature"       <temperature>       (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/TEMPERATURE:state:*:default]"}
+Switch Air_Conditioner_Screen_Office        "Display"           <display>           (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/DISPLAY:state:*:default]"}
 
 
 Group Weather_Chart													(Weather)
