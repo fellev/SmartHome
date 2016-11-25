@@ -140,3 +140,14 @@ rule "Water Heater Off from device"
 	  sendCommand( WaterHeater_Time_Left, 0)
 	}
 end
+
+rule "Water Heater Update Timer"
+    when 
+	Item WaterHeater_Set_Timer changed
+    then
+        //logInfo("WaterHeater_Set_Timer changed", "WaterHeater_Power_Status.state=[{}]", WaterHeater_Power)
+	if (WaterHeater_Power.state == ON)
+	{
+	    sendCommand( WaterHeater_Power, "ON")
+	}
+end
