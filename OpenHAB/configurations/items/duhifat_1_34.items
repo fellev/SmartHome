@@ -50,6 +50,9 @@ Rollershutter Shutter_ChildsRoom                "Child's Room"  (ChildsRoom, Shu
 Rollershutter Shutter_BedRoom                   "Bed Room"      (BedRoom, Shutters)         {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/001:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/001:state:default]"}
 Rollershutter Shutter_Office                    "Office"        (Office, Shutters)          {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/099:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/099:state:default]"}
 Rollershutter Shutter_LivingRoom                "LivingRoom"    (LivingRoom, Shutters)      {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/003:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/003:state:default]"}
+/* In Kitchen rollershutter directions are inverted */
+Rollershutter Shutter_Kitchen                   "Kitchen"       (Kitchen, Shutters)         {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/012:command:UP:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/012:command:DOWN:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/012:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/012:state:default]"}
+
 
 
 /* Air Conditioner */

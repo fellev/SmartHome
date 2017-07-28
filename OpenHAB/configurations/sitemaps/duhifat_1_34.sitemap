@@ -13,10 +13,11 @@ sitemap duhifat_1_34 label="Main Menu"
         }
         Switch      item=Air_Conditioner_Power_Living label="AC Power"
         Selection   item=Air_Conditioner_Temperature_Living  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30'] label="AC Temperature"
-        Switch      item=Shutter_LivingRoom             label="Shutter"           icon="rollershutter"        
+        Switch      item=Shutter_LivingRoom             label="Balcony"           icon="rollershutter"
+        Switch      item=Shutter_Kitchen                label="Kitchen"           icon="rollershutter"        
         Switch      item=LIVINGROOM_Light_RGB_Preset1   label="White Leds"        icon="switch"
     }
-    
+
     Frame label="Bed Room" {
         Text item=Air_Conditioner_Power_BedRoom label="Air Conditioner Bed Room" icon="climate" {
                 Frame {
