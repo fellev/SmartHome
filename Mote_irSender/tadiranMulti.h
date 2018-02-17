@@ -116,7 +116,10 @@ class tadiranMulti
         Mode                   _mode;         // Select the mode
         FanAngle               _fan_angle;    // Fan angle
         unsigned char          _light;        // Led light
-        tadiranMulti(){};
+        unsigned char          _crc;          // CRC to send
+        tadiranMulti(){
+            _crc = 16;
+        };
         tadiranMulti(Power         power,
                      unsigned int  fan,
                      unsigned int  temperature,
@@ -131,9 +134,9 @@ class tadiranMulti
                        _fan_angle(fan_angle),
                        _light(light) {};
         
-        void send();
-        
-        
+        void send(int crc);
+        void startToSend();
+        void worker();       
 };
 
 

@@ -226,6 +226,8 @@ void loop()
     
     Radio_Task();
     
+    tmulti.worker();
+    
     //irsend.sendTadiarMulti(unsigned long long *p_sec1, byte sec1_nbits, unsigned long *p_sec2, byte sec2_nbits);
 //     tmulti._power           = tadiranMulti::ON;
 //     tmulti._fan             = 3;
@@ -271,7 +273,7 @@ void Radio_Task(void)
                 tmulti._fan_angle       = (tadiranMulti::FanAngle)msg_rcv.config.fan_angle;
                 tmulti._light           = msg_rcv.config.light;
                 
-                tmulti.send();
+                tmulti.startToSend();
             }
             else if (radio.DATA[0]=='S' && radio.DATA[1]=='T' && radio.DATA[2]=='S')
             {
@@ -314,9 +316,14 @@ boolean reportStatus()
     return radio.sendWithRetry(lastRequesterNodeID, buff, 7, RETRY_NUM, ACK_TIME);
 }
 
-void tadiranMulti::send()
+void tadiranMulti::send(int crc)
 {   
     DNG_PRINTln("Send() - started");
+    
+    if (crc >= 16)
+    {
+        return;
+    }
     
     digitalWrite(GPIO_LED_ONBOARD, HIGH);
     
@@ -338,13 +345,28 @@ void tadiranMulti::send()
     
     sec2.code.air_flow_angle = _fan_angle;
     
-    for ( int i = 0 ; i < 16 ; i++ )
-    {
-        sec2.code.crc = i;
+//    for ( int i = 0 ; i < 16 ; i++ )
+//    {
+//        sec2.code.crc = i;
+        sec2.code.crc = crc;    
         irsend.sendTadiarMulti(&sec1.raw_data, 35, &sec2.raw_data, 32);
-        wdt_reset();
+//        wdt_reset();
 //         delay(100);
-    }
+//    }
     
     digitalWrite(GPIO_LED_ONBOARD, LOW);
+}
+
+void tadiranMulti::startToSend()
+{
+    _crc = 0;
+}
+
+void tadiranMulti::worker()
+{
+    if (_crc < 16)
+    {
+        send(_crc);
+        _crc++;
+    }    
 }

@@ -31,6 +31,8 @@
 //*****************************************************************************************************************************
 // ADJUST THE SETTINGS BELOW DEPENDING ON YOUR HARDWARE/SITUATION!
 //*****************************************************************************************************************************
+#define BOARD_REV 0 // Revision 0 - Board with two relays: Relay1 - Direction, Relay2 - Power
+                    // Revision 1 - Board with two relays: Relay1 - Up, Relay2 - Down
 #define CHECK_VIRGIN_VALUE 0x55
 #define GATEWAYID   1
 #define NODEID      99
@@ -50,13 +52,13 @@
 
 #define LED_ONBOARD         9   //pin connected to onboard LED
 
-#define RELAY_DIR_PIN         6  //direction relay - selecting the direction of the shutter (Open or Close)
-#define RELAY_PWR_PIN         7  //power relay - connects the direction relay to the power line
+#define RELAY_1             6  //direction relay - selecting the direction of the shutter (Open or Close)
+#define RELAY_2             7  //power relay - connects the direction relay to the power line
 #define RELAY_PULSE_MS      250  //just enough that the opener will pick it up
 
 #define DOOR_MOVEMENT_TIME 20000 // this has to be at least as long as the max between [door opening time, door closing time]
                                  // my door opens and closes in about 12s
-#define STATUS_CHANGE_MIN  1500  // this has to be at least as long as the delay 
+#define STATUS_CHANGE_MIN  500   // this has to be at least as long as the delay 
                                  // between a opener button press and door movement start
                                  // most garage doors will start moving immediately (within half a second)
                                  
@@ -132,29 +134,62 @@ struct configuration {
 // MANUFACTURER_ID - OPTIONAL, 0xEF30 for windbond 4mbit flash (Moteino OEM)
 /////////////////////////////////////////////////////////////////////////////
 SPIFlashA flash(SPI_CS, MANUFACTURER_ID);
+void (*shutter_motor_control)(int cmd);
 
-void shutter_motor_control(int cmd)
+#if (BOARD_REV == 0)
+//RELAY_1: direction relay - selecting the direction of the shutter (Open or Close)
+//RELAY_2: power relay - connects the direction relay to the power line
+void shutter_motor_control_rev0(int cmd)
 {
   switch(cmd)
   {
     case SHUTTER_STOP:
-      digitalWrite(RELAY_PWR_PIN, LOW);
-      digitalWrite(RELAY_DIR_PIN, LOW);
+      digitalWrite(RELAY_2, LOW);
+      digitalWrite(RELAY_1, LOW);
       break;
     case SHUTTER_OPEN:
-      digitalWrite(RELAY_DIR_PIN, LOW);
-      digitalWrite(RELAY_PWR_PIN, HIGH);
+      digitalWrite(RELAY_1, LOW);
+      digitalWrite(RELAY_2, HIGH);
       break;
     case SHUTTER_CLOSE:
-      digitalWrite(RELAY_DIR_PIN, HIGH);
-      digitalWrite(RELAY_PWR_PIN, HIGH);
+      digitalWrite(RELAY_1, HIGH);
+      delay(100);
+      digitalWrite(RELAY_2, HIGH);
       break;
     default: 
-      digitalWrite(RELAY_PWR_PIN, LOW);
-      digitalWrite(RELAY_DIR_PIN, LOW);
+      digitalWrite(RELAY_2, LOW);
+      digitalWrite(RELAY_1, LOW);
       break;
   }
 }
+#elif (BOARD_REV == 1)
+//RELAY_1: Connected to motor up (open) direction
+//RELAY_2: Connected to motor down (close) direction
+void shutter_motor_control_rev1(int cmd)
+{
+  switch(cmd)
+  {
+    case SHUTTER_STOP:
+      digitalWrite(RELAY_2, LOW);
+      digitalWrite(RELAY_1, LOW);
+      break;
+    case SHUTTER_OPEN:
+      digitalWrite(RELAY_2, LOW);
+      delay(1);
+      digitalWrite(RELAY_1, HIGH); 
+      break;
+    case SHUTTER_CLOSE:
+      digitalWrite(RELAY_1, LOW);
+      delay(1);
+      digitalWrite(RELAY_2, HIGH);
+      break;
+    default: 
+      digitalWrite(RELAY_2, LOW);
+      digitalWrite(RELAY_1, LOW);
+      break;
+  }
+}
+#endif
 
 void displayMainMenu()
 {
@@ -267,6 +302,11 @@ void handleMenuInput(char c)
 
 void setup(void)
 {
+#if (BOARD_REV == 0)
+  shutter_motor_control = shutter_motor_control_rev0;
+#elif (BOARD_REV == 1)
+  shutter_motor_control = shutter_motor_control_rev1;
+#endif
   Serial.begin(SERIAL_BAUD);
   EEPROM_readAnything(0, CONFIG);
   if (CONFIG.check_virgin!=CHECK_VIRGIN_VALUE) // virgin CONFIG, expected [0x55]
@@ -279,8 +319,8 @@ void setup(void)
     CONFIG.networkID=NETWORKID;
   }
   
-  pinMode(RELAY_DIR_PIN, OUTPUT);digitalWrite(RELAY_DIR_PIN, LOW);
-  pinMode(RELAY_PWR_PIN, OUTPUT);digitalWrite(RELAY_PWR_PIN, LOW);
+  pinMode(RELAY_1, OUTPUT);digitalWrite(RELAY_1, LOW);
+  pinMode(RELAY_2, OUTPUT);digitalWrite(RELAY_2, LOW);
   pinMode(HALLSENSOR1, INPUT);digitalWrite(HALLSENSOR1, HIGH); //activate pullup
   pinMode(HALLSENSOR2, INPUT);digitalWrite(HALLSENSOR2, HIGH); //activate pullup
   pinMode(BTNO, INPUT);digitalWrite(BTNO, HIGH); //activate pullup
@@ -465,8 +505,8 @@ void loop()
       }
       else if (radio.DATA[0]=='S' && radio.DATA[1]=='T' && radio.DATA[2]=='O')
       {
-        if (millis()-(lastStatusTimestamp) > STATUS_CHANGE_MIN && (STATUS == STATUS_OPEN || STATUS == STATUS_CLOSED)){
-          newStatus = STATUS_STOPPED_BY_USER;
+        if (millis()-(lastStatusTimestamp) > STATUS_CHANGE_MIN && !(STATUS == STATUS_OPEN || STATUS == STATUS_CLOSED)){
+          newStatus = STATUS_UNKNOWN;
           bMode = NORMAL_MODE;
         }
       }      
