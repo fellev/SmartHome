@@ -7,7 +7,7 @@
 // Disable (set to 0) all the protocols you do not need/want!
 //
 
-// #define IR_RECEIVE            // Uncomment this line in case you want to use IR receive functionality
+#define IR_RECEIVE            // Uncomment this line in case you want to use IR receive functionality
 
 #define DECODE_RC5           0
 #define SEND_RC5             0
@@ -15,8 +15,8 @@
 #define DECODE_RC6           0
 #define SEND_RC6             0
 
-#define DECODE_NEC           0
-#define SEND_NEC             0
+#define DECODE_NEC           1
+#define SEND_NEC             1
 
 #define DECODE_SONY          0
 #define SEND_SONY            0
@@ -60,4 +60,4 @@
 #define DECODE_TADIRAN_MULTI 0
 #define SEND_TADIRAN_MULTI   1
 
-#endif
+#endif /* IRCONFIG_H */
