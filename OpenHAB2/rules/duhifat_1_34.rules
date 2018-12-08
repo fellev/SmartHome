@@ -1,0 +1,154 @@
+import org.openhab.core.library.types.*
+
+
+rule "Livingroom Set RGB value"
+when
+        Item Light_RGB changed
+then
+        var HSBType hsbValue = Light_RGB.state as HSBType
+        postUpdate( LIVINGROOM_Light_R, hsbValue.red.intValue )
+        postUpdate( LIVINGROOM_Light_G, hsbValue.green.intValue )
+        postUpdate( LIVINGROOM_Light_B, hsbValue.blue.intValue )
+end
+
+rule "Bedroom RGB Preset purple faint light"
+    when
+        Item LIVINGROOM_Light_RGB_Preset1 received command 
+    then
+       
+        if(receivedCommand == ON)
+        {
+            postUpdate( LIVINGROOM_Light_R, 100 )
+            postUpdate( LIVINGROOM_Light_G, 47 )
+            postUpdate( LIVINGROOM_Light_B, 20 )
+        }
+        else 
+        {
+            postUpdate( LIVINGROOM_Light_R, 0 )
+            postUpdate( LIVINGROOM_Light_G, 0 )
+            postUpdate( LIVINGROOM_Light_B, 0 )           
+        }
+end       
+
+rule "Bedroom Set RGB value"
+when
+        Item BEDROOM_Light_RGB changed
+then
+        var HSBType hsbValue = BEDROOM_Light_RGB.state as HSBType
+        postUpdate( BEDROOM_Light_R, hsbValue.red.intValue )
+        postUpdate( BEDROOM_Light_G, hsbValue.green.intValue )
+        postUpdate( BEDROOM_Light_B, hsbValue.blue.intValue )
+end
+
+rule "Bedroom RGB Preset"
+    when
+        Item BEDROOM_Light_RGB_Preset received command 
+    then
+       
+        if(receivedCommand == ON)
+        {
+            if (BEDROOM_Light_RGB_Color_Preset.state == "0") // White
+            {
+                postUpdate( BEDROOM_Light_R, 100 )
+                postUpdate( BEDROOM_Light_G, 47 )
+                postUpdate( BEDROOM_Light_B, 20 )
+            }
+            else if (BEDROOM_Light_RGB_Color_Preset.state == "1") // Purple lite
+            {
+                postUpdate( BEDROOM_Light_R, 1 )
+                postUpdate( BEDROOM_Light_G, 0 )
+                postUpdate( BEDROOM_Light_B, 1 )                
+            }
+            else if (BEDROOM_Light_RGB_Color_Preset.state == "2") // Pink
+            {
+                postUpdate( BEDROOM_Light_R, 2 )
+                postUpdate( BEDROOM_Light_G, 1 )
+                postUpdate( BEDROOM_Light_B, 1 )                
+            }            
+        }
+        else 
+        {
+            postUpdate( BEDROOM_Light_R, 0 )
+            postUpdate( BEDROOM_Light_G, 0 )
+            postUpdate( BEDROOM_Light_B, 0 )            
+        }
+end
+
+rule "Bedroom RGB Preset Chnage"
+    when
+            Item BEDROOM_Light_RGB_Color_Preset changed
+    then
+            sendCommand(BEDROOM_Light_RGB_Preset, "ON");
+end
+
+rule "LivingRoom AC"
+when
+        Item Air_Conditioner_Power_Living changed or 
+        Item Air_Conditioner_Mode_Living changed or
+        Item Air_Conditioner_FanSpeed_Living changed or
+        Item Air_Conditioner_FanAngle_Living changed or
+        Item Air_Conditioner_Temperature_Living changed or
+        Item Air_Conditioner_Screen_Living changed
+then
+//        logInfo("Air Conditioner LivingRoom",receivedCommand + "" +Air_Conditioner_Mode_Living )
+        postUpdate( Air_Conditioner_Power_Living,       Air_Conditioner_Power_Living.state)
+        postUpdate( Air_Conditioner_Mode_Living,        Air_Conditioner_Mode_Living.state)
+        postUpdate( Air_Conditioner_FanSpeed_Living,    Air_Conditioner_FanSpeed_Living.state)
+        postUpdate( Air_Conditioner_FanAngle_Living,    Air_Conditioner_FanAngle_Living.state)
+        postUpdate( Air_Conditioner_Temperature_Living, Air_Conditioner_Temperature_Living.state)
+        postUpdate( Air_Conditioner_Screen_Living,      Air_Conditioner_Screen_Living.state)
+end
+
+rule "ChildsRoom AC"
+when
+        Item Air_Conditioner_Power_ChildsRoom changed or 
+        Item Air_Conditioner_Mode_ChildsRoom changed or
+        Item Air_Conditioner_FanSpeed_ChildsRoom changed or
+        Item Air_Conditioner_FanAngle_ChildsRoom changed or
+        Item Air_Conditioner_Temperature_ChildsRoom changed or
+        Item Air_Conditioner_Screen_ChildsRoom changed
+then
+//        logInfo("Air Conditioner ChildsRoom",receivedCommand + "" +Air_Conditioner_Mode_ChildsRoom )
+        postUpdate( Air_Conditioner_Power_ChildsRoom,       Air_Conditioner_Power_ChildsRoom.state)
+        postUpdate( Air_Conditioner_Mode_ChildsRoom,        Air_Conditioner_Mode_ChildsRoom.state)
+        postUpdate( Air_Conditioner_FanSpeed_ChildsRoom,    Air_Conditioner_FanSpeed_ChildsRoom.state)
+        postUpdate( Air_Conditioner_FanAngle_ChildsRoom,    Air_Conditioner_FanAngle_ChildsRoom.state)
+        postUpdate( Air_Conditioner_Temperature_ChildsRoom, Air_Conditioner_Temperature_ChildsRoom.state)
+        postUpdate( Air_Conditioner_Screen_ChildsRoom,      Air_Conditioner_Screen_ChildsRoom.state)
+end
+
+rule "Water Heater On With Timer"
+    when
+        Item WaterHeater_Power received command 
+    then
+        if(receivedCommand == ON)
+        {
+	    postUpdate( WaterHeater_Timer_Post, String::format("TMR%s",WaterHeater_Set_Timer.state) )
+        }
+        else if(receivedCommand == OFF)
+        {
+            postUpdate( WaterHeater_Timer_Post, "OFF")
+        }
+end
+
+rule "Water Heater Off from device"
+    when
+	Item WaterHeater_Power_Status changed
+    then
+	if(WaterHeater_Power_Status.state == OFF)
+	{
+	  sendCommand( WaterHeater_Power, "OFF")
+	  sendCommand( WaterHeater_Time_Left, 0)
+	}
+end
+
+rule "Water Heater Update Timer"
+    when 
+	Item WaterHeater_Set_Timer changed
+    then
+        //logInfo("WaterHeater_Set_Timer changed", "WaterHeater_Power_Status.state=[{}]", WaterHeater_Power)
+	if (WaterHeater_Power.state == ON)
+	{
+	    sendCommand( WaterHeater_Power, "ON")
+	}
+end
