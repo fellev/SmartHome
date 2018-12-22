@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+//#define DEBUG_EN
+
 #define IR_RECEIVE            // Uncomment this line in case you want to use IR receive functionality
 
 #define DECODE_RC5           0

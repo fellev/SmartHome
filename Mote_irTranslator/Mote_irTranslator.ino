@@ -2,6 +2,7 @@
 #include <IRremoteInt.h>
 #include <IRremote.h>
 #include "Mote_irTranslator.h"
+#include "config.h"
 
 
 #ifdef DEBUG_EN
@@ -30,14 +31,14 @@ s_ir_translation G_irTranslation[] =
     { D_STB_YES_POWER, D_STB_VISIONNET_POWER, },
     { D_STB_YES_VOLUME_UP, D_STB_VISIONNET_VOLUME_UP, },
     { D_STB_YES_VOLUME_DOWN, D_STB_VISIONNET_VOLUME_DOWN, },
-    { D_STB_YES_CHANNEL_UP, D_STB_VISIONNET_PAGE_UP, },
-    { D_STB_YES_CHANNEL_DOWN, D_STB_VISIONNET_PAGE_DOWN, },
+    { D_STB_YES_CHANNEL_UP, D_STB_VISIONNET_UP /* D_STB_VISIONNET_PAGE_UP */, },
+    { D_STB_YES_CHANNEL_DOWN, D_STB_VISIONNET_DOWN /*D_STB_VISIONNET_PAGE_DOWN*/, },
     { D_STB_YES_OK, D_STB_VISIONNET_OK, },
     { D_STB_YES_UP, D_STB_VISIONNET_UP, },
     { D_STB_YES_DOWN, D_STB_VISIONNET_DOWN, },
     { D_STB_YES_LEFT, D_STB_VISIONNET_LEFT, },
     { D_STB_YES_RIGHT, D_STB_VISIONNET_RIGHT, },
-    { D_STB_YES_GUIDE, D_STB_VISIONNET_EPG, },
+    { D_STB_YES_GUIDE, D_STB_VISIONNET_MENU /*D_STB_VISIONNET_EPG*/, },
     { D_STB_YES_MOSAIC, D_STB_VISIONNET_EXIT, },
     { D_STB_YES_SYNO, D_STB_VISIONNET_INFO, },
     { D_STB_YES_HELP, D_STB_VISIONNET_MENU, },
@@ -64,6 +65,7 @@ s_ir_translation G_irTranslation[] =
 void setup() {
   Serial.begin(115200);
   irrecv.enableIRIn(); // Start the receiver
+  DNG_PRINTln("Start");
 }
 
 //On success return 0

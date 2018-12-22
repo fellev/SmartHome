@@ -1,0 +1,9 @@
+/Product/
+/Release/
+/System/
+/core/
+/sources.mk
+/subdir.mk
+/libraries/
+/makefile
+/objects.mk

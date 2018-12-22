@@ -16,9 +16,11 @@
 /**    DEFINITIONS                                                        **/
 /***************************************************************************/
 /* GPIO */
-#define D_HW_CONFIG_GPIO_PIN_WAHTER_HEATER_RELAY                       5
-#define D_HW_CONFIG_GPIO_PIN_POWER_BUTTON                              4
-#define D_HW_CONFIG_GPIO_PIN_LED_POWER_STATUS                          14
+//#define D_HW_CONFIG_GPIO_PIN_WAHTER_HEATER_RELAY                       5
+//#define D_HW_CONFIG_GPIO_PIN_POWER_BUTTON                              4
+//#define D_HW_CONFIG_GPIO_PIN_LED_POWER_STATUS                          14
+
+#define D_HW_CONFIG_MAX_PWR_SW_NUM									   5
 
 /***************************************************************************/
 /**    MACROS                                                             **/
