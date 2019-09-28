@@ -3,9 +3,9 @@ import org.openhab.core.library.types.*
 
 rule "Livingroom Set RGB value"
 when
-        Item Light_RGB changed
+        Item LIVINGROOM_Light_RGB changed
 then
-        var HSBType hsbValue = Light_RGB.state as HSBType
+        var HSBType hsbValue = LIVINGROOM_Light_RGB.state as HSBType
         postUpdate( LIVINGROOM_Light_R, hsbValue.red.intValue )
         postUpdate( LIVINGROOM_Light_G, hsbValue.green.intValue )
         postUpdate( LIVINGROOM_Light_B, hsbValue.blue.intValue )
@@ -151,4 +151,54 @@ rule "Water Heater Update Timer"
 	{
 	    sendCommand( WaterHeater_Power, "ON")
 	}
+end
+
+rule "Mijia & Aqara Wireless Switch"
+when
+    Channel "mihome:sensor_switch:158d000361568f:button" triggered
+then
+    var actionName = receivedEvent.getEvent()
+    switch(actionName) {
+        case "SHORT_PRESSED": {
+            if (LIVINGROOM_Light_RGB_Preset1.state == OFF)
+            {
+                sendCommand( LIVINGROOM_Light_RGB_Preset1, "ON")
+            }
+            else
+            {
+                sendCommand( LIVINGROOM_Light_RGB_Preset1, "OFF")
+            }
+        }
+        case "DOUBLE_PRESSED": {
+            //<ACTION>
+        }
+        case "LONG_PRESSED": {
+                sendCommand( LIVINGROOM_Light_RGB_Preset1, "OFF")
+                createTimer(now.plusSeconds(4), [
+                    sendCommand( BEDROOM_Light_RGB_Preset, "OFF")
+                    createTimer(now.plusSeconds(2), [
+                        postUpdate( Air_Conditioner_Power_Living,       OFF)
+                        postUpdate( Air_Conditioner_Mode_Living,        Air_Conditioner_Mode_Living.state)
+                        postUpdate( Air_Conditioner_FanSpeed_Living,    Air_Conditioner_FanSpeed_Living.state)
+                        postUpdate( Air_Conditioner_FanAngle_Living,    Air_Conditioner_FanAngle_Living.state)
+                        postUpdate( Air_Conditioner_Temperature_Living, Air_Conditioner_Temperature_Living.state)
+                        postUpdate( Air_Conditioner_Screen_Living,      Air_Conditioner_Screen_Living.state)
+                        createTimer(now.plusSeconds(2), [
+                            postUpdate( Air_Conditioner_Power_ChildsRoom,       OFF)
+                            postUpdate( Air_Conditioner_Mode_ChildsRoom,        Air_Conditioner_Mode_ChildsRoom.state)
+                            postUpdate( Air_Conditioner_FanSpeed_ChildsRoom,    Air_Conditioner_FanSpeed_ChildsRoom.state)
+                            postUpdate( Air_Conditioner_FanAngle_ChildsRoom,    Air_Conditioner_FanAngle_ChildsRoom.state)
+                            postUpdate( Air_Conditioner_Temperature_ChildsRoom, Air_Conditioner_Temperature_ChildsRoom.state)
+                            postUpdate( Air_Conditioner_Screen_ChildsRoom,      Air_Conditioner_Screen_ChildsRoom.state)
+                            createTimer(now.plusSeconds(1), [
+                                sendCommand( WaterHeater_Power, "OFF")
+                            ])
+                        ])
+                    ])
+                ])
+        }
+        case "LONG_RELEASED": {
+            //<ACTION>
+        }
+    }
 end
