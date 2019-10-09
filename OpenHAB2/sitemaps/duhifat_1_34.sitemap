@@ -36,7 +36,7 @@ sitemap duhifat_1_34 label="Main Menu"
         Switch      item=BEDROOM_Light_RGB_Preset         label="Leds"                                      icon="light"
     }
     
-    Frame label="Kid's Room" {
+    Frame label="Kids' Room" {
         Text item=Air_Conditioner_Power_KidsRoom label="Air Conditioner Kids' Room" icon="climate" {
                 Frame {
                     Switch      item=Air_Conditioner_Power_KidsRoom  

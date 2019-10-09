@@ -99,22 +99,22 @@ then
         postUpdate( Air_Conditioner_Screen_Living,      Air_Conditioner_Screen_Living.state)
 end
 
-rule "ChildsRoom AC"
+rule "KidsRoom AC"
 when
-        Item Air_Conditioner_Power_ChildsRoom changed or 
-        Item Air_Conditioner_Mode_ChildsRoom changed or
-        Item Air_Conditioner_FanSpeed_ChildsRoom changed or
-        Item Air_Conditioner_FanAngle_ChildsRoom changed or
-        Item Air_Conditioner_Temperature_ChildsRoom changed or
-        Item Air_Conditioner_Screen_ChildsRoom changed
+        Item Air_Conditioner_Power_KidsRoom changed or 
+        Item Air_Conditioner_Mode_KidsRoom changed or
+        Item Air_Conditioner_FanSpeed_KidsRoom changed or
+        Item Air_Conditioner_FanAngle_KidsRoom changed or
+        Item Air_Conditioner_Temperature_KidsRoom changed or
+        Item Air_Conditioner_Screen_KidsRoom changed
 then
-//        logInfo("Air Conditioner ChildsRoom",receivedCommand + "" +Air_Conditioner_Mode_ChildsRoom )
-        postUpdate( Air_Conditioner_Power_ChildsRoom,       Air_Conditioner_Power_ChildsRoom.state)
-        postUpdate( Air_Conditioner_Mode_ChildsRoom,        Air_Conditioner_Mode_ChildsRoom.state)
-        postUpdate( Air_Conditioner_FanSpeed_ChildsRoom,    Air_Conditioner_FanSpeed_ChildsRoom.state)
-        postUpdate( Air_Conditioner_FanAngle_ChildsRoom,    Air_Conditioner_FanAngle_ChildsRoom.state)
-        postUpdate( Air_Conditioner_Temperature_ChildsRoom, Air_Conditioner_Temperature_ChildsRoom.state)
-        postUpdate( Air_Conditioner_Screen_ChildsRoom,      Air_Conditioner_Screen_ChildsRoom.state)
+//        logInfo("Air Conditioner KidsRoom",receivedCommand + "" +Air_Conditioner_Mode_KidsRoom )
+        postUpdate( Air_Conditioner_Power_KidsRoom,       Air_Conditioner_Power_KidsRoom.state)
+        postUpdate( Air_Conditioner_Mode_KidsRoom,        Air_Conditioner_Mode_KidsRoom.state)
+        postUpdate( Air_Conditioner_FanSpeed_KidsRoom,    Air_Conditioner_FanSpeed_KidsRoom.state)
+        postUpdate( Air_Conditioner_FanAngle_KidsRoom,    Air_Conditioner_FanAngle_KidsRoom.state)
+        postUpdate( Air_Conditioner_Temperature_KidsRoom, Air_Conditioner_Temperature_KidsRoom.state)
+        postUpdate( Air_Conditioner_Screen_KidsRoom,      Air_Conditioner_Screen_KidsRoom.state)
 end
 
 rule "Water Heater On With Timer"
@@ -184,12 +184,12 @@ then
                         postUpdate( Air_Conditioner_Temperature_Living, Air_Conditioner_Temperature_Living.state)
                         postUpdate( Air_Conditioner_Screen_Living,      Air_Conditioner_Screen_Living.state)
                         createTimer(now.plusSeconds(2), [
-                            postUpdate( Air_Conditioner_Power_ChildsRoom,       OFF)
-                            postUpdate( Air_Conditioner_Mode_ChildsRoom,        Air_Conditioner_Mode_ChildsRoom.state)
-                            postUpdate( Air_Conditioner_FanSpeed_ChildsRoom,    Air_Conditioner_FanSpeed_ChildsRoom.state)
-                            postUpdate( Air_Conditioner_FanAngle_ChildsRoom,    Air_Conditioner_FanAngle_ChildsRoom.state)
-                            postUpdate( Air_Conditioner_Temperature_ChildsRoom, Air_Conditioner_Temperature_ChildsRoom.state)
-                            postUpdate( Air_Conditioner_Screen_ChildsRoom,      Air_Conditioner_Screen_ChildsRoom.state)
+                            postUpdate( Air_Conditioner_Power_KidsRoom,       OFF)
+                            postUpdate( Air_Conditioner_Mode_KidsRoom,        Air_Conditioner_Mode_KidsRoom.state)
+                            postUpdate( Air_Conditioner_FanSpeed_KidsRoom,    Air_Conditioner_FanSpeed_KidsRoom.state)
+                            postUpdate( Air_Conditioner_FanAngle_KidsRoom,    Air_Conditioner_FanAngle_KidsRoom.state)
+                            postUpdate( Air_Conditioner_Temperature_KidsRoom, Air_Conditioner_Temperature_KidsRoom.state)
+                            postUpdate( Air_Conditioner_Screen_KidsRoom,      Air_Conditioner_Screen_KidsRoom.state)
                             createTimer(now.plusSeconds(1), [
                                 sendCommand( WaterHeater_Power, "OFF")
                             ])
