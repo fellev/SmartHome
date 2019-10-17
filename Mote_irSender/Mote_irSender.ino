@@ -26,9 +26,9 @@
 /*****************************************************************************
  * Defines
  * **************************************************************************/
-#define DEBUG_EN
+//#define DEBUG_EN
 
-#define DEVICE_TYPE_NAME        "RGB LED CONTROLLER"
+#define DEVICE_TYPE_NAME        "IR Sender"
 
 #define CHECK_VIRGIN_VALUE      0x55
 #define GATEWAYID               1
