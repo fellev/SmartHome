@@ -117,6 +117,24 @@ then
         postUpdate( Air_Conditioner_Screen_KidsRoom,      Air_Conditioner_Screen_KidsRoom.state)
 end
 
+rule "BedRoom AC"
+when
+        Item Air_Conditioner_Power_BedRoom changed or 
+        Item Air_Conditioner_Mode_BedRoom changed or
+        Item Air_Conditioner_FanSpeed_BedRoom changed or
+        Item Air_Conditioner_FanAngle_BedRoom changed or
+        Item Air_Conditioner_Temperature_BedRoom changed or
+        Item Air_Conditioner_Screen_BedRoom changed
+then
+//        logInfo("Air Conditioner BedRoom",receivedCommand + "" +Air_Conditioner_Mode_BedRoom )
+        postUpdate( Air_Conditioner_Power_BedRoom,       Air_Conditioner_Power_BedRoom.state)
+        postUpdate( Air_Conditioner_Mode_BedRoom,        Air_Conditioner_Mode_BedRoom.state)
+        postUpdate( Air_Conditioner_FanSpeed_BedRoom,    Air_Conditioner_FanSpeed_BedRoom.state)
+        postUpdate( Air_Conditioner_FanAngle_BedRoom,    Air_Conditioner_FanAngle_BedRoom.state)
+        postUpdate( Air_Conditioner_Temperature_BedRoom, Air_Conditioner_Temperature_BedRoom.state)
+        postUpdate( Air_Conditioner_Screen_BedRoom,      Air_Conditioner_Screen_BedRoom.state)
+end
+
 rule "Water Heater On With Timer"
     when
         Item WaterHeater_Power received command 
