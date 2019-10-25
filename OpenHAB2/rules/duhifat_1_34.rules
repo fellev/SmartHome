@@ -1,4 +1,59 @@
-import org.openhab.core.library.types.*
+
+val Functions.Function0<void> f_turnOffAll = [|
+        sendCommand( LIVINGROOM_Light_RGB_Preset1, "OFF")
+        createTimer(now.plusSeconds(4), [
+            sendCommand( BEDROOM_Light_RGB_Preset, "OFF")
+            createTimer(now.plusSeconds(2), [
+                if (Air_Conditioner_PowerMaster_Living.state == ON)
+                {
+                    sendCommand(Air_Conditioner_PowerMaster_Living, "OFF")
+                }
+                else
+                {
+                    postUpdate( Air_Conditioner_Power_Living,       OFF)
+                    postUpdate( Air_Conditioner_Mode_Living,        Air_Conditioner_Mode_Living.state)
+                    postUpdate( Air_Conditioner_FanSpeed_Living,    Air_Conditioner_FanSpeed_Living.state)
+                    postUpdate( Air_Conditioner_FanAngle_Living,    Air_Conditioner_FanAngle_Living.state)
+                    postUpdate( Air_Conditioner_Temperature_Living, Air_Conditioner_Temperature_Living.state)
+                    postUpdate( Air_Conditioner_Screen_Living,      Air_Conditioner_Screen_Living.state)
+                }
+                createTimer(now.plusSeconds(2), [
+                    if (Air_Conditioner_PowerMaster_KidsRoom.state == ON)
+                    {
+                        sendCommand(Air_Conditioner_PowerMaster_KidsRoom, "OFF")
+                    }
+                    else
+                    {
+                        postUpdate( Air_Conditioner_Power_KidsRoom,       OFF)
+                        postUpdate( Air_Conditioner_Mode_KidsRoom,        Air_Conditioner_Mode_KidsRoom.state)
+                        postUpdate( Air_Conditioner_FanSpeed_KidsRoom,    Air_Conditioner_FanSpeed_KidsRoom.state)
+                        postUpdate( Air_Conditioner_FanAngle_KidsRoom,    Air_Conditioner_FanAngle_KidsRoom.state)
+                        postUpdate( Air_Conditioner_Temperature_KidsRoom, Air_Conditioner_Temperature_KidsRoom.state)
+                        postUpdate( Air_Conditioner_Screen_KidsRoom,      Air_Conditioner_Screen_KidsRoom.state)
+                    }
+                    createTimer(now.plusSeconds(2), [
+                        if (Air_Conditioner_PowerMaster_BedRoom.state == ON)
+                        {
+                            sendCommand(Air_Conditioner_PowerMaster_BedRoom, "OFF")
+                        }
+                        else
+                        {
+                            postUpdate( Air_Conditioner_Power_BedRoom,       OFF)
+                            postUpdate( Air_Conditioner_Mode_BedRoom,        Air_Conditioner_Mode_BedRoom.state)
+                            postUpdate( Air_Conditioner_FanSpeed_BedRoom,    Air_Conditioner_FanSpeed_BedRoom.state)
+                            postUpdate( Air_Conditioner_FanAngle_BedRoom,    Air_Conditioner_FanAngle_BedRoom.state)
+                            postUpdate( Air_Conditioner_Temperature_BedRoom, Air_Conditioner_Temperature_BedRoom.state)
+                            postUpdate( Air_Conditioner_Screen_BedRoom,      Air_Conditioner_Screen_BedRoom.state)
+                        }                         
+                        createTimer(now.plusSeconds(1), [
+                            sendCommand( WaterHeater_Power, "OFF")
+                        ])
+                    ])
+                ])
+            ])
+        ])        
+        null
+]
 
 
 rule "Livingroom Set RGB value"
@@ -135,6 +190,23 @@ then
         postUpdate( Air_Conditioner_Screen_BedRoom,      Air_Conditioner_Screen_BedRoom.state)
 end
 
+rule "Office AC"
+when
+        Item Air_Conditioner_Power_Office changed or 
+        Item Air_Conditioner_Mode_Office changed or
+        Item Air_Conditioner_FanSpeed_Office changed or
+        Item Air_Conditioner_FanAngle_Office changed or
+        Item Air_Conditioner_Temperature_Office changed or
+        Item Air_Conditioner_Screen_Office changed
+then
+        postUpdate( Air_Conditioner_Power_Office,       Air_Conditioner_Power_Office.state)
+        postUpdate( Air_Conditioner_Mode_Office,        Air_Conditioner_Mode_Office.state)
+        postUpdate( Air_Conditioner_FanSpeed_Office,    Air_Conditioner_FanSpeed_Office.state)
+        postUpdate( Air_Conditioner_FanAngle_Office,    Air_Conditioner_FanAngle_Office.state)
+        postUpdate( Air_Conditioner_Temperature_Office, Air_Conditioner_Temperature_Office.state)
+        postUpdate( Air_Conditioner_Screen_Office,      Air_Conditioner_Screen_Office.state)
+end
+
 rule "Water Heater On With Timer"
     when
         Item WaterHeater_Power received command 
@@ -191,32 +263,171 @@ then
             //<ACTION>
         }
         case "LONG_PRESSED": {
-                sendCommand( LIVINGROOM_Light_RGB_Preset1, "OFF")
-                createTimer(now.plusSeconds(4), [
-                    sendCommand( BEDROOM_Light_RGB_Preset, "OFF")
-                    createTimer(now.plusSeconds(2), [
-                        postUpdate( Air_Conditioner_Power_Living,       OFF)
-                        postUpdate( Air_Conditioner_Mode_Living,        Air_Conditioner_Mode_Living.state)
-                        postUpdate( Air_Conditioner_FanSpeed_Living,    Air_Conditioner_FanSpeed_Living.state)
-                        postUpdate( Air_Conditioner_FanAngle_Living,    Air_Conditioner_FanAngle_Living.state)
-                        postUpdate( Air_Conditioner_Temperature_Living, Air_Conditioner_Temperature_Living.state)
-                        postUpdate( Air_Conditioner_Screen_Living,      Air_Conditioner_Screen_Living.state)
-                        createTimer(now.plusSeconds(2), [
-                            postUpdate( Air_Conditioner_Power_KidsRoom,       OFF)
-                            postUpdate( Air_Conditioner_Mode_KidsRoom,        Air_Conditioner_Mode_KidsRoom.state)
-                            postUpdate( Air_Conditioner_FanSpeed_KidsRoom,    Air_Conditioner_FanSpeed_KidsRoom.state)
-                            postUpdate( Air_Conditioner_FanAngle_KidsRoom,    Air_Conditioner_FanAngle_KidsRoom.state)
-                            postUpdate( Air_Conditioner_Temperature_KidsRoom, Air_Conditioner_Temperature_KidsRoom.state)
-                            postUpdate( Air_Conditioner_Screen_KidsRoom,      Air_Conditioner_Screen_KidsRoom.state)
-                            createTimer(now.plusSeconds(1), [
-                                sendCommand( WaterHeater_Power, "OFF")
-                            ])
-                        ])
-                    ])
-                ])
+            f_turnOffAll.apply()
         }
         case "LONG_RELEASED": {
             //<ACTION>
         }
     }
+end
+
+rule "Office AC PWR control"
+    when
+            Item HT_Temperature_Office changed or
+            Item Air_Conditioner_MinTemp_Office changed or
+            Item Air_Conditioner_MaxTemp_Office changed or 
+            Item Air_Conditioner_PowerMaster_Office changed or
+            Item Air_Conditioner_PowerMode_Office changed
+    then
+            if ((Air_Conditioner_PowerMode_Office.state == "1") && (Air_Conditioner_PowerMaster_Office.state == ON)) //Auto
+            {
+                val temp = HT_Temperature_Office.state as DecimalType
+                val minTemp = Air_Conditioner_MinTemp_Office.state as DecimalType
+                val maxTemp = Air_Conditioner_MaxTemp_Office.state as DecimalType
+                if (temp <= minTemp)
+                {
+                    sendCommand(Air_Conditioner_Power_Office, "OFF")
+                }
+                else if (temp >= maxTemp)
+                {
+                    sendCommand(Air_Conditioner_Power_Office, "ON")
+                }
+            }
+            else
+            {
+                if (Air_Conditioner_PowerMaster_Office.state == ON)
+                {
+                    sendCommand(Air_Conditioner_Power_Office, "ON")
+                }
+                else if (Air_Conditioner_PowerMaster_Office.state == OFF)
+                {
+                    if (Air_Conditioner_Power_Office.state == ON)
+                    {
+                        sendCommand(Air_Conditioner_Power_Office, "OFF")
+                    }
+                }
+            }
+end
+
+rule "Living Room AC PWR control"
+    when
+            Item TH_Sensor3 changed or
+            Item Air_Conditioner_MinTemp_Living changed or
+            Item Air_Conditioner_MaxTemp_Living changed or 
+            Item Air_Conditioner_PowerMaster_Living changed or
+            Item Air_Conditioner_PowerMode_Living changed
+    then
+            if ((Air_Conditioner_PowerMode_Living.state == "1") && (Air_Conditioner_PowerMaster_Living.state == ON)) //Auto
+            {
+                //val temp = TH_Sensor3.state as Number
+                val temp = (TH_Sensor3.state as QuantityType<Number>).doubleValue
+                val minTemp = Air_Conditioner_MinTemp_Living.state as DecimalType
+                val maxTemp = Air_Conditioner_MaxTemp_Living.state as DecimalType
+                if (temp <= minTemp)
+                {
+                    sendCommand(Air_Conditioner_Power_Living, "OFF")
+                }
+                else if (temp >= maxTemp)
+                {
+                    sendCommand(Air_Conditioner_Power_Living, "ON")
+                }
+            }
+            else
+            {
+                if (Air_Conditioner_PowerMaster_Living.state == ON)
+                {
+                    sendCommand(Air_Conditioner_Power_Living, "ON")
+                }
+                else if (Air_Conditioner_PowerMaster_Living.state == OFF)
+                {
+                    if (Air_Conditioner_Power_Living.state == ON)
+                    {
+                        sendCommand(Air_Conditioner_Power_Living, "OFF")
+                    }
+                }
+            }
+end
+
+rule "BedRoom AC PWR control"
+    when
+            Item XIAOMI_TEMPERATURE_SENSOR_TEMPERATURE changed or
+            Item Air_Conditioner_MinTemp_BedRoom changed or
+            Item Air_Conditioner_MaxTemp_BedRoom changed or 
+            Item Air_Conditioner_PowerMaster_BedRoom changed or
+            Item Air_Conditioner_PowerMode_BedRoom changed
+    then
+            if ((Air_Conditioner_PowerMode_BedRoom.state == "1") && (Air_Conditioner_PowerMaster_BedRoom.state == ON)) //Auto
+            {
+                val temp = (XIAOMI_TEMPERATURE_SENSOR_TEMPERATURE.state as QuantityType<Number>).doubleValue
+                val minTemp = Air_Conditioner_MinTemp_BedRoom.state as DecimalType
+                val maxTemp = Air_Conditioner_MaxTemp_BedRoom.state as DecimalType
+                if (temp <= minTemp)
+                {
+                    sendCommand(Air_Conditioner_Power_BedRoom, "OFF")
+                }
+                else if (temp >= maxTemp)
+                {
+                    sendCommand(Air_Conditioner_Power_BedRoom, "ON")
+                }
+            }
+            else
+            {
+                if (Air_Conditioner_PowerMaster_BedRoom.state == ON)
+                {
+                    sendCommand(Air_Conditioner_Power_BedRoom, "ON")
+                }
+                else if (Air_Conditioner_PowerMaster_BedRoom.state == OFF)
+                {
+                    if (Air_Conditioner_Power_BedRoom.state == ON)
+                    {
+                        sendCommand(Air_Conditioner_Power_BedRoom, "OFF")
+                    }
+                }
+            }
+end
+
+rule "KidsRoom AC PWR control"
+    when
+            Item TH_Sensor4 changed or
+            Item Air_Conditioner_MinTemp_KidsRoom changed or
+            Item Air_Conditioner_MaxTemp_KidsRoom changed or 
+            Item Air_Conditioner_PowerMaster_KidsRoom changed or
+            Item Air_Conditioner_PowerMode_KidsRoom changed
+    then
+            if ((Air_Conditioner_PowerMode_KidsRoom.state == "1") && (Air_Conditioner_PowerMaster_KidsRoom.state == ON)) //Auto
+            {
+                val temp = (TH_Sensor4.state as QuantityType<Number>).doubleValue
+                val minTemp = Air_Conditioner_MinTemp_KidsRoom.state as DecimalType
+                val maxTemp = Air_Conditioner_MaxTemp_KidsRoom.state as DecimalType
+                if (temp <= minTemp)
+                {
+                    sendCommand(Air_Conditioner_Power_KidsRoom, "OFF")
+                }
+                else if (temp >= maxTemp)
+                {
+                    sendCommand(Air_Conditioner_Power_KidsRoom, "ON")
+                }
+            }
+            else
+            {
+                if (Air_Conditioner_PowerMaster_KidsRoom.state == ON)
+                {
+                    sendCommand(Air_Conditioner_Power_KidsRoom, "ON")
+                }
+                else if (Air_Conditioner_PowerMaster_KidsRoom.state == OFF)
+                {
+                    if (Air_Conditioner_Power_KidsRoom.state == ON)
+                    {
+                        sendCommand(Air_Conditioner_Power_KidsRoom, "OFF")
+                    }
+                }
+            }
+end
+
+rule "Turn Off All"
+    when 
+            Item Turn_Off_All changed
+    then
+            f_turnOffAll.apply()
+            postUpdate( Turn_Off_All, OFF)
 end

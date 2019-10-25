@@ -33,11 +33,11 @@ Switch        Z_LivingTable                     "Living Room Table"      (Lights
 
 /* Water Heater */
 Switch        WaterHeater_Power             "Water Heater"       <switch>       (Appliance)     ["Switchable"]
-Number        WaterHeater_Time_Left         "Timer [%d]"         <time>        (Appliance)     {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/TMR:state:default]"}
-Number        WaterHeater_Set_Timer         "Set Timer"          <time>        (Appliance)     /* {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"} */
+Number        WaterHeater_Time_Left         "Timer [%d]"         <time>         (Appliance)     {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/TMR:state:default]"}
+Number        WaterHeater_Set_Timer         "Set Timer"          <time>         (Appliance)     /* {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"} */
 String        WaterHeater_Timer_Post        "Timer Post"         <timer>        (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"}
 String        WaterHeater_Power_Post        "Power Post"         <switch>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"}
-Switch        WaterHeater_Power_Status      "Power Status [%s]"  <info> (Appliance)     {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/PWR:state:default]"}
+Switch        WaterHeater_Power_Status      "Power Status [%s]"  <status>       (Appliance)     {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/PWR:state:default]"}
 
 /* Rollershutters */
 Switch Shutter_all (Shutters)
@@ -51,43 +51,64 @@ Rollershutter Shutter_Kitchen                   "Kitchen"       (Kitchen, Shutte
 
 
 /* Air Conditioner */
-Number Air_Conditioner_Mode_Living          "Mode"              <settings>          (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/MODE:state:*:default]"}
-Switch Air_Conditioner_Power_Living         "Power"             <switch>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/POWER:state:*:default]"}
-Number Air_Conditioner_FanSpeed_Living      "Fan Speed"         <fan>               (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/FAN:state:*:default]"}
-Number Air_Conditioner_FanAngle_Living      "Fan Angle"         <angle>             (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/ANGLE:state:*:default]"}
-Number Air_Conditioner_Temperature_Living   "Temperature"       <temperature>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/TEMPERATURE:state:*:default]"}
-Switch Air_Conditioner_Screen_Living        "Display"           <display>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/DISPLAY:state:*:default]"}
-/* Switch Air_Conditioner_Timer_Living        "Timer"  <clock> (Appliance) */
+Number Air_Conditioner_Mode_Living           "AC Mode"           <settings>          (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/MODE:state:*:default]"}
+Switch Air_Conditioner_Power_Living          "Power Status [%s]" <status>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/POWER:state:*:default]"}
+Number Air_Conditioner_FanSpeed_Living       "Fan Speed"         <fan>               (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/FAN:state:*:default]"}
+Number Air_Conditioner_FanAngle_Living       "Fan Angle"         <incline>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/ANGLE:state:*:default]"}
+Number Air_Conditioner_Temperature_Living    "Temperature"       <temperature>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/TEMPERATURE:state:*:default]"}
+Switch Air_Conditioner_Screen_Living         "Display"           <screen>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/009/DISPLAY:state:*:default]"}
+Number Air_Conditioner_MinTemp_Living        "Min Temperature"   <temperature>
+Number Air_Conditioner_MaxTemp_Living        "Max Temperature"   <temperature>
+String Air_Conditioner_PowerMode_Living      "Power Mode"        <settings>
+Switch Air_Conditioner_PowerMaster_Living    "Power"             <switch>            (Appliance)
 
-Number Air_Conditioner_Mode_BedRoom          "Mode"              <settings>          (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/MODE:state:*:default]"}
-Switch Air_Conditioner_Power_BedRoom         "Power"             <switch>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/POWER:state:*:default]"}
+Number Air_Conditioner_Mode_BedRoom          "AC Mode"           <settings>          (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/MODE:state:*:default]"}
+Switch Air_Conditioner_Power_BedRoom         "Power Status [%s]" <status>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/POWER:state:*:default]"}
 Number Air_Conditioner_FanSpeed_BedRoom      "Fan Speed"         <fan>               (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/FAN:state:*:default]"}
-Number Air_Conditioner_FanAngle_BedRoom      "Fan Angle"         <angle>             (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/ANGLE:state:*:default]"}
+Number Air_Conditioner_FanAngle_BedRoom      "Fan Angle"         <incline>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/ANGLE:state:*:default]"}
 Number Air_Conditioner_Temperature_BedRoom   "Temperature"       <temperature>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/TEMPERATURE:state:*:default]"}
-Switch Air_Conditioner_Screen_BedRoom        "Display"           <display>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/DISPLAY:state:*:default]"}
+Switch Air_Conditioner_Screen_BedRoom        "Display"           <screen>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/007/DISPLAY:state:*:default]"}
+Number Air_Conditioner_MinTemp_BedRoom       "Min Temperature"   <temperature>
+Number Air_Conditioner_MaxTemp_BedRoom       "Max Temperature"   <temperature>
+String Air_Conditioner_PowerMode_BedRoom     "Power Mode"        <settings>
+Switch Air_Conditioner_PowerMaster_BedRoom   "Power"             <switch>            (Appliance)
 
-Number Air_Conditioner_Mode_KidsRoom          "Mode"              <settings>          (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/MODE:state:*:default]"}
-Switch Air_Conditioner_Power_KidsRoom         "Power"             <switch>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/POWER:state:*:default]"}
-Number Air_Conditioner_FanSpeed_KidsRoom      "Fan Speed"         <fan>               (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/FAN:state:*:default]"}
-Number Air_Conditioner_FanAngle_KidsRoom      "Fan Angle"         <angle>             (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/ANGLE:state:*:default]"}
-Number Air_Conditioner_Temperature_KidsRoom   "Temperature"       <temperature>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/TEMPERATURE:state:*:default]"}
-Switch Air_Conditioner_Screen_KidsRoom        "Display"           <display>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/DISPLAY:state:*:default]"}
+Number Air_Conditioner_Mode_KidsRoom         "AC Mode"           <settings>          (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/MODE:state:*:default]"}
+Switch Air_Conditioner_Power_KidsRoom        "Power Status [%s]" <status>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/POWER:state:*:default]"}
+Number Air_Conditioner_FanSpeed_KidsRoom     "Fan Speed"         <fan>               (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/FAN:state:*:default]"}
+Number Air_Conditioner_FanAngle_KidsRoom     "Fan Angle"         <incline>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/ANGLE:state:*:default]"}
+Number Air_Conditioner_Temperature_KidsRoom  "Temperature"       <temperature>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/TEMPERATURE:state:*:default]"}
+Switch Air_Conditioner_Screen_KidsRoom       "Display"           <screen>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/DISPLAY:state:*:default]"}
+Number Air_Conditioner_MinTemp_KidsRoom      "Min Temperature"   <temperature>
+Number Air_Conditioner_MaxTemp_KidsRoom      "Max Temperature"   <temperature>
+String Air_Conditioner_PowerMode_KidsRoom    "Power Mode"        <settings>
+Switch Air_Conditioner_PowerMaster_KidsRoom  "Power"             <switch>            (Appliance)
 
-Number Air_Conditioner_Mode_Office          "Mode"              <settings>          (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/MODE:state:*:default]"}
-Switch Air_Conditioner_Power_Office         "Power"             <switch>            (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/POWER:state:*:default]"}
-Number Air_Conditioner_FanSpeed_Office      "Fan Speed"         <fan>               (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/FAN:state:*:default]"}
-Number Air_Conditioner_FanAngle_Office      "Fan Angle"         <angle>             (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/ANGLE:state:*:default]"}
-Number Air_Conditioner_Temperature_Office   "Temperature"       <temperature>       (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/TEMPERATURE:state:*:default]"}
-Switch Air_Conditioner_Screen_Office        "Display"           <display>           (Appliance)     //{mqtt=">[mymosquitto:/CONTROLLERS/AC/008/DISPLAY:state:*:default]"}
+Number Air_Conditioner_Mode_Office           "AC Mode"           <settings>          (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/013/MODE:state:*:default]"}
+Switch Air_Conditioner_Power_Office          "Power Status [%s]" <status>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/013/POWER:state:*:default]"}
+Number Air_Conditioner_FanSpeed_Office       "Fan Speed"         <fan>               (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/013/FAN:state:*:default]"}
+Number Air_Conditioner_FanAngle_Office       "Fan Angle"         <incline>           (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/013/ANGLE:state:*:default]"}
+Number Air_Conditioner_Temperature_Office    "Temperature"       <temperature>       (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/013/TEMPERATURE:state:*:default]"}
+Switch Air_Conditioner_Screen_Office         "Display"           <screen>            (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/AC/013/DISPLAY:state:*:default]"}
+Number Air_Conditioner_MinTemp_Office        "Min Temperature"   <temperature>
+Number Air_Conditioner_MaxTemp_Office        "Max Temperature"   <temperature>
+String Air_Conditioner_PowerMode_Office      "Power Mode"        <settings>
+Switch Air_Conditioner_PowerMaster_Office    "Power"             <switch>            (Appliance)
+Number HT_Temperature_Office                 "Temperature [%.2f °C]"       <temperature>
 
 
 Group Weather_Chart													(Weather)
 Number Weather_Temperature              "Outside Temperature [%.2f °C]" <temperature> { channel="mihome:sensor_ht:158d0003547717:temperature" }
 Number:Dimensionless Weather_Humidity	"Humidity [%d%%]"               <humidity>    { channel="mihome:sensor_ht:158d0003547717:humidity" }   
-Number Weather_Temp_Max 		"Todays Maximum [%.1f °C]"	<temperature> (Weather_Chart)
-Number Weather_Temp_Min 		"Todays Minimum [%.1f °C]"	<temperature> (Weather_Chart)
+Number Weather_Temp_Max 		"Todays Maximum [%.2f °C]"	<temperature> (Weather_Chart)
+Number Weather_Temp_Min 		"Todays Minimum [%.2f °C]"	<temperature> (Weather_Chart)
 Number Weather_Chart_Period		"Chart Period"
 DateTime Weather_LastUpdate		"Last Update [%1$ta %1$tR]"	<clock>
+Number Temperature_KidsRoom             "Room Temperature [%.2f °C]"         <temperature> { channel="mihome:sensor_ht:158d0003546a46:temperature" }
+Number Temperature_BedRoom              "Room Temperature [%.2f °C]"         <temperature> { channel="mihome:sensor_weather_v1:158d0003055bd4:temperature" }
+Number Temperature_Living               "Room Temperature [%.2f °C]"         <temperature> { channel="mihome:sensor_ht:158d000354767a:temperature" }
 
 /* NTP binding demo item */
 DateTime		Date			"Date [%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berlin:de_DE" }
+
+Switch Turn_Off_All     "Turn Off All"  <switch>

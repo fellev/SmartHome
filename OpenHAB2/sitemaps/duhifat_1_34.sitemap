@@ -3,15 +3,20 @@ sitemap duhifat_1_34 label="Main Menu"
     Frame label="Living Room" {
         Text item=Air_Conditioner_Power_Living label="Air Conditioner Living Room" icon="climate" {
                 Frame {
-                    Switch      item=Air_Conditioner_Power_Living  
+                    Switch      item=Air_Conditioner_PowerMaster_Living  
+                    Selection   item=Air_Conditioner_PowerMode_Living mappings=[0='Manual', 1='Auto']
                     Selection   item=Air_Conditioner_Mode_Living   mappings=[0='Auto', 1='Cool', 2='Dry', 3='Fan', 4='Heat']
                     Selection   item=Air_Conditioner_FanSpeed_Living mappings=[0='Auto', 1='1', 2='2', 3='3']
                     Selection   item=Air_Conditioner_FanAngle_Living mappings=[0='Auto', 1='Full Sweep', 2='Position 1(UP)', 3='Position 2', 4='Position 3', 5='Position 4', 6='Position 5(DOWN)', 7='Sweep Down', 9='Sweep Center', 11='Sweep Up']
                     Selection   item=Air_Conditioner_Temperature_Living  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30']
                     Switch      item=Air_Conditioner_Screen_Living                     
+                    Selection   item=Air_Conditioner_MinTemp_Living mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
+                    Selection   item=Air_Conditioner_MaxTemp_Living mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28', 29='29']
+                    Text        item=Air_Conditioner_Power_Living                  
+                    Text        item=Temperature_Living
                 } 
         }
-        Switch      item=Air_Conditioner_Power_Living label="AC Power"
+        Switch      item=Air_Conditioner_PowerMaster_Living label="AC Power"
         Selection   item=Air_Conditioner_Temperature_Living  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30'] label="AC Temperature"
         Switch      item=Shutter_LivingRoom             label="Balcony"           icon="rollershutter"
         Switch      item=Shutter_Kitchen                label="Kitchen"           icon="rollershutter"        
@@ -21,15 +26,20 @@ sitemap duhifat_1_34 label="Main Menu"
     Frame label="Bed Room" {
         Text item=Air_Conditioner_Power_BedRoom label="Air Conditioner Bed Room" icon="climate" {
                 Frame {
-                    Switch      item=Air_Conditioner_Power_BedRoom  
+                    Switch      item=Air_Conditioner_PowerMaster_BedRoom  
+                    Selection   item=Air_Conditioner_PowerMode_BedRoom mappings=[0='Manual', 1='Auto']
                     Selection   item=Air_Conditioner_Mode_BedRoom   mappings=[0='Auto', 1='Cool', 2='Dry', 3='Fan', 4='Heat']
                     Selection   item=Air_Conditioner_FanSpeed_BedRoom mappings=[0='Auto', 1='1', 2='2', 3='3']
                     Selection   item=Air_Conditioner_FanAngle_BedRoom mappings=[0='Auto', 1='Full Sweep', 2='Position 1(UP)', 3='Position 2', 4='Position 3', 5='Position 4', 6='Position 5(DOWN)', 7='Sweep Down', 9='Sweep Center', 11='Sweep Up']
                     Selection   item=Air_Conditioner_Temperature_BedRoom  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30']
                     Switch      item=Air_Conditioner_Screen_BedRoom                     
+                    Selection   item=Air_Conditioner_MinTemp_BedRoom mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
+                    Selection   item=Air_Conditioner_MaxTemp_BedRoom mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28', 29='29']
+                    Text        item=Air_Conditioner_Power_BedRoom  
+                    Text        item=Temperature_BedRoom
                 } 
         }
-        Switch      item=Air_Conditioner_Power_BedRoom label="AC Power"
+        Switch      item=Air_Conditioner_PowerMaster_BedRoom label="AC Power"
         Selection   item=Air_Conditioner_Temperature_BedRoom  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30'] label="AC Temperature"
         Switch      item=Shutter_BedRoom                  label="Shutter"                                   icon="rollershutter"
         Selection   item=BEDROOM_Light_RGB_Color_Preset   mappings=[0='White', 1='Purple', 2='Pink']        icon="colorwheel"        
@@ -39,15 +49,20 @@ sitemap duhifat_1_34 label="Main Menu"
     Frame label="Kids' Room" {
         Text item=Air_Conditioner_Power_KidsRoom label="Air Conditioner Kids' Room" icon="climate" {
                 Frame {
-                    Switch      item=Air_Conditioner_Power_KidsRoom  
+                    Switch      item=Air_Conditioner_PowerMaster_KidsRoom  
+                    Selection   item=Air_Conditioner_PowerMode_KidsRoom mappings=[0='Manual', 1='Auto']
                     Selection   item=Air_Conditioner_Mode_KidsRoom   mappings=[0='Auto', 1='Cool', 2='Dry', 3='Fan', 4='Heat']
                     Selection   item=Air_Conditioner_FanSpeed_KidsRoom mappings=[0='Auto', 1='1', 2='2', 3='3']
                     Selection   item=Air_Conditioner_FanAngle_KidsRoom mappings=[0='Auto', 1='Full Sweep', 2='Position 1(UP)', 3='Position 2', 4='Position 3', 5='Position 4', 6='Position 5(DOWN)', 7='Sweep Down', 9='Sweep Center', 11='Sweep Up']
                     Selection   item=Air_Conditioner_Temperature_KidsRoom  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30']
                     Switch      item=Air_Conditioner_Screen_KidsRoom                     
+                    Selection   item=Air_Conditioner_MinTemp_KidsRoom mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
+                    Selection   item=Air_Conditioner_MaxTemp_KidsRoom mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28', 29='29']
+                    Text        item=Air_Conditioner_Power_KidsRoom   
+                    Text        item=Temperature_KidsRoom
                 } 
         }
-        Switch      item=Air_Conditioner_Power_KidsRoom label="AC Power"
+        Switch      item=Air_Conditioner_PowerMaster_KidsRoom label="AC Power"
         Selection   item=Air_Conditioner_Temperature_KidsRoom  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30'] label="AC Temperature"
         Switch      item=Shutter_KidsRoom                  label="Shutter"           icon="rollershutter"
     }
@@ -55,12 +70,17 @@ sitemap duhifat_1_34 label="Main Menu"
     Frame label="Office" {
         Text item=Air_Conditioner_Power_Office label="Air Conditioner Office" icon="climate" {
                 Frame {
-                    Switch      item=Air_Conditioner_Power_Office  
+                    Switch      item=Air_Conditioner_PowerMaster_Office  
+                    Selection   item=Air_Conditioner_PowerMode_Office mappings=[0='Manual', 1='Auto']
                     Selection   item=Air_Conditioner_Mode_Office   mappings=[0='Auto', 1='Cool', 2='Dry', 3='Fan', 4='Heat']
                     Selection   item=Air_Conditioner_FanSpeed_Office mappings=[0='Auto', 1='1', 2='2', 3='3']
                     Selection   item=Air_Conditioner_FanAngle_Office mappings=[0='Auto', 1='Full Sweep', 2='Position 1(UP)', 3='Position 2', 4='Position 3', 5='Position 4', 6='Position 5(DOWN)', 7='Sweep Down', 9='Sweep Center', 11='Sweep Up']
                     Selection   item=Air_Conditioner_Temperature_Office  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30']
                     Switch      item=Air_Conditioner_Screen_Office                     
+                    Selection   item=Air_Conditioner_MinTemp_Office mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
+                    Selection   item=Air_Conditioner_MaxTemp_Office mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
+                    Text        item=Air_Conditioner_Power_Office
+                    Selection   item=HT_Temperature_Office mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25',25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28', 29='29', 30='30']
                 } 
         }
     }    
@@ -89,11 +109,12 @@ sitemap duhifat_1_34 label="Main Menu"
         }
     }
   
-	Frame {
-		Group item=LivingRoom label="Living Room" icon="groundfloor"
-		Group item=BedRoom label="Bed Room" icon="bedroom"
-		Group item=Office label="Office" icon="office"
-		Group item=KidsRoom label="Kids' Room" icon="girl_2"
-	}
+    Frame {
+            Switch item=Turn_Off_All
+            Group item=LivingRoom label="Living Room" icon="groundfloor"
+            Group item=BedRoom label="Bed Room" icon="bedroom"
+            Group item=Office label="Office" icon="office"
+            Group item=KidsRoom label="Kids' Room" icon="girl_2"
+    }
 
 }
