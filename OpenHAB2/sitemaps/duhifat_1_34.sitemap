@@ -111,6 +111,8 @@ sitemap duhifat_1_34 label="Main Menu"
   
     Frame {
             Switch item=Turn_Off_All
+            Switch item=Open_All_Shutters            
+            Switch item=Close_All_Shutters
             Group item=LivingRoom label="Living Room" icon="groundfloor"
             Group item=BedRoom label="Bed Room" icon="bedroom"
             Group item=Office label="Office" icon="office"

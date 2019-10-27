@@ -1,5 +1,35 @@
 
-val Functions.Function0<void> f_turnOffAll = [|
+import org.eclipse.smarthome.model.script.ScriptServiceUtil
+
+val f_Control_AC_Power= [ String _ac_name, String _power_state |
+    logInfo("AC name", _ac_name)
+    var _Power        = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_Power_"       + _ac_name)
+    var _Mode         = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_Mode_"        + _ac_name)
+    var _FanSpeed     = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_FanSpeed_"    + _ac_name)
+    var _FanAngle     = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_FanAngle_"    + _ac_name)
+    var _Temperature  = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_Temperature_" + _ac_name)
+    var _Screen       = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_Screen_"      + _ac_name)
+    
+    if (_power_state == "ON")
+    {
+        _Power.postUpdate(ON)
+    }
+    else if (_power_state == "OFF")
+    {
+        _Power.postUpdate(OFF)
+    }
+    if ((_power_state == "OFF") || (_power_state == "ON"))
+    {
+        _Mode.postUpdate(_Mode.state)
+        _FanSpeed.postUpdate(_FanSpeed.state)   
+        _FanAngle.postUpdate(_FanAngle.state)   
+        _Temperature.postUpdate(_Temperature.state)
+        _Screen.postUpdate(_Screen.state)          
+    }
+    null
+]
+
+val f_turnOffAll = [|
         sendCommand( LIVINGROOM_Light_RGB_Preset1, "OFF")
         createTimer(now.plusSeconds(4), [
             sendCommand( BEDROOM_Light_RGB_Preset, "OFF")
@@ -54,7 +84,6 @@ val Functions.Function0<void> f_turnOffAll = [|
         ])        
         null
 ]
-
 
 rule "Livingroom Set RGB value"
 when
@@ -279,6 +308,10 @@ rule "Office AC PWR control"
             Item Air_Conditioner_PowerMaster_Office changed or
             Item Air_Conditioner_PowerMode_Office changed
     then
+            logInfo("AC_Office.rules", "One of the item was changed")
+            //logError("AC_Office.rules", "Temperature %1$.1f°C", TH_Sensor3.state)
+            //logDebug("AC_Office.rules", "Temperature %1$.1f°C", TH_Sensor3.state)
+            
             if ((Air_Conditioner_PowerMode_Office.state == "1") && (Air_Conditioner_PowerMaster_Office.state == ON)) //Auto
             {
                 val temp = HT_Temperature_Office.state as DecimalType
@@ -286,7 +319,15 @@ rule "Office AC PWR control"
                 val maxTemp = Air_Conditioner_MaxTemp_Office.state as DecimalType
                 if (temp <= minTemp)
                 {
-                    sendCommand(Air_Conditioner_Power_Office, "OFF")
+                    if (Air_Conditioner_Power_Office.state == ON)
+                    {
+                        sendCommand(Air_Conditioner_Power_Office, "OFF")
+                    }
+                    /* In case current power is OFF, send AC OFF command anyway */
+                    else if ((Air_Conditioner_Power_Office.state == OFF) && (Air_Conditioner_PowerMaster1_Office.state != Air_Conditioner_PowerMaster_Office.state))
+                    {
+                        sendCommand(Air_Conditioner_PowerOff_Office, "ON")
+                    }                   
                 }
                 else if (temp >= maxTemp)
                 {
@@ -305,8 +346,14 @@ rule "Office AC PWR control"
                     {
                         sendCommand(Air_Conditioner_Power_Office, "OFF")
                     }
+                    /* In case current power is OFF, send AC OFF command anyway */
+                    else if ((Air_Conditioner_Power_Office.state == OFF) && (Air_Conditioner_PowerMaster1_Office.state != Air_Conditioner_PowerMaster_Office.state))
+                    {
+                        sendCommand(Air_Conditioner_PowerOff_Office, "ON")
+                    }
                 }
             }
+            Air_Conditioner_PowerMaster1_Office.state = Air_Conditioner_PowerMaster_Office.state
 end
 
 rule "Living Room AC PWR control"
@@ -319,7 +366,6 @@ rule "Living Room AC PWR control"
     then
             if ((Air_Conditioner_PowerMode_Living.state == "1") && (Air_Conditioner_PowerMaster_Living.state == ON)) //Auto
             {
-                //val temp = TH_Sensor3.state as Number
                 val temp = (TH_Sensor3.state as QuantityType<Number>).doubleValue
                 val minTemp = Air_Conditioner_MinTemp_Living.state as DecimalType
                 val maxTemp = Air_Conditioner_MaxTemp_Living.state as DecimalType
@@ -431,3 +477,42 @@ rule "Turn Off All"
             f_turnOffAll.apply()
             postUpdate( Turn_Off_All, OFF)
 end
+
+rule "Turn Off AC Office"
+    when 
+            Item Air_Conditioner_PowerOff_Office changed
+    then
+            if (Air_Conditioner_PowerOff_Office.state == ON)
+            {
+                f_Control_AC_Power.apply("Office", "OFF")
+            }
+            postUpdate(Air_Conditioner_PowerOff_Office, OFF)
+end
+
+rule "Close all shutters"
+    when 
+            Item Close_All_Shutters changed
+    then
+            if (Close_All_Shutters.state == ON)
+            {
+                Shutter_KidsRoom.sendCommand("DOWN")
+                Shutter_BedRoom.sendCommand("DOWN")
+                Shutter_Kitchen.sendCommand("DOWN")
+            }
+            Close_All_Shutters.postUpdate(OFF)
+end
+
+rule "Open all shutters"
+    when 
+            Item Open_All_Shutters changed
+    then
+            if (Open_All_Shutters.state == ON)
+            {
+                Shutter_KidsRoom.sendCommand("UP")
+                Shutter_BedRoom.sendCommand("UP")
+                Shutter_Kitchen.sendCommand("UP")
+                Shutter_LivingRoom.sendCommand("UP")
+            }
+            Open_All_Shutters.postUpdate(OFF)
+end
+
