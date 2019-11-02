@@ -85,6 +85,69 @@ val f_turnOffAll = [|
         null
 ]
 
+var f_AC_Power_Control = [ String _ac_name, GenericItem _ht_temperature |
+
+    //logInfo("f_AC_Power_Control", "Temperature %1$.1f°C", _ht_temperature.state)
+    logInfo("f_AC_Power_Control.ac_name", _ac_name)
+    
+    var _Air_Conditioner_MinTemp        = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_MinTemp_"       + _ac_name)
+    var _Air_Conditioner_MaxTemp        = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_MaxTemp_"       + _ac_name)
+    var _Air_Conditioner_Power          = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_Power_"         + _ac_name)
+    var _Air_Conditioner_PowerOff       = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_PowerOff_"      + _ac_name)
+    var _Air_Conditioner_PowerMaster    = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_PowerMaster_"   + _ac_name)
+    var _Air_Conditioner_PowerMaster1   = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_PowerMaster1_"  + _ac_name)
+    var _Air_Conditioner_PowerMode      = ScriptServiceUtil.getItemRegistry.getItem("Air_Conditioner_PowerMode_"     + _ac_name)    
+    
+    
+    if ((_Air_Conditioner_PowerMode.state == "1") && (_Air_Conditioner_PowerMaster.state == ON)) //Auto
+    {
+        val temp = _ht_temperature.state as DecimalType
+        val minTemp = _Air_Conditioner_MinTemp.state as DecimalType
+        val maxTemp = _Air_Conditioner_MaxTemp.state as DecimalType
+        if (temp <= minTemp)
+        {
+            if (_Air_Conditioner_Power.state == ON)
+            {
+                sendCommand(_Air_Conditioner_Power, "OFF")
+            }
+            /* In case current power is OFF, send AC OFF command anyway */
+            else if ((_Air_Conditioner_Power.state == OFF) && (_Air_Conditioner_PowerMaster1.state != _Air_Conditioner_PowerMaster.state))
+            {
+                sendCommand(_Air_Conditioner_PowerOff, "ON")
+            }                   
+        }
+        else if (temp >= maxTemp)
+        {
+            sendCommand(_Air_Conditioner_Power, "ON")
+        }
+    }
+    else
+    {
+        logInfo("f_AC_Power_Control", "Step 1")
+        if (_Air_Conditioner_PowerMaster.state == ON)
+        {
+            sendCommand(_Air_Conditioner_Power, "ON")
+        }
+        else if (_Air_Conditioner_PowerMaster.state == OFF)
+        {
+            if (_Air_Conditioner_Power.state == ON)
+            {
+                sendCommand(_Air_Conditioner_Power, "OFF")
+            }
+            /* In case current power is OFF, send AC OFF command anyway */
+            else if ((_Air_Conditioner_Power.state == OFF) && (_Air_Conditioner_PowerMaster1.state != _Air_Conditioner_PowerMaster.state))
+            {
+                sendCommand(_Air_Conditioner_PowerOff, "ON")
+            }
+        }
+    }
+    
+    logInfo("f_AC_Power_Control", "Step 2")
+    _Air_Conditioner_PowerMaster1.state = _Air_Conditioner_PowerMaster.state
+    logInfo("f_AC_Power_Control", "Step 3")
+    null
+]
+
 rule "Livingroom Set RGB value"
 when
         Item LIVINGROOM_Light_RGB changed
@@ -312,48 +375,49 @@ rule "Office AC PWR control"
             //logError("AC_Office.rules", "Temperature %1$.1f°C", TH_Sensor3.state)
             //logDebug("AC_Office.rules", "Temperature %1$.1f°C", TH_Sensor3.state)
             
-            if ((Air_Conditioner_PowerMode_Office.state == "1") && (Air_Conditioner_PowerMaster_Office.state == ON)) //Auto
-            {
-                val temp = HT_Temperature_Office.state as DecimalType
-                val minTemp = Air_Conditioner_MinTemp_Office.state as DecimalType
-                val maxTemp = Air_Conditioner_MaxTemp_Office.state as DecimalType
-                if (temp <= minTemp)
-                {
-                    if (Air_Conditioner_Power_Office.state == ON)
-                    {
-                        sendCommand(Air_Conditioner_Power_Office, "OFF")
-                    }
-                    /* In case current power is OFF, send AC OFF command anyway */
-                    else if ((Air_Conditioner_Power_Office.state == OFF) && (Air_Conditioner_PowerMaster1_Office.state != Air_Conditioner_PowerMaster_Office.state))
-                    {
-                        sendCommand(Air_Conditioner_PowerOff_Office, "ON")
-                    }                   
-                }
-                else if (temp >= maxTemp)
-                {
-                    sendCommand(Air_Conditioner_Power_Office, "ON")
-                }
-            }
-            else
-            {
-                if (Air_Conditioner_PowerMaster_Office.state == ON)
-                {
-                    sendCommand(Air_Conditioner_Power_Office, "ON")
-                }
-                else if (Air_Conditioner_PowerMaster_Office.state == OFF)
-                {
-                    if (Air_Conditioner_Power_Office.state == ON)
-                    {
-                        sendCommand(Air_Conditioner_Power_Office, "OFF")
-                    }
-                    /* In case current power is OFF, send AC OFF command anyway */
-                    else if ((Air_Conditioner_Power_Office.state == OFF) && (Air_Conditioner_PowerMaster1_Office.state != Air_Conditioner_PowerMaster_Office.state))
-                    {
-                        sendCommand(Air_Conditioner_PowerOff_Office, "ON")
-                    }
-                }
-            }
-            Air_Conditioner_PowerMaster1_Office.state = Air_Conditioner_PowerMaster_Office.state
+//            if ((Air_Conditioner_PowerMode_Office.state == "1") && (Air_Conditioner_PowerMaster_Office.state == ON)) //Auto
+//            {
+//                val temp = HT_Temperature_Office.state as DecimalType
+//                val minTemp = Air_Conditioner_MinTemp_Office.state as DecimalType
+//                val maxTemp = Air_Conditioner_MaxTemp_Office.state as DecimalType
+//                if (temp <= minTemp)
+//                {
+//                    if (Air_Conditioner_Power_Office.state == ON)
+//                    {
+//                        sendCommand(Air_Conditioner_Power_Office, "OFF")
+//                    }
+//                    /* In case current power is OFF, send AC OFF command anyway */
+//                    else if ((Air_Conditioner_Power_Office.state == OFF) && (Air_Conditioner_PowerMaster1_Office.state != Air_Conditioner_PowerMaster_Office.state))
+//                    {
+//                        sendCommand(Air_Conditioner_PowerOff_Office, "ON")
+//                    }                   
+//                }
+//                else if (temp >= maxTemp)
+//                {
+//                    sendCommand(Air_Conditioner_Power_Office, "ON")
+//                }
+//            }
+//            else
+//            {
+//                if (Air_Conditioner_PowerMaster_Office.state == ON)
+//                {
+//                    sendCommand(Air_Conditioner_Power_Office, "ON")
+//                }
+//                else if (Air_Conditioner_PowerMaster_Office.state == OFF)
+//                {
+//                    if (Air_Conditioner_Power_Office.state == ON)
+//                    {
+//                        sendCommand(Air_Conditioner_Power_Office, "OFF")
+//                    }
+//                    /* In case current power is OFF, send AC OFF command anyway */
+//                    else if ((Air_Conditioner_Power_Office.state == OFF) && (Air_Conditioner_PowerMaster1_Office.state != Air_Conditioner_PowerMaster_Office.state))
+//                    {
+//                        sendCommand(Air_Conditioner_PowerOff_Office, "ON")
+//                    }
+//                }
+//            }
+//            Air_Conditioner_PowerMaster1_Office.state = Air_Conditioner_PowerMaster_Office.state
+            f_AC_Power_Control.apply("Office", HT_Temperature_Office)
 end
 
 rule "Living Room AC PWR control"
@@ -487,6 +551,39 @@ rule "Turn Off AC Office"
                 f_Control_AC_Power.apply("Office", "OFF")
             }
             postUpdate(Air_Conditioner_PowerOff_Office, OFF)
+end
+
+rule "Turn Off AC Living Room"
+    when 
+            Item Air_Conditioner_PowerOff_Living changed
+    then
+            if (Air_Conditioner_PowerOff_Living.state == ON)
+            {
+                f_Control_AC_Power.apply("Living", "OFF")
+            }
+            postUpdate(Air_Conditioner_PowerOff_Living, OFF)
+end
+
+rule "Turn Off AC BedRoom"
+    when 
+            Item Air_Conditioner_PowerOff_BedRoom changed
+    then
+            if (Air_Conditioner_PowerOff_BedRoom.state == ON)
+            {
+                f_Control_AC_Power.apply("BedRoom", "OFF")
+            }
+            postUpdate(Air_Conditioner_PowerOff_BedRoom, OFF)
+end
+
+rule "Turn Off AC KidsRoom"
+    when 
+            Item Air_Conditioner_PowerOff_KidsRoom changed
+    then
+            if (Air_Conditioner_PowerOff_KidsRoom.state == ON)
+            {
+                f_Control_AC_Power.apply("KidsRoom", "OFF")
+            }
+            postUpdate(Air_Conditioner_PowerOff_KidsRoom, OFF)
 end
 
 rule "Close all shutters"
