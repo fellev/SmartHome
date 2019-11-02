@@ -6,7 +6,12 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>it.baeyens.arduino.core.inoToCpp</name>
+			<name>io.sloeber.core.inoToCpp</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>io.sloeber.arduino.core.inoToCpp</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -28,18 +33,18 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
-		<nature>it.baeyens.arduinonature</nature>
+		<nature>io.sloeber.arduinonature</nature>
 	</natures>
 	<linkedResources>
 		<link>
 			<name>core/core</name>
 			<type>2</type>
-			<location>/home/felix/.arduino15/packages/esp8266/hardware/esp8266/2.3.0/cores/esp8266</location>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp8266/hardware/esp8266/2.5.2/cores/esp8266</locationURI>
 		</link>
 		<link>
 			<name>core/variant</name>
 			<type>2</type>
-			<location>/home/felix/.arduino15/packages/esp8266/hardware/esp8266/2.3.0/variants/nodemcu</location>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp8266/hardware/esp8266/2.5.2/variants/nodemcu</locationURI>
 		</link>
 		<link>
 			<name>libraries/DebugUtils</name>
@@ -49,7 +54,7 @@
 		<link>
 			<name>libraries/EEPROM</name>
 			<type>2</type>
-			<location>/home/felix/.arduino15/packages/esp8266/hardware/esp8266/2.3.0/libraries/EEPROM</location>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp8266/hardware/esp8266/2.5.2/libraries/EEPROM</locationURI>
 		</link>
 		<link>
 			<name>libraries/EEPROMAnything</name>
@@ -59,7 +64,7 @@
 		<link>
 			<name>libraries/ESP8266WiFi</name>
 			<type>2</type>
-			<location>/home/felix/.arduino15/packages/esp8266/hardware/esp8266/2.3.0/libraries/ESP8266WiFi</location>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp8266/hardware/esp8266/2.5.2/libraries/ESP8266WiFi</locationURI>
 		</link>
 		<link>
 			<name>libraries/SimpleTimer</name>
