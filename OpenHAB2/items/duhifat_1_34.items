@@ -121,4 +121,5 @@ Number Temperature_Living               "Room Temperature [%.2f °C]"         <t
 /* NTP binding demo item */
 DateTime		Date			"Date [%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berlin:de_DE" }
 
-Switch Turn_Off_All     "Turn Off All"  <switch>
+Switch Turn_Off_All            "Turn Off All"         <switch>
+Switch Turn_Off_All_Lights     "Turn Off All Lights"  <switch>
