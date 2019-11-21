@@ -1,0 +1,213 @@
+import org.eclipse.smarthome.model.script.ScriptServiceUtil
+
+val f_turnOffAllLights = [|
+        sendCommand( LIVINGROOM_Light_RGB_Preset1, "OFF")
+        sendCommand( BEDROOM_Light_RGB_Preset, "OFF")
+        null
+]
+
+val f_turnOffAll = [|
+        sendCommand( Turn_Off_All_Lights, "ON")
+            createTimer(now.plusSeconds(2), [
+            if (Air_Conditioner_PowerMaster_Living.state == ON)
+            {
+                sendCommand(Air_Conditioner_PowerMaster_Living, "OFF")
+            }
+            else
+            {
+                postUpdate( Air_Conditioner_Power_Living,       OFF)
+                postUpdate( Air_Conditioner_Mode_Living,        Air_Conditioner_Mode_Living.state)
+                postUpdate( Air_Conditioner_FanSpeed_Living,    Air_Conditioner_FanSpeed_Living.state)
+                postUpdate( Air_Conditioner_FanAngle_Living,    Air_Conditioner_FanAngle_Living.state)
+                postUpdate( Air_Conditioner_Temperature_Living, Air_Conditioner_Temperature_Living.state)
+                postUpdate( Air_Conditioner_Screen_Living,      Air_Conditioner_Screen_Living.state)
+            }
+            createTimer(now.plusSeconds(2), [
+                if (Air_Conditioner_PowerMaster_KidsRoom.state == ON)
+                {
+                    sendCommand(Air_Conditioner_PowerMaster_KidsRoom, "OFF")
+                }
+                else
+                {
+                    postUpdate( Air_Conditioner_Power_KidsRoom,       OFF)
+                    postUpdate( Air_Conditioner_Mode_KidsRoom,        Air_Conditioner_Mode_KidsRoom.state)
+                    postUpdate( Air_Conditioner_FanSpeed_KidsRoom,    Air_Conditioner_FanSpeed_KidsRoom.state)
+                    postUpdate( Air_Conditioner_FanAngle_KidsRoom,    Air_Conditioner_FanAngle_KidsRoom.state)
+                    postUpdate( Air_Conditioner_Temperature_KidsRoom, Air_Conditioner_Temperature_KidsRoom.state)
+                    postUpdate( Air_Conditioner_Screen_KidsRoom,      Air_Conditioner_Screen_KidsRoom.state)
+                }
+                createTimer(now.plusSeconds(2), [
+                    if (Air_Conditioner_PowerMaster_BedRoom.state == ON)
+                    {
+                        sendCommand(Air_Conditioner_PowerMaster_BedRoom, "OFF")
+                    }
+                    else
+                    {
+                        postUpdate( Air_Conditioner_Power_BedRoom,       OFF)
+                        postUpdate( Air_Conditioner_Mode_BedRoom,        Air_Conditioner_Mode_BedRoom.state)
+                        postUpdate( Air_Conditioner_FanSpeed_BedRoom,    Air_Conditioner_FanSpeed_BedRoom.state)
+                        postUpdate( Air_Conditioner_FanAngle_BedRoom,    Air_Conditioner_FanAngle_BedRoom.state)
+                        postUpdate( Air_Conditioner_Temperature_BedRoom, Air_Conditioner_Temperature_BedRoom.state)
+                        postUpdate( Air_Conditioner_Screen_BedRoom,      Air_Conditioner_Screen_BedRoom.state)
+                    }                         
+                    createTimer(now.plusSeconds(1), [
+                        sendCommand( WaterHeater_Power, "OFF")
+                    ])
+                ])
+            ])
+        ])
+        null
+]
+
+rule "Livingroom Set RGB value"
+when
+        Item LIVINGROOM_Light_RGB changed
+then
+        var HSBType hsbValue = LIVINGROOM_Light_RGB.state as HSBType
+        postUpdate( LIVINGROOM_Light_R, hsbValue.red.intValue )
+        postUpdate( LIVINGROOM_Light_G, hsbValue.green.intValue )
+        postUpdate( LIVINGROOM_Light_B, hsbValue.blue.intValue )
+end
+
+rule "Bedroom RGB Preset purple faint light"
+    when
+        Item LIVINGROOM_Light_RGB_Preset1 received command 
+    then
+       
+        if(receivedCommand == ON)
+        {
+            postUpdate( LIVINGROOM_Light_R, 100 )
+            postUpdate( LIVINGROOM_Light_G, 47 )
+            postUpdate( LIVINGROOM_Light_B, 20 )
+        }
+        else 
+        {
+            postUpdate( LIVINGROOM_Light_R, 0 )
+            postUpdate( LIVINGROOM_Light_G, 0 )
+            postUpdate( LIVINGROOM_Light_B, 0 )           
+        }
+end       
+
+rule "Bedroom Set RGB value"
+when
+        Item BEDROOM_Light_RGB changed
+then
+        var HSBType hsbValue = BEDROOM_Light_RGB.state as HSBType
+        postUpdate( BEDROOM_Light_R, hsbValue.red.intValue )
+        postUpdate( BEDROOM_Light_G, hsbValue.green.intValue )
+        postUpdate( BEDROOM_Light_B, hsbValue.blue.intValue )
+end
+
+rule "Bedroom RGB Preset"
+    when
+        Item BEDROOM_Light_RGB_Preset received command 
+    then
+       
+        if(receivedCommand == ON)
+        {
+            if (BEDROOM_Light_RGB_Color_Preset.state == "0") // White
+            {
+                postUpdate( BEDROOM_Light_R, 100 )
+                postUpdate( BEDROOM_Light_G, 47 )
+                postUpdate( BEDROOM_Light_B, 20 )
+            }
+            else if (BEDROOM_Light_RGB_Color_Preset.state == "1") // Purple lite
+            {
+                postUpdate( BEDROOM_Light_R, 1 )
+                postUpdate( BEDROOM_Light_G, 0 )
+                postUpdate( BEDROOM_Light_B, 1 )                
+            }
+            else if (BEDROOM_Light_RGB_Color_Preset.state == "2") // Pink
+            {
+                postUpdate( BEDROOM_Light_R, 2 )
+                postUpdate( BEDROOM_Light_G, 1 )
+                postUpdate( BEDROOM_Light_B, 1 )                
+            }            
+        }
+        else 
+        {
+            postUpdate( BEDROOM_Light_R, 0 )
+            postUpdate( BEDROOM_Light_G, 0 )
+            postUpdate( BEDROOM_Light_B, 0 )            
+        }
+end
+
+rule "Bedroom RGB Preset Chnage"
+    when
+            Item BEDROOM_Light_RGB_Color_Preset changed
+    then
+            sendCommand(BEDROOM_Light_RGB_Preset, "ON");
+end
+
+rule "Turn Off All Lights"
+    when 
+            Item Turn_Off_All_Lights changed
+    then
+            f_turnOffAllLights.apply()
+            postUpdate( Turn_Off_All_Lights, OFF)
+end
+
+rule "Wireless Switch Living Room"
+when
+    Channel "mihome:sensor_switch:158d000361568f:button" triggered or 
+    Channel "mihome:sensor_switch:158d00035c6133:button" triggered
+then
+    var actionName = receivedEvent.getEvent()
+    switch(actionName) {
+        case "SHORT_PRESSED": {
+            if (LIVINGROOM_Light_RGB_Preset1.state == OFF)
+            {
+                sendCommand( LIVINGROOM_Light_RGB_Preset1, "ON")
+            }
+            else
+            {
+                sendCommand( LIVINGROOM_Light_RGB_Preset1, "OFF")
+            }
+        }
+        case "DOUBLE_PRESSED": {
+            //<ACTION>
+        }
+        case "LONG_PRESSED": {
+            f_turnOffAll.apply()
+        }
+        case "LONG_RELEASED": {
+            //<ACTION>
+        }
+    }
+end
+
+rule "Wireless Switch Bedroom"
+when
+    Channel "mihome:sensor_switch:158d000349265b:button" triggered or 
+    Channel "mihome:sensor_switch:158d00035f37fb:button" triggered or
+    Channel "mihome:sensor_switch:158d0003496e6d:button" triggered
+then
+    var actionName = receivedEvent.getEvent()
+    switch(actionName) {
+        case "SHORT_PRESSED": {
+            if (BEDROOM_Light_RGB_Preset.state == OFF)
+            {
+                sendCommand( BEDROOM_Light_RGB_Preset, "ON")
+            }
+            else
+            {
+                sendCommand( BEDROOM_Light_RGB_Preset, "OFF")
+            }
+        }
+        case "DOUBLE_PRESSED": {
+            var Integer state = Integer::parseInt(BEDROOM_Light_RGB_Color_Preset.state.toString)
+            state = state + 1
+            if (state > 2)
+            {
+                state = 0
+            }
+            BEDROOM_Light_RGB_Color_Preset.sendCommand(state)
+        }
+        case "LONG_PRESSED": {
+            f_turnOffAllLights.apply()
+        }
+        case "LONG_RELEASED": {
+            //<ACTION>
+        }
+    }
+end
