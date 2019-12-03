@@ -203,6 +203,10 @@ class IRrecv
 //
 class IRsend
 {
+	private:
+#		if SEND_SAMSUNG
+		static const unsigned long ir_codes[];
+#		endif
 	public:
 		IRsend () { }
 
@@ -242,6 +246,7 @@ class IRsend
 		//......................................................................
 #		if SEND_SAMSUNG
 			void  sendSAMSUNG    (unsigned long data,  int nbits) ;
+			void  sendSAMSUNG_code    (unsigned int index) ;
 #		endif
 		//......................................................................
 #		if SEND_WHYNTER

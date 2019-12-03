@@ -19,6 +19,54 @@
 
 //+=============================================================================
 #if SEND_SAMSUNG
+const unsigned  long IRsend::ir_codes[] =
+{
+    0xE0E040BF, /* on/off */
+    0xE0E0807F, /* source */
+    0xE0E0F00F, /* mute */
+    0xE0E020DF, /* 1 */
+    0xE0E0A05F, /* 2 */
+    0xE0E0609F, /* 3 */
+    0xE0E010EF, /* 4 */
+    0xE0E0906F, /* 5 */
+    0xE0E050AF, /* 6 */
+    0xE0E030CF, /* 7 */
+    0xE0E0B04F, /* 8 */
+    0xE0E0708F, /* 9 */
+    0xE0E08877, /* 0 */
+    0xE0E034CB, /* txt/mix */
+    0xE0E0C837, /* pre-ch */
+    0xE0E0E01F, /* volume + */
+    0xE0E0D02F, /* volume - */
+    0xE0E048B7, /* channel + */
+    0xE0E008F7, /* channel - */
+    0xE0E0D629, /* ch list */
+    0xE0E058A7, /* menu */
+    0xE0E031CE, /* media p */
+    0xE0E0F20D, /* guide */
+    0xE0E0F807, /* info */
+    0xE0E0D22D, /* tools */
+    0xE0E006F9, /* up */
+    0xE0E0A659, /* left */
+    0xE0E046B9, /* right */
+    0xE0E08679, /* down */
+    0xE0E016E9, /* enter */
+    0xE0E01AE5, /* return */
+    0xE0E0B44B, /* exit */
+    0xE0E0FC03, /* e-manual */
+    0xE0E07C83, /* pic size */
+    0xE0E0A45B, /* ad/subt */
+    0xE0E0629D, /* stop */
+    0xE0E0E21D, /* play */
+    0xE0E052AD, /* pause */
+    0xE0E0A25D, /* rewind */
+    0xE0E012ED, /* forward */
+    0xE0E036C9, /* a */
+    0xE0E028D7, /* b */
+    0xE0E0A857, /* c */
+    0xE0E06897  /* d */
+};
+
 void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
 {
 	// Set IR carrier frequency
@@ -42,6 +90,11 @@ void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
 	// Footer
 	mark(SAMSUNG_BIT_MARK);
     space(0);  // Always end with the LED off
+}
+
+void  IRsend::sendSAMSUNG_code (unsigned int index)
+{
+	this->sendSAMSUNG(this->ir_codes[index], SAMSUNG_BITS);
 }
 #endif
 

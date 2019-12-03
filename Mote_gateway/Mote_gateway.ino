@@ -19,7 +19,6 @@
 // ADJUST THE SETTINGS BELOW DEPENDING ON YOUR HARDWARE/SITUATION!
 //*****************************************************************************************************************************
 #define NODEID        1
-#define GARAGENODEID  99
 #define NETWORKID     100
 //Match frequency to the hardware version of the radio on your Moteino (uncomment one):
 #define FREQUENCY   RF69_433MHZ
@@ -33,6 +32,29 @@
 #define AC_ACK_TIME   255
 #define RETRY_NUM     8
 
+#define D_STR_ID "ID:"
+#define D_STR_OK "ok ... "
+#define D_STR_NOTHING "nothing ... "
+
+//*****************************************************************************************************************************
+
+//*****************************************************************************************************************************
+// MACROS
+//*****************************************************************************************************************************
+#ifdef DEBUG_EN
+#define println_dbg(a) Serial.println(a)
+#define print_dbg(a)   Serial.print(a)
+#define println2_dbg(a,b) Serial.println(a,b)
+#define print2_dbg(a,b)   Serial.print(a,b)
+#else
+#define println_dbg(...)
+#define print_dbg(...)
+#define println2_dbg(...)
+#define print2_dbg(...)
+#endif
+
+//*****************************************************************************************************************************
+// METHODS
 //*****************************************************************************************************************************
 
 RFM69 radio;
@@ -49,11 +71,11 @@ void setup() {
   radio.encrypt(ENCRYPTKEY);
   char buff[50];
   sprintf(buff, "\nListening at %d Mhz...", FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);
-  Serial.println(buff);
+  println_dbg(buff);
   if (flash.initialize())
-    Serial.println("SPI Flash Init OK!");
+    println_dbg("SPI Flash Init OK!");
   else
-    Serial.println("SPI Flash Init FAIL! (is chip present?)");
+    println_dbg("SPI Flash Init FAIL! (is chip present?)");
 }
 
 byte ackCount=0;
@@ -69,66 +91,74 @@ void loop() {
     if (input[0]=='S' && input[1]=='H' && input[2]=='T' && input[3]=='O' && input[4]=='P' && input[5]=='N')
     {
       nodeid = val2(&input[6]);
-      Serial.print("ID:");Serial.print(nodeid, DEC);
-      Serial.print("OPN ... ");      
+      print_dbg(D_STR_ID);print2_dbg(nodeid, DEC);
+      print_dbg("OPN ... ");
       if (radio.sendWithRetry(nodeid, "OPN", 3, RETRY_NUM, ACK_TIME))
-        Serial.println("ok ... ");
-      else Serial.println("nothing ... ");
+        println_dbg(D_STR_OK);
+      else println_dbg(D_STR_NOTHING);
     }
     else if (input[0]=='S' && input[1]=='H' && input[2]=='T' && input[3]=='C' && input[4]=='L' && input[5]=='S')
     {
       nodeid = val2(&input[6]);
-      Serial.print("ID:");Serial.print(nodeid, DEC);
-      Serial.print("CLS ... ");
+      print_dbg(D_STR_ID);print2_dbg(nodeid, DEC);
+      print_dbg("CLS ... ");
       if (radio.sendWithRetry(nodeid, "CLS", 3, RETRY_NUM, ACK_TIME))
-        Serial.println("ok ... ");
-      else Serial.println("nothing ... ");
+        println_dbg(D_STR_OK);
+      else println_dbg(D_STR_NOTHING);
     }
     else if (input[0]=='S' && input[1]=='H' && input[2]=='T' && input[3]=='S' && input[4]=='T' && input[5]=='O')
     {
       nodeid = val2(&input[6]);
-      Serial.print("ID:");Serial.print(nodeid, DEC);
-      Serial.print("STO ... ");
+      print_dbg(D_STR_ID);print2_dbg(nodeid, DEC);
+      print_dbg("STO ... ");
       if (radio.sendWithRetry(nodeid, "STO", 3, RETRY_NUM, ACK_TIME))
-        Serial.println("ok ... ");
-      else Serial.println("nothing ... ");
+        println_dbg(D_STR_OK);
+      else println_dbg(D_STR_NOTHING);
     }
     else if (input[0]=='S' && input[1]=='H' && input[2]=='T' && input[3]=='S' && input[4]=='T' && input[5]=='S')
     {
       nodeid = val2(&input[6]);
-      Serial.print("ID:");Serial.print(nodeid, DEC);
-      Serial.print("STS ... ");
+      print_dbg(D_STR_ID);print2_dbg(nodeid, DEC);
+      print_dbg("STS ... ");
       if (radio.sendWithRetry(nodeid, "STS", 3, RETRY_NUM, ACK_TIME))
-        Serial.println("ok ... ");
-      else Serial.println("nothing ... ");
+        println_dbg(D_STR_OK);
+      else println_dbg(D_STR_NOTHING);
     }
     else if (input[0]=='R' && input[1]=='G' && input[2]=='B' && input[5]=='C' && input[6]=='L' && input[7]=='R')
     {
       nodeid = val2(&input[3]);
-      Serial.print("ID:");Serial.print(nodeid, DEC);
-      Serial.print("RGB CLR ... ");
+      print_dbg(D_STR_ID);print2_dbg(nodeid, DEC);
+      print_dbg("RGB CLR ... ");
       if (radio.sendWithRetry(nodeid, &input[5], 6, RETRY_NUM, ACK_TIME))
-        Serial.println("ok ... ");
-      else Serial.println("nothing ... ");      
+        println_dbg(D_STR_OK);
+      else println_dbg(D_STR_NOTHING);
     }
     else if (input[0]=='A' && input[1]=='C' && input[4]=='C' && input[5]=='F' && input[6]=='G')
     {
       int result;
       nodeid = val2(&input[2]);
       result = radio.sendWithRetry(nodeid, &input[4], 5, RETRY_NUM, AC_ACK_TIME);
-      Serial.print("ID:");Serial.print(nodeid, DEC);
-      Serial.print(" AC CFG ... ");
+      print_dbg(D_STR_ID);print2_dbg(nodeid, DEC);
+      print_dbg("AC CFG ... ");
       if (result)
-        Serial.println("ok ... ");
-      else Serial.println("nothing ... ");      
+        println_dbg(D_STR_OK);
+      else println_dbg(D_STR_NOTHING);
     }
-
-    //if (input == 'i')
-    //{
-    //  Serial.print("DeviceID: ");
-    //  word jedecid = flash.readDeviceId();
-    //  Serial.println(jedecid, HEX);
-    //}
+    else if (input[0]=='T' && input[1]=='V')
+    {
+      int result;
+      nodeid = val2(&input[2]);
+      result = radio.sendWithRetry(nodeid, &input[4], 5, RETRY_NUM, AC_ACK_TIME);
+      print_dbg(D_STR_ID);print2_dbg(nodeid, DEC);
+      print_dbg("AC CFG ... ");
+      if (result)
+        println_dbg(D_STR_OK);
+      else println_dbg(D_STR_NOTHING);
+    }
+  }
+  else if (inputLen > 0)
+  {
+	  print_dbg("Received serial data, Length");println_dbg(inputLen);
   }
 
   if (radio.receiveDone())
@@ -140,11 +170,10 @@ void loop() {
     
     if (radio.ACKRequested())
     {
-      byte theNodeID = radio.SENDERID;
       radio.sendACK();
-      Serial.print("[ACK-sent]");
+      print_dbg("[ACK-sent]");
     }
-    Serial.println();
+    println_dbg();
     Blink(LED,3);
   }
 }
