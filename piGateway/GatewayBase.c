@@ -55,7 +55,10 @@
 #define SHUTTER_CMD_LEN 		8
 #define RBG_LED_STRIP_CMD_LEN 	11
 #define AC_CMD_LEN				9
+#define TV_CMD_LEN				9
+
 #define MAX_LED_COLOR_VALUE	  	255
+
 
 #define MAX_CONTROLLER_NUM 99
 
@@ -127,6 +130,7 @@ enum e_device_type
     E_LIGTH_RGB,
     E_AC,
     E_SWITCH,
+	E_TV,
     E_NUM_OF_DEVICE_TYPES
 };
 
@@ -135,6 +139,12 @@ enum e_gateway_controller_response
 	E_GW_RESPONSE_OK,
 	E_GW_RESPONSE_ERROR
 };
+
+typedef enum e_tv_opcodes_t
+{
+	E_TV_OPCODE_IR_CODE,
+	E_TV_OPCODE_POWER
+}e_tv_opcodes;
 
 struct s_devicedata
 {
@@ -147,7 +157,8 @@ const char* device_tipics[E_NUM_OF_DEVICE_TYPES] =
     [E_SHUTTER] =   "/CONTROLLERS/SHUTTER/",
     [E_LIGTH_RGB] = "/CONTROLLERS/RGB/",
     [E_AC] =        "/CONTROLLERS/AC/",
-    [E_SWITCH]=     "/CONTROLLERS/SWITCH/"
+    [E_SWITCH]=     "/CONTROLLERS/SWITCH/",
+	[E_TV]=         "/CONTROLLERS/TV/"
 };
 
 const char* gw_response[] =
@@ -182,7 +193,7 @@ void print_usage(void)
 	printf("gateway_base version %s running on libmosquitto %d.%d.%d.\n\n",
 			VERSION, major, minor, revision);
 	printf(
-			"Usage: mosquitto_sub [-c] [-h host] [-k keepalive] [-p port] [-q qos] [-R] -t topic ...\n");
+			"Usage: piGatewayBase [-c] [-h host] [-k keepalive] [-p port] [-q qos] [-R] -t topic ...\n");
 	printf("                     [-T filter_out]\n");
 #ifdef WITH_SRV
 	printf("                     [-A bind_address] [-S]\n");
@@ -199,7 +210,7 @@ void print_usage(void)
 	printf("                     [--psk hex-key --psk-identity identity [--ciphers ciphers]]\n");
 #endif
 #endif
-	printf("       mosquitto_sub --help\n\n");
+	printf("       piGatewayBase --help\n\n");
 	printf(
 			" -A : bind the outgoing socket to this host/ip address. Use to control which interface\n");
 	printf("      the client communicates over.\n");
@@ -326,6 +337,52 @@ int send_command_to_rgb_led_strip(void *obj, struct s_rgb_value *value, unsigned
 		error_code = event_waitFor( ud->serial_rx_cm_event, COMMAND_SEND_TO_CONTROLLER_TIMEOUT);
 		controllerID++;
 	}while(count++ < repeat);
+
+	return error_code;
+}
+
+int send_ir_code_to_tv(void *obj, unsigned int controllerID, unsigned long ir_code, e_tv_opcodes opcode)
+{
+	struct userdata *ud;
+	uint8_t msg[32] = {0};
+	int error_code = 0;
+	int i;
+
+	assert(obj);
+	ud = (struct userdata *)obj;
+
+	event_waitFor( ud->serial_rx_cm_event, 0); // Clear the event
+
+	sprintf((char*)msg, "TV%02x", controllerID);
+
+	if (opcode == E_TV_OPCODE_IR_CODE)
+	{
+		msg[4] = 'C';
+	}
+	else if (opcode == E_TV_OPCODE_POWER)
+	{
+		msg[4] = 'P';
+	}
+	msg[5] = ir_code & 0xFF;
+	msg[6] = (ir_code >> 8) & 0xFF;
+	msg[7] = (ir_code >> 16) & 0xFF;
+	msg[8] = (ir_code >> 24) & 0xFF;
+	if(ud->verbose){
+		printf("Sending to TV controller ID %d: ", controllerID);
+		for ( i = 0 ; i < 5 ; i++)
+		{
+			printf("%c", msg[i]);
+		}
+		printf("[0x%02x]", msg[i++]);
+		printf("[0x%02x]", msg[i++]);
+		printf("[0x%02x]", msg[i++]);
+		printf("[0x%02x]", msg[i++]);
+		printf("\n");
+	}
+
+	write_serial((uint8_t*)msg, TV_CMD_LEN, ud->fd_serial);
+
+	error_code = event_waitFor( ud->serial_rx_cm_event, COMMAND_SEND_TO_CONTROLLER_TIMEOUT);
 
 	return error_code;
 }
@@ -703,6 +760,23 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 	{
 		//TODO: add switch device command handler
     }
+	else if (strncmp ( message->topic, device_tipics[E_TV], strlen(device_tipics[E_TV]) ) == 0)
+	{
+		const char* controllerIdStr = &(((const char*)message->topic)[strlen(device_tipics[E_AC])]);
+		unsigned int controllerId = atoi(controllerIdStr);
+		unsigned long ir_code = (unsigned long) strtol((const char*)message->payload, NULL, 16);
+
+		const char* opcode = &controllerIdStr[4];
+		if (strncmp(opcode, "PWER", 4) == 0)
+		{
+			send_ir_code_to_tv(obj, controllerId, ir_code, E_TV_OPCODE_POWER);
+		}
+		else if (strncmp(opcode, "CODE", 4) == 0)
+		{
+			send_ir_code_to_tv(obj, controllerId, ir_code, E_TV_OPCODE_IR_CODE);
+		}
+
+	}
 	else if (ud->verbose)
 	{
 		printf("Unknown topic: %s\n", message->topic);
