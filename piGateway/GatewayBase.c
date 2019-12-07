@@ -76,6 +76,7 @@
 #define COMMAND_SEND_TO_CONTROLLER_TIMEOUT  5000
 
 #define D_BYTES_IN_DWORD 4
+#define D_TV_PAYLOAD_LEN 8
 
 /******************************************************************************
  * Private Types
@@ -771,6 +772,11 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 		uint8_t ir_code[D_BYTES_IN_DWORD];
 		char * payload = message->payload;
 
+		if (message->payloadlen != D_TV_PAYLOAD_LEN )
+		{
+			printf("Invalid TV message payload\n");
+			return;
+		}
 		for ( i = 0; i < D_BYTES_IN_DWORD ; i++ )
 		{
 			ir_code[i] = val2(payload);
