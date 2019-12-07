@@ -75,6 +75,8 @@
 
 #define COMMAND_SEND_TO_CONTROLLER_TIMEOUT  5000
 
+#define D_BYTES_IN_DWORD 4
+
 /******************************************************************************
  * Private Types
  * ****************************************************************************/
@@ -179,6 +181,8 @@ uint16_t 		   device_ac_status[MAX_CONTROLLER_NUM+1];
  * ****************************************************************************/
 void write_serial(uint8_t *msg, int len, int fd);
 extern ssize_t readline(int fd, void *vptr, size_t maxlen);
+uint8_t val2(const char *str);
+uint8_t atob (uint8_t ch);
 
 /******************************************************************************
  * Methods
@@ -341,7 +345,7 @@ int send_command_to_rgb_led_strip(void *obj, struct s_rgb_value *value, unsigned
 	return error_code;
 }
 
-int send_ir_code_to_tv(void *obj, unsigned int controllerID, unsigned long ir_code, e_tv_opcodes opcode)
+int send_ir_code_to_tv(void *obj, unsigned int controllerID, uint8_t *ir_code, e_tv_opcodes opcode)
 {
 	struct userdata *ud;
 	uint8_t msg[32] = {0};
@@ -363,10 +367,10 @@ int send_ir_code_to_tv(void *obj, unsigned int controllerID, unsigned long ir_co
 	{
 		msg[4] = 'P';
 	}
-	msg[5] = ir_code & 0xFF;
-	msg[6] = (ir_code >> 8) & 0xFF;
-	msg[7] = (ir_code >> 16) & 0xFF;
-	msg[8] = (ir_code >> 24) & 0xFF;
+	msg[5] = ir_code[3];
+	msg[6] = ir_code[2];
+	msg[7] = ir_code[1];
+	msg[8] = ir_code[0];
 	if(ud->verbose){
 		printf("Sending to TV controller ID %d: ", controllerID);
 		for ( i = 0 ; i < 5 ; i++)
@@ -583,7 +587,7 @@ int open_serial(const char *serial_port)
 void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquitto_message *message)
 {
 	struct userdata *ud;
-//	int i;
+	int i;
 //	bool res;
 //	char *token;
 //	char *topic;
@@ -764,7 +768,14 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 	{
 		const char* controllerIdStr = &(((const char*)message->topic)[strlen(device_tipics[E_AC])]);
 		unsigned int controllerId = atoi(controllerIdStr);
-		unsigned long ir_code = (unsigned long) strtol((const char*)message->payload, NULL, 16);
+		uint8_t ir_code[D_BYTES_IN_DWORD];
+		char * payload = message->payload;
+
+		for ( i = 0; i < D_BYTES_IN_DWORD ; i++ )
+		{
+			ir_code[i] = val2(payload);
+			payload += 2;
+		}
 
 		const char* opcode = &controllerIdStr[4];
 		if (strncmp(opcode, "PWER", 4) == 0)
@@ -1177,4 +1188,51 @@ int main(int argc, char* argv[])
 	pthread_mutex_unlock(&(ud.mxq));
 	pthread_join(th,NULL);
 	return 0;
+}
+
+/***************************************************************************//**
+* \fn atob
+* \brief ascii value of hex digit -> real val
+* 		 the value of a hex char, 0=0,1=1,A=10,F=15
+* \param ch
+* \retval real val
+*******************************************************************************/
+uint8_t atob (uint8_t ch)
+{
+	if (ch >= '0' && ch <= '9')
+    	return ch - '0';
+	else{
+		switch(ch)	{
+  		case 'A': return 10;
+	   	case 'B': return 11;
+		case 'C': return 12;
+		case 'D': return 13;
+		case 'E': return 14;
+		case 'F': return 15;
+		case 'a': return 10;
+	   	case 'b': return 11;
+		case 'c': return 12;
+		case 'd': return 13;
+		case 'e': return 14;
+  		case 'f': return 15;
+  }
+
+	}
+	return 0xFF; //error - char recieved not in range
+}
+
+/***************************************************************************//**
+* \fn val2
+* \brief like atob for 2 chars representing nibbles of byte
+* \param None
+* \retval None
+*******************************************************************************/
+uint8_t val2(const char *str)
+{
+	uint8_t tmp;
+	tmp = atob(str[0]);
+	tmp <<= 4;
+	tmp |= atob(str[1]);
+	return tmp;
+
 }

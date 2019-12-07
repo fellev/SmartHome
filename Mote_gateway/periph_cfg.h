@@ -10,7 +10,7 @@
  * 1. BOARD_MINI_WIRELESS_MOTEINO_COMPATIBLE
  * 2. BOARD_MINI_WIRELESS_MOTEINO
  */
-#define DEVICE_BOARD            BOARD_MINI_WIRELESS_MOTEINO
+//#define DEVICE_BOARD            BOARD_MINI_WIRELESS_MOTEINO
 /***************************************************************************************/
 
 #if (DEVICE_BOARD == BOARD_MINI_WIRELESS_MOTEINO_COMPATIBLE)
