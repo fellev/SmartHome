@@ -1,6 +1,17 @@
 sitemap duhifat_1_34 label="Main Menu"
 {
     Frame label="Living Room" {
+        Text label="TV Living Room" icon="screen" {
+                Frame {
+                    Switch item=TV_Power_Living
+                    Switch item=TV_Mute_Living icon="soundvolume_mute"
+                    Switch item=TV_VolumeUp_Living icon="soundvolume"
+                    Switch item=TV_VolumeDown_Living icon="soundvolume"
+                    Switch item=TV_Source_Living icon="none"
+                    Switch item=TV_ChannelUp_Living icon="none"
+                    Switch item=TV_ChannelDown_Living icon="none"
+                }
+        }    
         Text item=Air_Conditioner_Power_Living label="Air Conditioner Living Room" icon="climate" {
                 Frame {
                     Switch      item=Air_Conditioner_PowerMaster_Living  

@@ -106,6 +106,19 @@ Switch Air_Conditioner_PowerMaster1_Office   "Power"             <switch>
 Switch Air_Conditioner_PowerOff_Office       "Power"             <switch>          
 Number HT_Temperature_Office                 "Temperature [%.2f °C]"       <temperature>
 
+/* TV */
+Switch TV_Power_Living                       "TV Power"          <switch>
+Switch TV_PowerOff_Living                    "TV Power OFF"      <switch>
+Switch TV_Mute_Living                        "Mute"              <switch>
+Switch TV_VolumeUp_Living                    "Volume +"          <switch>
+Switch TV_VolumeDown_Living                  "Volume -"          <switch>
+Switch TV_Source_Living                      "Source"            <switch>
+Switch TV_ChannelUp_Living                   "Channel +"         <switch>
+Switch TV_ChannelDown_Living                 "Channel -"         <switch>
+String TV_IrCodePost_Living                  "TV IR code post"   <ircode>        (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/TV/015/CODE:state:*:default]"}
+String TV_IrPowerPost_Living                 "TV IR power post"  <ircode>        (Appliance)     {mqtt=">[mymosquitto:/CONTROLLERS/TV/015/PWER:state:*:default]"}
+String TV_RemoteCommand_Living               "TV Remote Commands" <ircode>
+
 
 Group Weather_Chart													(Weather)
 Number Weather_Temperature              "Outside Temperature [%.2f °C]" <temperature> { channel="mihome:sensor_ht:158d0003547717:temperature" }
@@ -123,3 +136,4 @@ DateTime		Date			"Date [%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berl
 
 Switch Turn_Off_All            "Turn Off All"         <switch>
 Switch Turn_Off_All_Lights     "Turn Off All Lights"  <switch>
+

@@ -1,0 +1,28 @@
+
+rule "Close all shutters"
+    when 
+            Item Close_All_Shutters changed
+    then
+            if (Close_All_Shutters.state == ON)
+            {
+                Shutter_KidsRoom.sendCommand("DOWN")
+                Shutter_BedRoom.sendCommand("DOWN")
+                Shutter_Kitchen.sendCommand("DOWN")
+            }
+            Close_All_Shutters.postUpdate(OFF)
+end
+
+rule "Open all shutters"
+    when 
+            Item Open_All_Shutters changed
+    then
+            if (Open_All_Shutters.state == ON)
+            {
+                Shutter_KidsRoom.sendCommand("UP")
+                Shutter_BedRoom.sendCommand("UP")
+                Shutter_Kitchen.sendCommand("UP")
+                Shutter_LivingRoom.sendCommand("UP")
+            }
+            Open_All_Shutters.postUpdate(OFF)
+end
+

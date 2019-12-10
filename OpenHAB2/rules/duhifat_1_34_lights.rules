@@ -8,6 +8,7 @@ val f_turnOffAllLights = [|
 
 val f_turnOffAll = [|
         sendCommand( Turn_Off_All_Lights, "ON")
+        postUpdate( TV_IrPowerPost_Living, String::format("00000000") )
             createTimer(now.plusSeconds(2), [
             if (Air_Conditioner_PowerMaster_Living.state == ON)
             {
@@ -210,4 +211,12 @@ then
             //<ACTION>
         }
     }
+end
+
+rule "Turn Off All"
+    when 
+            Item Turn_Off_All changed
+    then
+            f_turnOffAll.apply()
+            postUpdate( Turn_Off_All, OFF)
 end

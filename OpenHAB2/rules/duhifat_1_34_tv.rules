@@ -1,0 +1,56 @@
+
+rule "TV IR Codes Living Room"
+    when 
+            Item TV_Power_Living changed or
+            Item TV_Mute_Living changed or
+            Item TV_VolumeUp_Living changed or
+            Item TV_VolumeDown_Living changed or
+            Item TV_Source_Living changed or
+            Item TV_ChannelUp_Living changed or
+            Item TV_ChannelDown_Living changed
+    then
+            if (TV_Power_Living.state == ON)
+            {
+                postUpdate( TV_IrCodePost_Living, String::format("E0E040BF") )
+            }
+            if (TV_Mute_Living.state == ON)
+            {
+                postUpdate( TV_IrCodePost_Living, String::format("E0E0F00F") )
+            }
+            if (TV_VolumeUp_Living.state == ON)
+            {
+                postUpdate( TV_IrCodePost_Living, String::format("E0E0E01F") )
+            }        
+            if (TV_VolumeDown_Living.state == ON)
+            {
+                postUpdate( TV_IrCodePost_Living, String::format("E0E0D02F") )
+            }
+            if (TV_Source_Living.state == ON)
+            {
+                postUpdate( TV_IrCodePost_Living, String::format("E0E0807F") )
+            }    
+            if (TV_ChannelUp_Living.state == ON)
+            {
+                postUpdate( TV_IrCodePost_Living, String::format("E0E048B7") )
+            }       
+            if (TV_ChannelDown_Living.state == ON)
+            {
+                postUpdate( TV_IrCodePost_Living, String::format("E0E008F7") )
+            }              
+            postUpdate(TV_Power_Living, OFF)
+            postUpdate(TV_Mute_Living, OFF)
+            postUpdate(TV_VolumeUp_Living, OFF)
+            postUpdate(TV_VolumeDown_Living, OFF)
+            postUpdate(TV_Source_Living, OFF)
+            postUpdate(TV_ChannelUp_Living, OFF)
+            postUpdate(TV_ChannelDown_Living, OFF)
+end
+
+rule "TV Remote Commands Living Room"
+    when 
+            Item TV_RemoteCommand_Living changed
+    then
+            //logInfo("TV_RemoteCommand_Living %s", TV_RemoteCommand_Living.state)
+            postUpdate( TV_IrCodePost_Living, TV_RemoteCommand_Living.state)
+            postUpdate(TV_RemoteCommand_Living, NULL)
+end

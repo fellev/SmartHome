@@ -171,7 +171,7 @@ rule "Water Heater On With Timer"
     then
         if(receivedCommand == ON)
         {
-	    postUpdate( WaterHeater_Timer_Post, String::format("TMR%s",WaterHeater_Set_Timer.state) )
+            postUpdate( WaterHeater_Timer_Post, String::format("TMR%s",WaterHeater_Set_Timer.state) )
         }
         else if(receivedCommand == OFF)
         {
@@ -372,14 +372,6 @@ rule "KidsRoom AC PWR control"
             }
 end
 
-rule "Turn Off All"
-    when 
-            Item Turn_Off_All changed
-    then
-            f_turnOffAll.apply()
-            postUpdate( Turn_Off_All, OFF)
-end
-
 rule "Turn Off AC Office"
     when 
             Item Air_Conditioner_PowerOff_Office changed
@@ -422,32 +414,5 @@ rule "Turn Off AC KidsRoom"
                 f_Control_AC_Power.apply("KidsRoom", "OFF")
             }
             postUpdate(Air_Conditioner_PowerOff_KidsRoom, OFF)
-end
-
-rule "Close all shutters"
-    when 
-            Item Close_All_Shutters changed
-    then
-            if (Close_All_Shutters.state == ON)
-            {
-                Shutter_KidsRoom.sendCommand("DOWN")
-                Shutter_BedRoom.sendCommand("DOWN")
-                Shutter_Kitchen.sendCommand("DOWN")
-            }
-            Close_All_Shutters.postUpdate(OFF)
-end
-
-rule "Open all shutters"
-    when 
-            Item Open_All_Shutters changed
-    then
-            if (Open_All_Shutters.state == ON)
-            {
-                Shutter_KidsRoom.sendCommand("UP")
-                Shutter_BedRoom.sendCommand("UP")
-                Shutter_Kitchen.sendCommand("UP")
-                Shutter_LivingRoom.sendCommand("UP")
-            }
-            Open_All_Shutters.postUpdate(OFF)
 end
 
