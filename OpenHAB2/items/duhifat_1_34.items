@@ -7,6 +7,7 @@ Group Shutters 	(All)
 Group Weather 	(All)
 Group Status 	(All)
 Group Appliance (All)
+Group Stairs (All)
 
 Group GF_Living 	"Living Room" 	<video> 	(gGF)
 Group GF_Kitchen 	"Kitchen" 		<kitchen> 	(gGF)
@@ -134,6 +135,16 @@ Number Temperature_Living               "Room Temperature [%.2f °C]"         <t
 /* NTP binding demo item */
 DateTime		Date			"Date [%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berlin:de_DE" }
 
+/* Aqara Motion Sensor */
+Switch MS_MotionStatus_Stairs "Motion Status [%s]" <motion>  (Stairs) { channel="mihome:sensor_motion:158d0003977519:motion" }
+// minimum 5 seconds - the sensor only triggers once every minute to save energy
+Number MS_MotionTimer_Stairs  <clock>   (Stairs) { channel="mihome:sensor_motion:158d0003977519:motionOffTimer" }
+DateTime MS_LastMotion_Stairs "[%1$tY-%1$tm-%1$td  %1$tH:%1$tM]" <clock-on> { channel="mihome:sensor_motion:158d0003977519:lastMotion" }
+Number MS_Battery_Stairs      "Battery Level [%d%%]"  <battery> (Stairs) { channel="mihome:sensor_motion:158d0003977519:batteryLevel" }
+Switch MS_BatteryLow_Stairs   <energy>  (Stairs) { channel="mihome:sensor_motion:158d0003977519:lowBattery" }
+
+Switch Stairs_Light           "Power"        <switch>  (Stairs)
+String Stairs_CmdPost         "Power post"   {mqtt=">[mymosquitto:cmnd/stairs/Power:state:*:default]"}
+
 Switch Turn_Off_All            "Turn Off All"         <switch>
 Switch Turn_Off_All_Lights     "Turn Off All Lights"  <switch>
-
