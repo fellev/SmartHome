@@ -28,7 +28,6 @@ sitemap duhifat_1_34 label="Main Menu"
                 } 
         }
         Switch      item=Air_Conditioner_PowerMaster_Living label="AC Power"
-        Selection   item=Air_Conditioner_Temperature_Living  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30'] label="AC Temperature"
         Switch      item=Shutter_LivingRoom             label="Balcony"           icon="rollershutter"
         Switch      item=Shutter_Kitchen                label="Kitchen"           icon="rollershutter"        
         Switch      item=LIVINGROOM_Light_RGB_Preset1   label="White Leds"        icon="light"
@@ -51,7 +50,6 @@ sitemap duhifat_1_34 label="Main Menu"
                 } 
         }
         Switch      item=Air_Conditioner_PowerMaster_BedRoom label="AC Power"
-        Selection   item=Air_Conditioner_Temperature_BedRoom  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30'] label="AC Temperature"
         Switch      item=Shutter_BedRoom                  label="Shutter"                                   icon="rollershutter"
         Selection   item=BEDROOM_Light_RGB_Color_Preset   mappings=[0='White', 1='Purple', 2='Pink']        icon="colorwheel"        
         Switch      item=BEDROOM_Light_RGB_Preset         label="Leds"                                      icon="light"
@@ -67,14 +65,25 @@ sitemap duhifat_1_34 label="Main Menu"
                     Selection   item=Air_Conditioner_FanAngle_KidsRoom mappings=[0='Auto', 1='Full Sweep', 2='Position 1(UP)', 3='Position 2', 4='Position 3', 5='Position 4', 6='Position 5(DOWN)', 7='Sweep Down', 9='Sweep Center', 11='Sweep Up']
                     Selection   item=Air_Conditioner_Temperature_KidsRoom  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30']
                     Switch      item=Air_Conditioner_Screen_KidsRoom                     
-                    Selection   item=Air_Conditioner_MinTemp_KidsRoom mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
-                    Selection   item=Air_Conditioner_MaxTemp_KidsRoom mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28', 29='29']
+                    Selection   item=Air_Conditioner_MinTemp_KidsRoom mappings=[22.5='22.5', 23='23', 23.5='23.5', 24='24', 24.5='24.5', 25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
+                    Selection   item=Air_Conditioner_MaxTemp_KidsRoom mappings=[22.5='22.5', 23='23', 23.5='23.5', 24='24', 24.5='24.5',25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28', 29='29']
                     Text        item=Air_Conditioner_Power_KidsRoom   
                     Text        item=Temperature_KidsRoom
                 } 
         }
         Switch      item=Air_Conditioner_PowerMaster_KidsRoom label="AC Power"
-        Selection   item=Air_Conditioner_Temperature_KidsRoom  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30'] label="AC Temperature"
+        Text item=Radiator_Power_KidsRoom label="Radiator Kids' Room" icon="radiator" {
+                Frame {
+                    Switch      item=Radiator_PowerMaster_KidsRoom  
+                    Selection   item=Radiator_PowerMode_KidsRoom mappings=[0='Manual', 1='Auto']
+                    Selection   item=Radiator_Mode_KidsRoom   mappings=[4='Heat']
+                    Selection   item=Radiator_MinTemp_KidsRoom mappings=[22.5='22.5', 23='23', 23.5='23.5', 24='24', 24.5='24.5', 25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
+                    Selection   item=Radiator_MaxTemp_KidsRoom mappings=[22.5='22.5', 23='23', 23.5='23.5', 24='24', 24.5='24.5',25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28', 29='29']
+                    Text        item=Radiator_Power_KidsRoom   
+                    Text        item=Temperature_KidsRoom
+                }                 
+        }
+        Switch      item=Radiator_PowerMaster_KidsRoom label="Radiator Power"
         Switch      item=Shutter_KidsRoom                  label="Shutter"           icon="rollershutter"
     }
     

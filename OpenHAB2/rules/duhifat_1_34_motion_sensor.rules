@@ -1,0 +1,8 @@
+
+rule "Motion Sensor on stairs"
+    when
+        Item MS_MotionStatus_Stairs changed
+    then
+        //postUpdate( Stairs_CmdPost, String::format("BLINK") )
+        postUpdate( Stairs_CmdPost, MS_MotionStatus_Stairs.state )
+end

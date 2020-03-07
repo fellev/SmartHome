@@ -1,0 +1,356 @@
+
+import org.eclipse.smarthome.model.script.ScriptServiceUtil
+
+val f_Thermostat_Power= [ String _device_type, String _device_name, String _power_state |
+    logInfo("f_Thermostat_Power._device_type", _device_type)
+    logInfo("f_Thermostat_Power._device_name", _device_name)
+    var _Power        = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_Power_"       + _device_name)
+    var _Mode         = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_Mode_"        + _device_name)
+    var _FanSpeed     = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_FanSpeed_"    + _device_name)
+    var _FanAngle     = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_FanAngle_"    + _device_name)
+    var _Temperature  = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_Temperature_" + _device_name)
+    var _Screen       = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_Screen_"      + _device_name)
+    
+    if (_power_state == "ON")
+    {
+        _Power.postUpdate(ON)
+    }
+    else if (_power_state == "OFF")
+    {
+        _Power.postUpdate(OFF)
+    }
+    if ((_power_state == "OFF") || (_power_state == "ON"))
+    {
+        _Mode.postUpdate(_Mode.state)
+        _FanSpeed.postUpdate(_FanSpeed.state)   
+        _FanAngle.postUpdate(_FanAngle.state)   
+        _Temperature.postUpdate(_Temperature.state)
+        _Screen.postUpdate(_Screen.state)          
+    }
+    null
+]
+
+
+var f_Thermostat_Power_Control = [ String _device_type, String _device_name, GenericItem _ht_temperature |
+
+    //logInfo("f_AC_Power_Control", "Temperature %1$.1f°C", _ht_temperature.state)
+    logInfo("f_Thermostat_Power_Control._device_type", _device_type)
+    logInfo("f_Thermostat_Power_Control._device_name", _device_name)
+    
+    var MinTemp        = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_MinTemp_"       + _device_name)
+    var MaxTemp        = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_MaxTemp_"       + _device_name)
+    var Power          = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_Power_"         + _device_name)
+    var PowerOff       = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_PowerOff_"      + _device_name)
+    var PowerMaster    = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_PowerMaster_"   + _device_name)
+    var PowerMaster1   = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_PowerMaster1_"  + _device_name)
+    var PowerMode      = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_PowerMode_"     + _device_name)
+    var ControlMode    = ScriptServiceUtil.getItemRegistry.getItem(_device_type + "_Mode_"          + _device_name)    
+    
+   if ((PowerMode.state == "1") && (PowerMaster.state == ON) && (ControlMode.state == 1 || ControlMode.state == 4)) //Power mode is Auto and Control Mode is Heat or Cool
+   {
+        val temp = (_ht_temperature.state as QuantityType<Number>).doubleValue
+        val minTemp = MinTemp.state as DecimalType
+        val maxTemp = MaxTemp.state as DecimalType
+        if (ControlMode.state == 1) //Control Mode is Cool
+        {       
+            if (temp <= minTemp)
+            {
+                if (Power.state == ON)
+                {
+                    sendCommand(Power, "OFF")
+                }
+                /* In case current power is OFF, send AC OFF command anyway */
+                else if ((Power.state == OFF) && (PowerMaster1.state != PowerMaster.state))
+                {
+                    sendCommand(PowerOff, "ON")
+                }                   
+            }
+            else if (temp >= maxTemp)
+            {
+                sendCommand(Power, "ON")
+            }
+        }
+        else if (ControlMode.state == 4) //Control Mode is Heat
+        {
+            if (temp <= minTemp)
+            {
+                sendCommand(Power, "ON")
+            }
+            else if (temp >= maxTemp)
+            {
+                if (Power.state == ON)
+                {
+                    sendCommand(Power, "OFF")
+                }
+                /* In case current power is OFF, send AC OFF command anyway */
+                else if ((Power.state == OFF) && (PowerMaster1.state != PowerMaster.state))
+                {
+                    sendCommand(PowerOff, "ON")
+                }  
+            }
+        }            
+   }
+   else
+   {
+       logInfo("f_Thermostat_Power_Control", "Step 1")
+       if (PowerMaster.state == ON)
+       {
+           sendCommand(Power, "ON")
+       }
+       else if (PowerMaster.state == OFF)
+       {
+           if (Power.state == ON)
+           {
+               sendCommand(Power, "OFF")
+           }
+           /* In case current power is OFF, send AC OFF command anyway */
+           else if ((Power.state == OFF) && (PowerMaster1.state != PowerMaster.state))
+           {
+               sendCommand(PowerOff, "ON")
+           }
+       }
+   }
+   
+   logInfo("f_Thermostat_Power_Control", "Step 2")
+   PowerMaster1.postUpdate(PowerMaster.state)
+   logInfo("f_Thermostat_Power_Control", "Step 3")
+    
+   null
+]
+
+rule "LivingRoom AC"
+when
+        Item Air_Conditioner_Power_Living changed or 
+        Item Air_Conditioner_Mode_Living changed or
+        Item Air_Conditioner_FanSpeed_Living changed or
+        Item Air_Conditioner_FanAngle_Living changed or
+        Item Air_Conditioner_Temperature_Living changed or
+        Item Air_Conditioner_Screen_Living changed
+then
+//        logInfo("Air Conditioner LivingRoom",receivedCommand + "" +Air_Conditioner_Mode_Living )
+        postUpdate( Air_Conditioner_Power_Living,       Air_Conditioner_Power_Living.state)
+        postUpdate( Air_Conditioner_Mode_Living,        Air_Conditioner_Mode_Living.state)
+        postUpdate( Air_Conditioner_FanSpeed_Living,    Air_Conditioner_FanSpeed_Living.state)
+        postUpdate( Air_Conditioner_FanAngle_Living,    Air_Conditioner_FanAngle_Living.state)
+        postUpdate( Air_Conditioner_Temperature_Living, Air_Conditioner_Temperature_Living.state)
+        postUpdate( Air_Conditioner_Screen_Living,      Air_Conditioner_Screen_Living.state)
+end
+
+rule "KidsRoom AC"
+when
+        Item Air_Conditioner_Power_KidsRoom changed or 
+        Item Air_Conditioner_Mode_KidsRoom changed or
+        Item Air_Conditioner_FanSpeed_KidsRoom changed or
+        Item Air_Conditioner_FanAngle_KidsRoom changed or
+        Item Air_Conditioner_Temperature_KidsRoom changed or
+        Item Air_Conditioner_Screen_KidsRoom changed
+then
+//        logInfo("Air Conditioner KidsRoom",receivedCommand + "" +Air_Conditioner_Mode_KidsRoom )
+        //val mode = Air_Conditioner_Mode_KidsRoom.state as DecimalType
+        if (Air_Conditioner_Mode_KidsRoom.state <= 4) //AC Modes
+        {
+            postUpdate( Air_Conditioner_Power_KidsRoom,       Air_Conditioner_Power_KidsRoom.state)
+            postUpdate( Air_Conditioner_Mode_KidsRoom,        Air_Conditioner_Mode_KidsRoom.state)
+            postUpdate( Air_Conditioner_FanSpeed_KidsRoom,    Air_Conditioner_FanSpeed_KidsRoom.state)
+            postUpdate( Air_Conditioner_FanAngle_KidsRoom,    Air_Conditioner_FanAngle_KidsRoom.state)
+            postUpdate( Air_Conditioner_Temperature_KidsRoom, Air_Conditioner_Temperature_KidsRoom.state)
+            postUpdate( Air_Conditioner_Screen_KidsRoom,      Air_Conditioner_Screen_KidsRoom.state)
+        }
+        else if (Air_Conditioner_Mode_KidsRoom.state == 5) //Radiator
+        {
+            postUpdate( PowerSocket_Kids,       Air_Conditioner_Power_KidsRoom.state)
+        }
+end
+
+rule "BedRoom AC"
+when
+        Item Air_Conditioner_Power_BedRoom changed or 
+        Item Air_Conditioner_Mode_BedRoom changed or
+        Item Air_Conditioner_FanSpeed_BedRoom changed or
+        Item Air_Conditioner_FanAngle_BedRoom changed or
+        Item Air_Conditioner_Temperature_BedRoom changed or
+        Item Air_Conditioner_Screen_BedRoom changed
+then
+//        logInfo("Air Conditioner BedRoom",receivedCommand + "" +Air_Conditioner_Mode_BedRoom )
+        postUpdate( Air_Conditioner_Power_BedRoom,       Air_Conditioner_Power_BedRoom.state)
+        postUpdate( Air_Conditioner_Mode_BedRoom,        Air_Conditioner_Mode_BedRoom.state)
+        postUpdate( Air_Conditioner_FanSpeed_BedRoom,    Air_Conditioner_FanSpeed_BedRoom.state)
+        postUpdate( Air_Conditioner_FanAngle_BedRoom,    Air_Conditioner_FanAngle_BedRoom.state)
+        postUpdate( Air_Conditioner_Temperature_BedRoom, Air_Conditioner_Temperature_BedRoom.state)
+        postUpdate( Air_Conditioner_Screen_BedRoom,      Air_Conditioner_Screen_BedRoom.state)
+end
+
+rule "Office AC"
+when
+        Item Air_Conditioner_Power_Office changed or 
+        Item Air_Conditioner_Mode_Office changed or
+        Item Air_Conditioner_FanSpeed_Office changed or
+        Item Air_Conditioner_FanAngle_Office changed or
+        Item Air_Conditioner_Temperature_Office changed or
+        Item Air_Conditioner_Screen_Office changed
+then
+        postUpdate( Air_Conditioner_Power_Office,       Air_Conditioner_Power_Office.state)
+        postUpdate( Air_Conditioner_Mode_Office,        Air_Conditioner_Mode_Office.state)
+        postUpdate( Air_Conditioner_FanSpeed_Office,    Air_Conditioner_FanSpeed_Office.state)
+        postUpdate( Air_Conditioner_FanAngle_Office,    Air_Conditioner_FanAngle_Office.state)
+        postUpdate( Air_Conditioner_Temperature_Office, Air_Conditioner_Temperature_Office.state)
+        postUpdate( Air_Conditioner_Screen_Office,      Air_Conditioner_Screen_Office.state)
+end
+
+rule "Water Heater On With Timer"
+    when
+        Item WaterHeater_Power received command 
+    then
+        if(receivedCommand == ON)
+        {
+            postUpdate( WaterHeater_Timer_Post, String::format("TMR%s",WaterHeater_Set_Timer.state) )
+        }
+        else if(receivedCommand == OFF)
+        {
+            postUpdate( WaterHeater_Timer_Post, "OFF")
+        }
+end
+
+rule "Water Heater Off from device"
+    when
+	Item WaterHeater_Power_Status changed
+    then
+	if(WaterHeater_Power_Status.state == OFF)
+	{
+	  sendCommand( WaterHeater_Power, "OFF")
+	  sendCommand( WaterHeater_Time_Left, 0)
+	}
+end
+
+rule "Water Heater Update Timer"
+    when 
+	Item WaterHeater_Set_Timer changed
+    then
+        //logInfo("WaterHeater_Set_Timer changed", "WaterHeater_Power_Status.state=[{}]", WaterHeater_Power)
+	if (WaterHeater_Power.state == ON)
+	{
+	    sendCommand( WaterHeater_Power, "ON")
+	}
+end
+
+rule "Office AC PWR control"
+    when
+            Item HT_Temperature_Office changed or
+            Item Air_Conditioner_MinTemp_Office changed or
+            Item Air_Conditioner_MaxTemp_Office changed or 
+            Item Air_Conditioner_PowerMaster_Office changed or
+            Item Air_Conditioner_PowerMode_Office changed or
+            Item Air_Conditioner_Mode_Office changed
+    then
+            logInfo("AC_Office.rules", "One of the item was changed")
+            //logError("AC_Office.rules", "Temperature %1$.1f°C", TH_Sensor3.state)
+            //logDebug("AC_Office.rules", "Temperature %1$.1f°C", TH_Sensor3.state)
+            
+            //f_AC_Power_Control.apply("Office", HT_Temperature_Office)
+            f_Thermostat_Power_Control.apply("Air_Conditioner", "Office", HT_Temperature_Office)
+end
+
+rule "Living Room AC PWR control"
+    when
+            Item TH_Sensor3 changed or
+            Item Air_Conditioner_MinTemp_Living changed or
+            Item Air_Conditioner_MaxTemp_Living changed or 
+            Item Air_Conditioner_PowerMaster_Living changed or
+            Item Air_Conditioner_PowerMode_Living changed or
+            Item Air_Conditioner_Mode_Living changed
+    then
+            f_Thermostat_Power_Control.apply("Air_Conditioner", "Living", TH_Sensor3)
+end
+
+rule "BedRoom AC PWR control"
+    when
+            Item XIAOMI_TEMPERATURE_SENSOR_TEMPERATURE changed or
+            Item Air_Conditioner_MinTemp_BedRoom changed or
+            Item Air_Conditioner_MaxTemp_BedRoom changed or 
+            Item Air_Conditioner_PowerMaster_BedRoom changed or
+            Item Air_Conditioner_PowerMode_BedRoom changed or 
+            Item Air_Conditioner_Mode_BedRoom changed
+    then
+            f_Thermostat_Power_Control.apply("Air_Conditioner", "BedRoom", XIAOMI_TEMPERATURE_SENSOR_TEMPERATURE)
+end
+
+rule "KidsRoom AC PWR control"
+    when
+            Item TH_Sensor4 changed or
+            Item Air_Conditioner_MinTemp_KidsRoom changed or
+            Item Air_Conditioner_MaxTemp_KidsRoom changed or 
+            Item Air_Conditioner_PowerMaster_KidsRoom changed or
+            Item Air_Conditioner_PowerMode_KidsRoom changed or
+            Item Air_Conditioner_Mode_KidsRoom changed
+    then
+            f_Thermostat_Power_Control.apply("Air_Conditioner", "KidsRoom", XIAOMI_TEMPERATURE_SENSOR_TEMPERATURE)
+end
+
+rule "Kids Room Radiator PWR control"
+    when
+            Item TH_Sensor4 changed or
+            Item Radiator_MinTemp_KidsRoom changed or
+            Item Radiator_MaxTemp_KidsRoom changed or 
+            Item Radiator_PowerMaster_KidsRoom changed or
+            Item Radiator_PowerMode_KidsRoom changed or
+            Item Radiator_Mode_KidsRoom changed
+    then
+            logInfo("KidsRoomRadiator.rules", "One of the item was changed")
+            f_Thermostat_Power_Control.apply("Radiator", "KidsRoom", TH_Sensor4)
+end
+
+rule "Turn Off AC Office"
+    when 
+            Item Air_Conditioner_PowerOff_Office changed
+    then
+            if (Air_Conditioner_PowerOff_Office.state == ON)
+            {
+                f_Thermostat_Power.apply("Air_Conditioner", "Office", "OFF")
+            }
+            postUpdate(Air_Conditioner_PowerOff_Office, OFF)
+end
+
+rule "Turn Off AC Living Room"
+    when 
+            Item Air_Conditioner_PowerOff_Living changed
+    then
+            if (Air_Conditioner_PowerOff_Living.state == ON)
+            {
+                f_Thermostat_Power.apply("Air_Conditioner", "Living", "OFF")
+            }
+            postUpdate(Air_Conditioner_PowerOff_Living, OFF)
+end
+
+rule "Turn Off AC BedRoom"
+    when 
+            Item Air_Conditioner_PowerOff_BedRoom changed
+    then
+            if (Air_Conditioner_PowerOff_BedRoom.state == ON)
+            {
+                f_Thermostat_Power.apply("Air_Conditioner", "BedRoom", "OFF")
+            }
+            postUpdate(Air_Conditioner_PowerOff_BedRoom, OFF)
+end
+
+rule "Turn Off AC KidsRoom"
+    when 
+            Item Air_Conditioner_PowerOff_KidsRoom changed
+    then
+            if (Air_Conditioner_PowerOff_KidsRoom.state == ON)
+            {
+                f_Thermostat_Power.apply("Air_Conditioner", "KidsRoom", "OFF")
+            }
+            postUpdate(Air_Conditioner_PowerOff_KidsRoom, OFF)
+end
+
+rule "Turn Off Radiator KidsRoom"
+    when 
+            Item Radiator_PowerOff_KidsRoom changed
+    then
+            if (Radiator_PowerOff_KidsRoom.state == ON)
+            {
+                sendCommand(Radiator_PowerMaster_KidsRoom, "OFF")
+            }
+            postUpdate(Radiator_PowerOff_KidsRoom, OFF)
+end
+

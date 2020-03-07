@@ -42,12 +42,12 @@ Switch        WaterHeater_Power_Status      "Power Status [%s]"  <status>       
 
 /* Rollershutters */
 Switch Shutter_all (Shutters)
-Rollershutter Shutter_KidsRoom                "Kids' Room"    (KidsRoom, Shutters)      {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/002:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/002:state:default]"}
-Rollershutter Shutter_BedRoom                 "Bed Room"      (BedRoom, Shutters)         {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/001:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/001:state:default]"}
+Rollershutter Shutter_KidsRoom                "Kids' Room"    (KidsRoom, Shutters) ["Blinds"]     {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/002:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/002:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/002:state:default]"}
+Rollershutter Shutter_BedRoom                 "Bed Room"      (BedRoom, Shutters)  ["Blinds"]       {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/001:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/001:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/001:state:default]"}
 Rollershutter Shutter_Office                  "Office"        (Office, Shutters)          {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/099:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/099:state:default]"}
-Rollershutter Shutter_LivingRoom              "LivingRoom"    (LivingRoom, Shutters)      {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/003:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/003:state:default]"}
+Rollershutter Shutter_LivingRoom              "LivingRoom"    (LivingRoom, Shutters) ["Blinds"]     {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/003:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/003:state:default]"}
 /* In Kitchen rollershutter directions are inverted */
-Rollershutter Shutter_Kitchen                 "Kitchen"       (Kitchen, Shutters)         {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/012:command:UP:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/012:command:DOWN:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/012:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/012:state:default]"}
+Rollershutter Shutter_Kitchen                 "Kitchen"       (Kitchen, Shutters)  ["Blinds"]       {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/012:command:UP:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/012:command:DOWN:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/012:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/012:state:default]"}
 Switch Close_All_Shutters                     "Close All Shutters" <returnpipe>
 Switch Open_All_Shutters                      "Open All Shutters"  <flowpipe>
 
@@ -107,8 +107,22 @@ Switch Air_Conditioner_PowerMaster1_Office   "Power"             <switch>
 Switch Air_Conditioner_PowerOff_Office       "Power"             <switch>          
 Number HT_Temperature_Office                 "Temperature [%.2f °C]"       <temperature>
 
+Number Radiator_Mode_KidsRoom           "AC Mode"           <settings>          (Appliance)
+Switch Radiator_Power_KidsRoom          "Power Status [%s]" <status>            (Appliance)
+Number Radiator_FanSpeed_KidsRoom       "Fan Speed"         <fan>               (Appliance)
+Number Radiator_FanAngle_KidsRoom       "Fan Angle"         <incline>           (Appliance)
+Number Radiator_Temperature_KidsRoom    "Temperature"       <temperature>       (Appliance)
+Switch Radiator_Screen_KidsRoom         "Display"           <screen>            (Appliance)
+Number Radiator_MinTemp_KidsRoom        "Min Temperature"   <temperature>
+Number Radiator_MaxTemp_KidsRoom        "Max Temperature"   <temperature>
+String Radiator_PowerMode_KidsRoom      "Power Mode"        <settings>
+Switch Radiator_PowerMaster_KidsRoom    "Radiator Power"    <switch>            (Appliance)    ["Switchable"]
+Switch Radiator_PowerMaster1_KidsRoom   "Power"             <switch>          
+Switch Radiator_PowerOff_KidsRoom       "Power"             <switch>          
+
+
 /* TV */
-Switch TV_Power_Living                       "TV Power"          <switch>
+Switch TV_Power_Living                       "TV Power"          <switch>       ["Switchable"]
 Switch TV_PowerOff_Living                    "TV Power OFF"      <switch>
 Switch TV_Mute_Living                        "Mute"              <switch>
 Switch TV_VolumeUp_Living                    "Volume +"          <switch>
@@ -145,6 +159,9 @@ Switch MS_BatteryLow_Stairs   <energy>  (Stairs) { channel="mihome:sensor_motion
 
 Switch Stairs_Light           "Power"        <switch>  (Stairs)
 String Stairs_CmdPost         "Power post"   {mqtt=">[mymosquitto:cmnd/stairs/Power:state:*:default]"}
+
+Switch PowerSocket_Kids          "Heater"       <switch>  (KidsRoom)
+String PowerSocket_Kids_CmdPost  "Power post"   {mqtt=">[mymosquitto:cmnd/pwr_socket_kids/Power:state:*:default]"}
 
 Switch Turn_Off_All            "Turn Off All"         <switch>
 Switch Turn_Off_All_Lights     "Turn Off All Lights"  <switch>

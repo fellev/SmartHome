@@ -9,6 +9,9 @@ val f_turnOffAllLights = [|
 val f_turnOffAll = [|
         sendCommand( Turn_Off_All_Lights, "ON")
         postUpdate( TV_IrPowerPost_Living, String::format("00000000") )
+        postUpdate( PowerSocket_Kids_CmdPost, "OFF" )
+        //sendCommand(Radiator_PowerOff_KidsRoom, "ON")
+        sendCommand(Radiator_PowerMaster_KidsRoom, "OFF")
             createTimer(now.plusSeconds(2), [
             if (Air_Conditioner_PowerMaster_Living.state == ON)
             {

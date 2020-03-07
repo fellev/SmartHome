@@ -1,0 +1,6 @@
+rule "Radiator Power in Kids Room"
+    when 
+            Item Radiator_Power_KidsRoom received update
+    then
+            postUpdate( PowerSocket_Kids_CmdPost, Radiator_Power_KidsRoom.state.toString )
+end
