@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="io.sloeber.core.toolChain.release.1923014926">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="io.sloeber.core.toolChain.release.1923014926" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildProperties="" description="" id="io.sloeber.core.toolChain.release.1923014926" name="Debug" optionalBuildProperties="" parent="org.eclipse.cdt.build.core.emptycfg">
+					<folderInfo id="io.sloeber.core.toolChain.release.1923014926.126494084" name="/" resourcePath="">
+						<toolChain id="io.sloeber.core.toolChain.release.1749837112" name="Arduino Toolchain (Sloeber edition)" superClass="io.sloeber.core.toolChain.release">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="io.sloeber.targetplatform.800996696" name="Arduino Target" osList="all" superClass="io.sloeber.targetplatform"/>
+							<builder buildPath="${workspace_loc:/Mote_TvRemote}/Release" id="io.sloeber.sketch.builder.162310237" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Arduino sketch builder" superClass="io.sloeber.sketch.builder"/>
+							<tool id="io.sloeber.tool.sketch.compiler.cpp.186541763" name="Arduino C++ Compiler" superClass="io.sloeber.tool.sketch.compiler.cpp">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.cpp.sketch.option.incpath.141455112" name="Include Paths (-I)" superClass="io.sloeber.compiler.cpp.sketch.option.incpath" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/variant}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROMAnything}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROM/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/RFM69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPI/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPIFlashA}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/WirelessHEX69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/Arduino-IRremote-master}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/Configurations/HW}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/System/inc}&quot;"/>
+								</option>
+								<inputType id="io.sloeber.compiler.cpp.sketch.input.1561889926" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
+							</tool>
+							<tool id="io.sloeber.tool.compiler.c.443321595" name="Arduino C Compiler" superClass="io.sloeber.tool.compiler.c">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.c.sketch.option.incpath.1368483261" name="Include Paths (-I)" superClass="io.sloeber.compiler.c.sketch.option.incpath" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/variant}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROMAnything}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROM/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/RFM69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPI/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPIFlashA}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/WirelessHEX69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/Arduino-IRremote-master}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/Configurations/HW}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/System/inc}&quot;"/>
+								</option>
+								<inputType id="io.sloeber.compiler.c.sketch.input.1404569691" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
+							</tool>
+							<tool id="io.sloeber.tool.sketch.compiler.s.961345118" name="Arduino Assembler" superClass="io.sloeber.tool.sketch.compiler.s">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.asm.sketch.option.incpath.253820936" name="Include Paths (-I)" superClass="io.sloeber.compiler.asm.sketch.option.incpath" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/variant}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROMAnything}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROM/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/RFM69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPI/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPIFlashA}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/WirelessHEX69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/Arduino-IRremote-master}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/Configurations/HW}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/System/inc}&quot;"/>
+								</option>
+								<inputType id="io.sloeber.compiler.S.sketch.input.472427493" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
+							</tool>
+							<tool id="io.sloeber.tool.ar.1615064139" name="Arduino archiver" superClass="io.sloeber.tool.ar"/>
+							<tool id="io.sloeber.tool.combine.1050268051" name="Arduino combiner" superClass="io.sloeber.tool.combine"/>
+							<tool id="io.sloeber.tool.objcopy.eep.1424646750" name="Arduino tool objcopy command" superClass="io.sloeber.tool.objcopy.eep"/>
+							<tool id="io.sloeber.tool.size.413086978" name="Arduino tool Print Size" superClass="io.sloeber.tool.size"/>
+						</toolChain>
+					</folderInfo>
+					<fileInfo id="io.sloeber.core.toolChain.release.1923014926.1755232532" name="ir_codes.h" rcbsApplicability="disable" resourcePath="System/inc/ir_codes.h" toolsToInvoke=""/>
+					<sourceEntries>
+						<entry excluding="System/src/ir_codes.cpp|System/inc/ir_codes.h|System/src/ir_codes.c|libraries/SPIFlashA/Spanion_SPIFlashA_test|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**|libraries/?*/**/test*/**|libraries/?*/**/third-party/**|libraries/**/._*|libraries/?*/utility/*/*" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="io.sloeber.core.toolChain.release.1923014926.132889530">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="io.sloeber.core.toolChain.release.1923014926.132889530" moduleId="org.eclipse.cdt.core.settings" name="RELEASE">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildProperties="" description="" id="io.sloeber.core.toolChain.release.1923014926.132889530" name="RELEASE" optionalBuildProperties="" parent="org.eclipse.cdt.build.core.emptycfg">
+					<folderInfo id="io.sloeber.core.toolChain.release.1923014926.132889530." name="/" resourcePath="">
+						<toolChain id="io.sloeber.core.toolChain.release.1664953352" name="Arduino Toolchain (Sloeber edition)" superClass="io.sloeber.core.toolChain.release">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="io.sloeber.targetplatform.1592136407" name="Arduino Target" osList="all" superClass="io.sloeber.targetplatform"/>
+							<builder buildPath="${workspace_loc:/Mote_TvRemote}/Release" id="io.sloeber.sketch.builder.1871015975" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Arduino sketch builder" superClass="io.sloeber.sketch.builder"/>
+							<tool id="io.sloeber.tool.sketch.compiler.cpp.736579632" name="Arduino C++ Compiler" superClass="io.sloeber.tool.sketch.compiler.cpp">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.cpp.sketch.option.incpath.1155830764" name="Include Paths (-I)" superClass="io.sloeber.compiler.cpp.sketch.option.incpath" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/variant}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROMAnything}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROM/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/RFM69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPI/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPIFlashA}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/WirelessHEX69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/Arduino-IRremote-master}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/Configurations/HW}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/System/inc}&quot;"/>
+								</option>
+								<inputType id="io.sloeber.compiler.cpp.sketch.input.1599396999" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
+							</tool>
+							<tool id="io.sloeber.tool.compiler.c.692220728" name="Arduino C Compiler" superClass="io.sloeber.tool.compiler.c">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.c.sketch.option.incpath.1945891851" name="Include Paths (-I)" superClass="io.sloeber.compiler.c.sketch.option.incpath" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/variant}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROMAnything}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROM/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/RFM69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPI/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPIFlashA}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/WirelessHEX69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/Arduino-IRremote-master}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/Configurations/HW}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/System/inc}&quot;"/>
+								</option>
+								<inputType id="io.sloeber.compiler.c.sketch.input.1231523479" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
+							</tool>
+							<tool id="io.sloeber.tool.sketch.compiler.s.1802133486" name="Arduino Assembler" superClass="io.sloeber.tool.sketch.compiler.s">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.asm.sketch.option.incpath.1205339433" name="Include Paths (-I)" superClass="io.sloeber.compiler.asm.sketch.option.incpath" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/core/variant}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROMAnything}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/EEPROM/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/RFM69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPI/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/SPIFlashA}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/WirelessHEX69}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/libraries/Arduino-IRremote-master}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/Configurations/HW}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Mote_TvRemote/System/inc}&quot;"/>
+								</option>
+								<inputType id="io.sloeber.compiler.S.sketch.input.1347383766" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
+							</tool>
+							<tool id="io.sloeber.tool.ar.1418821832" name="Arduino archiver" superClass="io.sloeber.tool.ar"/>
+							<tool id="io.sloeber.tool.combine.710106695" name="Arduino combiner" superClass="io.sloeber.tool.combine"/>
+							<tool id="io.sloeber.tool.objcopy.eep.396188901" name="Arduino tool objcopy command" superClass="io.sloeber.tool.objcopy.eep"/>
+							<tool id="io.sloeber.tool.size.1729671114" name="Arduino tool Print Size" superClass="io.sloeber.tool.size"/>
+						</toolChain>
+					</folderInfo>
+					<fileInfo id="io.sloeber.core.toolChain.release.1923014926.132889530.System/inc/ir_codes.h" name="ir_codes.h" rcbsApplicability="disable" resourcePath="System/inc/ir_codes.h" toolsToInvoke=""/>
+					<sourceEntries>
+						<entry excluding="System/src/ir_codes.cpp|System/inc/ir_codes.h|System/src/ir_codes.c|libraries/SPIFlashA/Spanion_SPIFlashA_test|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**|libraries/?*/**/test*/**|libraries/?*/**/third-party/**|libraries/**/._*|libraries/?*/utility/*/*" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="Mote_TvRemote.null.509245935" name="Mote_TvRemote"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/Mote_TvRemote"/>
+		</configuration>
+	</storageModule>
+</cproject>
