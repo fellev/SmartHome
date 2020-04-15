@@ -15,8 +15,8 @@
 #define DECODE_RC6           0
 #define SEND_RC6             0
 
-#define DECODE_NEC           0
-#define SEND_NEC             0
+//#define DECODE_NEC           0
+//#define SEND_NEC             0
 
 #define DECODE_SONY          0
 #define SEND_SONY            0
