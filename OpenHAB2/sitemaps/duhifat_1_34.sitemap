@@ -138,6 +138,8 @@ sitemap duhifat_1_34 label="Main Menu"
             Group item=Office label="Office" icon="office"
             Group item=KidsRoom label="Kids' Room" icon="girl_2"
             Group item=Stairs label="Stairs" icon="corridor"
+            Group item=BathroomParents label="Parents Bathroom" icon="bath"
+            Group item=BathroomKids label="Kids Bathroom" icon="bath"
     }
 
 }

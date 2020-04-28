@@ -7,7 +7,9 @@ Group Shutters 	(All)
 Group Weather 	(All)
 Group Status 	(All)
 Group Appliance (All)
-Group Stairs (All)
+Group Stairs    (All)
+Group BathroomParents (All)
+Group BathroomKids    (All)
 
 Group GF_Living 	"Living Room" 	<video> 	(gGF)
 Group GF_Kitchen 	"Kitchen" 		<kitchen> 	(gGF)
@@ -164,7 +166,15 @@ Switch PowerSocket_Kids          "Heater"       <switch>  (KidsRoom)
 String PowerSocket_Kids_CmdPost  "Power post"   {mqtt=">[mymosquitto:cmnd/pwr_socket_kids/Power:state:*:default]"}
 
 Switch PowerSocket_RPI4          "RPI4 Power On/Off"   <switch>  (LivingRoom)
-String PowerSocket_RPI4_CmdPost  "Power post"          {mqtt=">[mymosquitto:cmnd/pwr_socket_rpi4/Power:state:*:default]"}
+//String PowerSocket_RPI4_CmdPost  "Power post"          {mqtt=">[mymosquitto:cmnd/pwr_socket_rpi4/Power:state:*:default]"}
+
+Switch BathroomHeater_Parents             "Heater"              <switch>  (BathroomParents)
+//String BathroomHeater_Parents_CmdPost     "Power post"          {mqtt=">[mymosquitto:cmnd/bathroom_heater_parents/Power:state:*:default]"}
+
+Switch BathroomHeater_Kids                "Heater"              <switch>  (BathroomKids)
+//String BathroomHeater_Kids_CmdPost        "Power post"          {mqtt=">[mymosquitto:cmnd/bathroom_heater_kids/Power:state:*:default]"}
+
+Switch Light_Kids                         "Light"              <switch>   (KidsRoom)
 
 Switch Turn_Off_All            "Turn Off All"         <switch>
 Switch Turn_Off_All_Lights     "Turn Off All Lights"  <switch>

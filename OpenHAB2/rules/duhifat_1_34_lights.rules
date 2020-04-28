@@ -12,6 +12,8 @@ val f_turnOffAll = [|
         postUpdate( PowerSocket_Kids_CmdPost, "OFF" )
         //sendCommand(Radiator_PowerOff_KidsRoom, "ON")
         sendCommand(Radiator_PowerMaster_KidsRoom, "OFF")
+        sendCommand(BathroomHeater_Parents, "OFF")
+        sendCommand(BathroomHeater_Kids, "OFF")
             createTimer(now.plusSeconds(2), [
             if (Air_Conditioner_PowerMaster_Living.state == ON)
             {

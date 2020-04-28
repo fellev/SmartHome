@@ -5,9 +5,9 @@ rule "Power Socket Kids"
             postUpdate( PowerSocket_Kids_CmdPost, PowerSocket_Kids.state.toString )
 end
 
-rule "Power Socket RPI4"
-    when 
-            Item PowerSocket_RPI4 received update
-    then
-            postUpdate( PowerSocket_RPI4_CmdPost, PowerSocket_RPI4.state.toString )
-end
+//rule "Power Socket RPI4"
+//    when 
+//            Item PowerSocket_RPI4 received update
+//    then
+//            postUpdate( PowerSocket_RPI4_CmdPost, PowerSocket_RPI4.state.toString )
+//end
