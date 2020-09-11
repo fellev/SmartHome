@@ -13,7 +13,7 @@
 	</configuration>
 	<configuration id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604" name="WaterHeater_Debug">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
-			<provider class="io.sloeber.core.toolchain.ArduinoLanguageProvider" console="false" env-hash="-469206507423923982" id="io.sloeber.languageSettingsProvider" keep-relative-paths="false" name="Arduino Compiler Settings" parameter="${COMMAND} -E -P -v -dD -D__IN_ECLIPSE__ &quot;${INPUTS}&quot;" prefer-non-shared="true">
+			<provider class="io.sloeber.core.toolchain.ArduinoLanguageProvider" console="false" env-hash="-550352646428" id="io.sloeber.languageSettingsProvider" keep-relative-paths="false" name="Arduino Compiler Settings" parameter="${COMMAND} -E -P -v -dD -D__IN_ECLIPSE__ &quot;${INPUTS}&quot;" prefer-non-shared="true">
 				<language-scope id="org.eclipse.cdt.core.gcc"/>
 				<language-scope id="org.eclipse.cdt.core.g++"/>
 			</provider>

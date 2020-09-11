@@ -31,10 +31,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.cpp.sketch.input.1442762690" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
 							</tool>
@@ -52,10 +53,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.c.sketch.input.599743426" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
 							</tool>
@@ -72,10 +74,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.S.sketch.input.1026950336" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
 							</tool>
