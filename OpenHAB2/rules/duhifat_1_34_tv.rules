@@ -54,3 +54,17 @@ rule "TV Remote Commands Living Room"
             postUpdate( TV_IrCodePost_Living, TV_RemoteCommand_Living.state)
             postUpdate(TV_RemoteCommand_Living, NULL)
 end
+
+rule "TV Power State"
+    when
+            Item TV_Power_State_Living received update
+    then
+            if (TV_Power_State_Living.state == ON)
+            {
+                postUpdate( TV_IrPowerPost_Living, String::format("00000001") )
+            }
+            else
+            {
+                postUpdate( TV_IrPowerPost_Living, String::format("00000000") )
+            }
+end

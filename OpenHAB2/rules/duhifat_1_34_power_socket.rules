@@ -1,9 +1,9 @@
-rule "Power Socket Kids"
-    when 
-            Item PowerSocket_Kids received update
-    then
-            postUpdate( PowerSocket_Kids_CmdPost, PowerSocket_Kids.state.toString )
-end
+//rule "Power Socket Kids"
+//    when 
+//            Item PowerSocket_Kids received update
+//    then
+//            postUpdate( PowerSocket_Kids_CmdPost, PowerSocket_Kids.state.toString )
+//end
 
 //rule "Power Socket RPI4"
 //    when 

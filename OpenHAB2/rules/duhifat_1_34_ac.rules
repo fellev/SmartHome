@@ -147,19 +147,19 @@ when
 then
 //        logInfo("Air Conditioner KidsRoom",receivedCommand + "" +Air_Conditioner_Mode_KidsRoom )
         //val mode = Air_Conditioner_Mode_KidsRoom.state as DecimalType
-        if (Air_Conditioner_Mode_KidsRoom.state <= 4) //AC Modes
-        {
+        //if (Air_Conditioner_Mode_KidsRoom.state <= 4) //AC Modes
+        //{
             postUpdate( Air_Conditioner_Power_KidsRoom,       Air_Conditioner_Power_KidsRoom.state)
             postUpdate( Air_Conditioner_Mode_KidsRoom,        Air_Conditioner_Mode_KidsRoom.state)
             postUpdate( Air_Conditioner_FanSpeed_KidsRoom,    Air_Conditioner_FanSpeed_KidsRoom.state)
             postUpdate( Air_Conditioner_FanAngle_KidsRoom,    Air_Conditioner_FanAngle_KidsRoom.state)
             postUpdate( Air_Conditioner_Temperature_KidsRoom, Air_Conditioner_Temperature_KidsRoom.state)
             postUpdate( Air_Conditioner_Screen_KidsRoom,      Air_Conditioner_Screen_KidsRoom.state)
-        }
-        else if (Air_Conditioner_Mode_KidsRoom.state == 5) //Radiator
-        {
-            postUpdate( PowerSocket_Kids,       Air_Conditioner_Power_KidsRoom.state)
-        }
+        //}
+        //else if (Air_Conditioner_Mode_KidsRoom.state == 5) //Radiator
+        //{
+        //    postUpdate( PowerSocket_Kids,       Air_Conditioner_Power_KidsRoom.state)
+        //}
 end
 
 rule "BedRoom AC"
@@ -235,7 +235,7 @@ end
 
 rule "Office AC PWR control"
     when
-            Item HT_Temperature_Office changed or
+            Item TH_Sensor5 changed or
             Item Air_Conditioner_MinTemp_Office changed or
             Item Air_Conditioner_MaxTemp_Office changed or 
             Item Air_Conditioner_PowerMaster_Office changed or
@@ -243,11 +243,7 @@ rule "Office AC PWR control"
             Item Air_Conditioner_Mode_Office changed
     then
             logInfo("AC_Office.rules", "One of the item was changed")
-            //logError("AC_Office.rules", "Temperature %1$.1f°C", TH_Sensor3.state)
-            //logDebug("AC_Office.rules", "Temperature %1$.1f°C", TH_Sensor3.state)
-            
-            //f_AC_Power_Control.apply("Office", HT_Temperature_Office)
-            f_Thermostat_Power_Control.apply("Air_Conditioner", "Office", HT_Temperature_Office)
+            f_Thermostat_Power_Control.apply("Air_Conditioner", "Office", TH_Sensor5)
 end
 
 rule "Living Room AC PWR control"
@@ -283,7 +279,7 @@ rule "KidsRoom AC PWR control"
             Item Air_Conditioner_PowerMode_KidsRoom changed or
             Item Air_Conditioner_Mode_KidsRoom changed
     then
-            f_Thermostat_Power_Control.apply("Air_Conditioner", "KidsRoom", XIAOMI_TEMPERATURE_SENSOR_TEMPERATURE)
+            f_Thermostat_Power_Control.apply("Air_Conditioner", "KidsRoom", TH_Sensor4)
 end
 
 rule "Kids Room Radiator PWR control"

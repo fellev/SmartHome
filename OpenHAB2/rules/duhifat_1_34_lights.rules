@@ -1,19 +1,25 @@
-import org.eclipse.smarthome.model.script.ScriptServiceUtil
-
-val f_turnOffAllLights = [|
-        sendCommand( LIVINGROOM_Light_RGB_Preset1, "OFF")
-        sendCommand( BEDROOM_Light_RGB_Preset, "OFF")
-        null
-]
-
 val f_turnOffAll = [|
-        sendCommand( Turn_Off_All_Lights, "ON")
         postUpdate( TV_IrPowerPost_Living, String::format("00000000") )
-        postUpdate( PowerSocket_Kids_CmdPost, "OFF" )
-        //sendCommand(Radiator_PowerOff_KidsRoom, "ON")
+        sendCommand(PowerSocket_Kids, "OFF" )
         sendCommand(Radiator_PowerMaster_KidsRoom, "OFF")
         sendCommand(BathroomHeater_Parents, "OFF")
         sendCommand(BathroomHeater_Kids, "OFF")
+        sendCommand(Lights     , "OFF")
+
+        if (Air_Conditioner_PowerMaster_Office.state == ON)
+        {
+            sendCommand(Air_Conditioner_PowerMaster_Office, "OFF")
+        }
+        else
+        {
+            postUpdate( Air_Conditioner_Power_Office,       OFF)
+            postUpdate( Air_Conditioner_Mode_Office,        Air_Conditioner_Mode_Office.state)
+            postUpdate( Air_Conditioner_FanSpeed_Office,    Air_Conditioner_FanSpeed_Office.state)
+            postUpdate( Air_Conditioner_FanAngle_Office,    Air_Conditioner_FanAngle_Office.state)
+            postUpdate( Air_Conditioner_Temperature_Office, Air_Conditioner_Temperature_Office.state)
+            postUpdate( Air_Conditioner_Screen_Office,      Air_Conditioner_Screen_Office.state)
+        }
+    
             createTimer(now.plusSeconds(2), [
             if (Air_Conditioner_PowerMaster_Living.state == ON)
             {
@@ -145,14 +151,6 @@ rule "Bedroom RGB Preset Change"
             sendCommand(BEDROOM_Light_RGB_Preset, "ON");
 end
 
-rule "Turn Off All Lights"
-    when 
-            Item Turn_Off_All_Lights changed
-    then
-            f_turnOffAllLights.apply()
-            postUpdate( Turn_Off_All_Lights, OFF)
-end
-
 rule "Wireless Switch Living Room"
 when
     Channel "mihome:sensor_switch:158d000361568f:button" triggered or 
@@ -210,7 +208,9 @@ then
             BEDROOM_Light_RGB_Color_Preset.sendCommand(state)
         }
         case "LONG_PRESSED": {
-            f_turnOffAllLights.apply()
+            sendCommand( LivingRoomLights, "OFF")
+            sendCommand( KitchenLights, "OFF")
+            sendCommand( TV_Power_State_Living, "OFF")
         }
         case "LONG_RELEASED": {
             //<ACTION>
@@ -219,13 +219,13 @@ then
 end
 
 
-rule "Stairs Light"
-    when 
-            Item Stairs_Light changed
-    then
-            postUpdate( Stairs_CmdPost, String::format("BLINK") )
-            postUpdate( Stairs_Light, OFF)
-end
+//rule "Stairs Light"
+//    when 
+//            Item Stairs_Light changed
+//    then
+//            postUpdate( Stairs_CmdPost, String::format("BLINK") )
+//            postUpdate( Stairs_Light, OFF)
+//end
 
 
 rule "Turn Off All"

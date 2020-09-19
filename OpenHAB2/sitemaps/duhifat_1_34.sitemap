@@ -30,7 +30,11 @@ sitemap duhifat_1_34 label="Main Menu"
         Switch      item=Air_Conditioner_PowerMaster_Living label="AC Power"
         Switch      item=Shutter_LivingRoom             label="Balcony"           icon="rollershutter"
         Switch      item=Shutter_Kitchen                label="Kitchen"           icon="rollershutter"        
-        Switch      item=LIVINGROOM_Light_RGB_Preset1   label="White Leds"        icon="light"
+        Switch      item=LIVINGROOM_Light_RGB_Preset1   label="Leds"              icon="light"
+        Switch      item=LivingRoom_Light_Main          label="Living Room"       icon="light"
+        Switch      item=LivingRoom_Light_Table         label="Table"             icon="light"
+        Switch      item=Kitchen_Light_Main             label="Kitchen Main"      icon="light"
+        Switch      item=Kitchen_Light_Spots            label="Kitchen Spots"     icon="light"
     }
 
     Frame label="Bed Room" {
@@ -85,6 +89,7 @@ sitemap duhifat_1_34 label="Main Menu"
         }
         Switch      item=Radiator_PowerMaster_KidsRoom label="Radiator Power"
         Switch      item=Shutter_KidsRoom                  label="Shutter"           icon="rollershutter"
+        Switch      item=Kids_Light_Main
     }
     
     Frame label="Office" {
@@ -97,10 +102,10 @@ sitemap duhifat_1_34 label="Main Menu"
                     Selection   item=Air_Conditioner_FanAngle_Office mappings=[0='Auto', 1='Full Sweep', 2='Position 1(UP)', 3='Position 2', 4='Position 3', 5='Position 4', 6='Position 5(DOWN)', 7='Sweep Down', 9='Sweep Center', 11='Sweep Up']
                     Selection   item=Air_Conditioner_Temperature_Office  mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25', 26='26', 27='27', 28='28', 29='29', 30='30']
                     Switch      item=Air_Conditioner_Screen_Office                     
-                    Selection   item=Air_Conditioner_MinTemp_Office mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
-                    Selection   item=Air_Conditioner_MaxTemp_Office mappings=[25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
+                    Selection   item=Air_Conditioner_MinTemp_Office mappings=[23='23', 24='24', 25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
+                    Selection   item=Air_Conditioner_MaxTemp_Office mappings=[23='23', 24='24', 25='25', 25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28']
                     Text        item=Air_Conditioner_Power_Office
-                    Selection   item=HT_Temperature_Office mappings=[16='16', 17='17', 18='18', 19='19', 20='20', 21='21', 22='22', 23='23', 24='24', 25='25',25.5='25.5',26='26', 26.5='26.5', 27='27', 27.5='27.5', 28='28', 29='29', 30='30']
+                    Text        item=Temperature_Office
                 } 
         }
     }    
@@ -133,13 +138,14 @@ sitemap duhifat_1_34 label="Main Menu"
             Switch item=Turn_Off_All
             Switch item=Open_All_Shutters            
             Switch item=Close_All_Shutters
-            Group item=LivingRoom label="Living Room" icon="groundfloor"
+            Group item=LivingRoom label="Living Room" icon="groundfloor" 
             Group item=BedRoom label="Bed Room" icon="bedroom"
             Group item=Office label="Office" icon="office"
             Group item=KidsRoom label="Kids' Room" icon="girl_2"
             Group item=Stairs label="Stairs" icon="corridor"
             Group item=BathroomParents label="Parents Bathroom" icon="bath"
             Group item=BathroomKids label="Kids Bathroom" icon="bath"
+            Group item=Kitchen
     }
 
 }

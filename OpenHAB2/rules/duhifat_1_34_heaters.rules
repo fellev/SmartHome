@@ -1,0 +1,13 @@
+//rule "Heater Bathroom Parents"
+//    when 
+//            Item BathroomHeater_Parents received update
+//    then
+//            postUpdate( BathroomHeater_Parents_CmdPost, BathroomHeater_Parents.state.toString )
+//end
+
+//rule "Heater Bathroom Kids"
+//    when 
+//            Item BathroomHeater_Kids received update
+//    then
+//            postUpdate( BathroomHeater_Kids_CmdPost, BathroomHeater_Kids.state.toString )
+//end
