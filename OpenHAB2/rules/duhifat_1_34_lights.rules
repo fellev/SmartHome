@@ -210,6 +210,7 @@ then
         case "LONG_PRESSED": {
             sendCommand( LivingRoomLights, "OFF")
             sendCommand( KitchenLights, "OFF")
+            sendCommand( BedroomLights, "OFF")
             sendCommand( TV_Power_State_Living, "OFF")
         }
         case "LONG_RELEASED": {

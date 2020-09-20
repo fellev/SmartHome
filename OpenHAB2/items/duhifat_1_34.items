@@ -26,9 +26,11 @@ Dimmer BEDROOM_Light_R                                                          
 Dimmer BEDROOM_Light_G                                                                                 {mqtt=">[mymosquitto:/CONTROLLERS/RGB/006/GREEN:state:*:default]"}
 Dimmer BEDROOM_Light_B                                                                                 {mqtt=">[mymosquitto:/CONTROLLERS/RGB/006/BLUE:state:*:default]"}
 Color  BEDROOM_Light_RGB                  "RGB Dimmer"         (BedRoom)
-Switch BEDROOM_Light_RGB_Preset           "Bedroom Light"      (Lights)                                                  ["Lighting"]
+Switch BEDROOM_Light_RGB_Preset           "Leds"               (BedRoom, Lights, BedroomLights)                          ["Lighting"]
 String BEDROOM_Light_RGB_Color_Preset     "Led Color"                                                                  
-                                                                                                                       
+
+Switch Bedroom_Light_Main                 "Main Light"         <switch>   (BedRoom, Lights, BedroomLights)               ["Lighting"]
+
 Switch BathroomParents_Light              "Light"              <switch>   (BathroomParents, Lights)                      ["Lighting"]
                                                                                                                        
 Switch Kids_Light_Main                    "Light"              <switch>   (KidsRoom, Lights)                             ["Lighting"]
@@ -42,6 +44,8 @@ Switch LivingRoom_Light_Table             "Table Light"        <switch>   (Livin
 Switch LivingRoom_Light_TV                "TV Light"           <switch>   (LivingRoom, Lights, LivingRoomLights)         ["Lighting"]
 
 Switch Stairs_Light                       "Power"              <switch>   (Stairs)
+
+
 
 /* Water Heater */
 Switch        WaterHeater_Power             "Water Heater"       <switch>       (Appliance)     ["Switchable"]
