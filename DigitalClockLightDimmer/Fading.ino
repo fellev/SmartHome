@@ -22,6 +22,7 @@ int avg = 0;
 
 //RunningAverage myRA(50);
 movingAvg avgL (50);                  // define the moving average object
+movingAvg avgL1 (20);                  // define the moving average object
 
 typedef struct TAG_S_INTENSITY_RANGE
 {
@@ -54,7 +55,8 @@ void f_analog_intensity (void)
   //    avg = 35;
   value2 = constrain(avg, 0, 70);
   value3 = map (value2, 0, 70, D_LED_POWER_OUTPUT_MIN, D_LED_POWER_OUTPUT_MAX);
-  analogWrite (ledpin, value3);
+  avg = avgL1.reading (value3);
+  analogWrite (ledpin, avg);
   delay (100);
 //		read_delay = 100;
   //	Serial.println(String("PWM"));
@@ -66,7 +68,7 @@ void f_digital_intensity (void)
   digitalWrite (ledpin, 1);
 //	delayMicroseconds(2);
   digitalWrite (ledpin, 0);
-  delay (10);
+  delay (1);
 //	read_delay = 1000;
 //	avgL.reset();
 }
@@ -77,6 +79,7 @@ void setup ()
   Serial.println (String ("Start"));
   Timer1.initialize (10000);  // 40 ms = 100 Hz
   avgL.begin ();
+  avgL1.begin ();
   f_intensity_control = f_digital_intensity;
 }
 
