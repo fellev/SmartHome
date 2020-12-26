@@ -1,11 +1,4 @@
-val f_turnOffAll = [|
-        postUpdate( TV_IrPowerPost_Living, String::format("00000000") )
-        sendCommand(PowerSocket_Kids, "OFF" )
-        sendCommand(Radiator_PowerMaster_KidsRoom, "OFF")
-        sendCommand(BathroomHeater_Parents, "OFF")
-        sendCommand(BathroomHeater_Kids, "OFF")
-        sendCommand(Lights     , "OFF")
-
+val f_turnOffAllAc = [|
         if (Air_Conditioner_PowerMaster_Office.state == ON)
         {
             sendCommand(Air_Conditioner_PowerMaster_Office, "OFF")
@@ -68,6 +61,17 @@ val f_turnOffAll = [|
                 ])
             ])
         ])
+        null
+]
+
+val f_turnOffAllLights = [|
+        postUpdate( TV_IrPowerPost_Living, String::format("00000000") )
+        sendCommand(PowerSocket_Kids, "OFF" )
+        sendCommand(Radiator_PowerMaster_KidsRoom, "OFF")
+        sendCommand(BathroomHeater_Parents, "OFF")
+        sendCommand(BathroomHeater_Kids, "OFF")
+        sendCommand(Lights     , "OFF")
+
         null
 ]
 
@@ -172,7 +176,7 @@ then
             //<ACTION>
         }
         case "LONG_PRESSED": {
-            f_turnOffAll.apply()
+            sendCommand( Turn_Off_All, "ON")
         }
         case "LONG_RELEASED": {
             //<ACTION>
@@ -220,19 +224,27 @@ then
 end
 
 
-//rule "Stairs Light"
-//    when 
-//            Item Stairs_Light changed
-//    then
-//            postUpdate( Stairs_CmdPost, String::format("BLINK") )
-//            postUpdate( Stairs_Light, OFF)
-//end
-
-
 rule "Turn Off All"
     when 
             Item Turn_Off_All changed
     then
-            f_turnOffAll.apply()
+            f_turnOffAllLights.apply()
+            f_turnOffAllAc.apply()
             postUpdate( Turn_Off_All, OFF)
+end
+
+rule "Turn Off All AC"
+    when 
+            Item Turn_Off_All_AC changed
+    then
+            f_turnOffAllAc.apply()
+            postUpdate( Turn_Off_All_AC, OFF)
+end
+
+rule "Presence"
+    when 
+            Item AnyoneHome changed to OFF
+    then
+            logInfo("Presence", "Nobody Home")
+            sendCommand( Turn_Off_All, "ON")
 end

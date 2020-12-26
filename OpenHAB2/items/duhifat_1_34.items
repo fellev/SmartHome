@@ -14,6 +14,8 @@ Group:Switch:OR(ON,OFF)    Lights           "All Lights"           <lightbulb>
 Group:Switch:OR(ON,OFF)    LivingRoomLights "Living Room Lights"   <lightbulb>
 Group:Switch:OR(ON,OFF)    KitchenLights    "Kitchen Lights"       <lightbulb>
 Group Kitchen                               "Kitchen"              <kitchen> 	(All)
+Group Presence            "Presence"
+Group:Switch:OR(ON,OFF)    AnyoneHome       "Anyone Home"
 
 /* Lights */
 Dimmer LIVINGROOM_Light_R                                                                              {mqtt=">[mymosquitto:/CONTROLLERS/RGB/260/RED:state:*:default]"}  /* 260 = 0x100 + 0x004 */
@@ -176,10 +178,12 @@ Switch MS_BatteryLow_Stairs   <energy>  (Stairs) { channel="mihome:sensor_motion
 
 Switch PowerSocket_Kids         "Heater"              <switch>  (KidsRoom)          
 
-Switch PowerSocket_RPI4         "RPI4 Power On/Off"   <switch>  (LivingRoom)
+Switch PowerSocket_RPI4         "YES Power On/Off"   <switch>  (LivingRoom)
 
 Switch BathroomHeater_Parents   "Heater"              <switch>  (BathroomParents)  ["Switchable"]
 
 Switch BathroomHeater_Kids      "Heater"              <switch>  (BathroomKids)     ["Switchable"]
 
 Switch Turn_Off_All            "Turn Off All"         <switch>
+
+Switch Turn_Off_All_AC         "Turn Off All AC"      <switch>

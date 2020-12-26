@@ -147,6 +147,7 @@ sitemap duhifat_1_34 label="Main Menu"
             Group item=BathroomParents label="Parents Bathroom" icon="bath"
             Group item=BathroomKids label="Kids Bathroom" icon="bath"
             Group item=Kitchen
+            Group item=Presence icon="presence"
     }
 
 }
