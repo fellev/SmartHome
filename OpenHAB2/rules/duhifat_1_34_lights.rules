@@ -1,4 +1,7 @@
 val f_turnOffAllAc = [|
+        
+        sendCommand(Radiator_Power_KidsRoom, "OFF")
+        
         if (Air_Conditioner_PowerMaster_Office.state == ON)
         {
             sendCommand(Air_Conditioner_PowerMaster_Office, "OFF")
