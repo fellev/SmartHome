@@ -1,372 +1,764 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
-	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646" moduleId="org.eclipse.cdt.core.settings" name="WaterHeater_Release">
-				<externalSettings/>
-				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-				</extensions>
-			</storageModule>
-			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="" artifactName="${ProjName}" buildProperties="" description="" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646" name="WaterHeater_Release" optionalBuildProperties="" parent="org.eclipse.cdt.build.core.emptycfg" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
-					<folderInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646." name="/" resourcePath="">
-						<toolChain id="io.sloeber.core.toolChain.release.329492233" name="Arduino Toolchain (Sloeber edition)" superClass="io.sloeber.core.toolChain.release">
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="io.sloeber.targetplatform.495039407" name="Arduino Target" osList="all" superClass="io.sloeber.targetplatform"/>
-							<builder buildPath="${workspace_loc:/SmartHomeWifi}/WaterHeater Release" id="io.sloeber.sketch.builder.1334426470" keepEnvironmentInBuildfile="false" name="Arduino sketch builder" superClass="io.sloeber.sketch.builder"/>
-							<tool id="io.sloeber.tool.sketch.compiler.cpp.1590512277" name="Arduino C++ Compiler" superClass="io.sloeber.tool.sketch.compiler.cpp">
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.cpp.sketch.option.incpath.1928810569" name="Include Paths (-I)" superClass="io.sloeber.compiler.cpp.sketch.option.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
-								</option>
-								<inputType id="io.sloeber.compiler.cpp.sketch.input.1442762690" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
-							</tool>
-							<tool id="io.sloeber.tool.compiler.c.978393119" name="Arduino C Compiler" superClass="io.sloeber.tool.compiler.c">
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.c.sketch.option.incpath.1377168868" name="Include Paths (-I)" superClass="io.sloeber.compiler.c.sketch.option.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
-								</option>
-								<inputType id="io.sloeber.compiler.c.sketch.input.599743426" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
-							</tool>
-							<tool id="io.sloeber.tool.sketch.compiler.s.2116779088" name="Arduino Assembler" superClass="io.sloeber.tool.sketch.compiler.s">
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.asm.sketch.option.incpath.935314287" name="Include Paths (-I)" superClass="io.sloeber.compiler.asm.sketch.option.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
-								</option>
-								<inputType id="io.sloeber.compiler.S.sketch.input.1026950336" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
-							</tool>
-							<tool id="io.sloeber.tool.ar.932344843" name="Arduino archiver" superClass="io.sloeber.tool.ar"/>
-							<tool id="io.sloeber.tool.combine.1376481741" name="Arduino combiner" superClass="io.sloeber.tool.combine"/>
-							<tool id="io.sloeber.tool.objcopy.eep.808534728" name="Arduino tool objcopy command" superClass="io.sloeber.tool.objcopy.eep"/>
-							<tool id="io.sloeber.tool.size.663868674" name="Arduino tool Print Size" superClass="io.sloeber.tool.size"/>
-						</toolChain>
-					</folderInfo>
-					<sourceEntries>
-						<entry excluding="Product/PowerSwitch|libraries/?*/**/test*/**|libraries**/._*|libraries/?*/**/third-party/**|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-					</sourceEntries>
-				</configuration>
-			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-		</cconfiguration>
-		<cconfiguration id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604" moduleId="org.eclipse.cdt.core.settings" name="WaterHeater_Debug">
-				<externalSettings/>
-				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-				</extensions>
-			</storageModule>
-			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="" artifactName="${ProjName}" buildProperties="" description="" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604" name="WaterHeater_Debug" optionalBuildProperties="" parent="org.eclipse.cdt.build.core.emptycfg" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
-					<folderInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604." name="/" resourcePath="">
-						<toolChain id="io.sloeber.core.toolChain.release.1736139458" name="Arduino Toolchain (Sloeber edition)" superClass="io.sloeber.core.toolChain.release">
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="io.sloeber.targetplatform.1422676455" name="Arduino Target" osList="all" superClass="io.sloeber.targetplatform"/>
-							<builder buildPath="${workspace_loc:/SmartHomeWifi}/WaterHeater Debug" id="io.sloeber.sketch.builder.1536918501" keepEnvironmentInBuildfile="false" name="Arduino sketch builder" superClass="io.sloeber.sketch.builder"/>
-							<tool id="io.sloeber.tool.sketch.compiler.cpp.42582176" name="Arduino C++ Compiler" superClass="io.sloeber.tool.sketch.compiler.cpp">
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.cpp.sketch.option.incpath.2086295703" name="Include Paths (-I)" superClass="io.sloeber.compiler.cpp.sketch.option.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
-								</option>
-								<inputType id="io.sloeber.compiler.cpp.sketch.input.2015372405" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
-							</tool>
-							<tool id="io.sloeber.tool.compiler.c.1110719508" name="Arduino C Compiler" superClass="io.sloeber.tool.compiler.c">
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.c.sketch.option.incpath.1463157313" name="Include Paths (-I)" superClass="io.sloeber.compiler.c.sketch.option.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
-								</option>
-								<inputType id="io.sloeber.compiler.c.sketch.input.887327644" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
-							</tool>
-							<tool id="io.sloeber.tool.sketch.compiler.s.2019380047" name="Arduino Assembler" superClass="io.sloeber.tool.sketch.compiler.s">
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.asm.sketch.option.incpath.1977866408" name="Include Paths (-I)" superClass="io.sloeber.compiler.asm.sketch.option.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
-								</option>
-								<inputType id="io.sloeber.compiler.S.sketch.input.640554129" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
-							</tool>
-							<tool id="io.sloeber.tool.ar.446726427" name="Arduino archiver" superClass="io.sloeber.tool.ar"/>
-							<tool id="io.sloeber.tool.combine.1099777397" name="Arduino combiner" superClass="io.sloeber.tool.combine"/>
-							<tool id="io.sloeber.tool.objcopy.eep.1503556275" name="Arduino tool objcopy command" superClass="io.sloeber.tool.objcopy.eep"/>
-							<tool id="io.sloeber.tool.size.1119231953" name="Arduino tool Print Size" superClass="io.sloeber.tool.size"/>
-						</toolChain>
-					</folderInfo>
-					<sourceEntries>
-						<entry excluding="Product/PowerSwitch|libraries/?*/**/test*/**|libraries**/._*|libraries/?*/**/third-party/**|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-					</sourceEntries>
-				</configuration>
-			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-		</cconfiguration>
-		<cconfiguration id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.1092657523">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.1092657523" moduleId="org.eclipse.cdt.core.settings" name="WaterHeater Clear EEprom Debug">
-				<externalSettings/>
-				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-				</extensions>
-			</storageModule>
-			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="" artifactName="${ProjName}" buildProperties="" description="Clear the eeprom on boot" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.1092657523" name="WaterHeater Clear EEprom Debug" parent="org.eclipse.cdt.build.core.emptycfg" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
-					<folderInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.1092657523." name="/" resourcePath="">
-						<toolChain errorParsers="" id="it.baeyens.arduino.core.toolChain.release.932990406" name="Arduino Toolchain" superClass="it.baeyens.arduino.core.toolChain.release">
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="it.baeyens.arduino.targetplatform.969185571" name="Arduino Target" osList="all" superClass="it.baeyens.arduino.targetplatform"/>
-							<builder autoBuildTarget="all" buildPath="${workspace_loc:/SmartHomeWifi}/WaterHeater Release" cleanBuildTarget="clean" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" errorParsers="org.eclipse.cdt.core.MakeErrorParser" id="it.baeyens.arduino.sketch.builder.413320791" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Arduino sketch builder" parallelBuildOn="false" superClass="it.baeyens.arduino.sketch.builder"/>
-							<tool command="${A.RECIPE.CPP.O.PATTERN}" commandLinePattern="${A.RECIPE.CPP.O.PATTERN.1} ${FLAGS} -D__IN_ECLIPSE__=1 -x c++ ${INPUTS} ${A.RECIPE.CPP.O.PATTERN.2} ${OUTPUT} ${A.RECIPE.CPP.O.PATTERN.3} ${JANTJE.WARNING_LEVEL} ${JANTJE.EXTRA.COMPILE} ${JANTJE.EXTRA.CPP.COMPILE}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.tool.sketch.compiler.cpp.1178262125" name="Arduino C++ Compiler" superClass="it.baeyens.arduino.tool.sketch.compiler.cpp">
-								<option id="it.baeyens.arduino.compiler.cpp.sketch.option.incpath.1711941625" name="Include Paths (-I)" superClass="it.baeyens.arduino.compiler.cpp.sketch.option.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
-								</option>
-								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.348101100" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
-							</tool>
-							<tool command="${A.RECIPE.C.O.PATTERN}" commandLinePattern="${A.RECIPE.C.O.PATTERN.1} ${FLAGS} -D__IN_ECLIPSE__=1 ${INPUTS} ${A.RECIPE.C.O.PATTERN.2} ${OUTPUT} ${A.RECIPE.C.O.PATTERN.3} ${JANTJE.WARNING_LEVEL} ${JANTJE.EXTRA.COMPILE} ${JANTJE.EXTRA.C.COMPILE}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.tool.compiler.c.525333736" name="Arduino C Compiler" superClass="it.baeyens.arduino.tool.compiler.c">
-								<option id="it.baeyens.arduino.compiler.c.sketch.option.incpath.114937406" name="Include Paths (-I)" superClass="it.baeyens.arduino.compiler.c.sketch.option.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
-								</option>
-								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.1134601215" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
-							</tool>
-							<tool command="${A.RECIPE.S.O.PATTERN}" commandLinePattern="${A.RECIPE.S.O.PATTERN.1} ${FLAGS} -D__IN_ECLIPSE__=1 ${INPUTS} ${A.RECIPE.S.O.PATTERN.2} ${OUTPUT} ${A.RECIPE.S.O.PATTERN.3} ${JANTJE.WARNING_LEVEL} ${JANTJE.EXTRA.COMPILE} ${JANTJE.EXTRA.S.COMPILE}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.tool.sketch.compiler.s.1330195275" name="Arduino Assembler" superClass="it.baeyens.arduino.tool.sketch.compiler.s"/>
-							<tool command="${A.RECIPE.AR.PATTERN}" commandLinePattern="${A.RECIPE.AR.PATTERN.1} ${FLAGS}  ${A.ARCHIVE_FILE} ${INPUTS} ${A.RECIPE.AR.PATTERN.2} ${A.RECIPE.AR.PATTERN.3}" errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="it.baeyens.arduino.tool.ar.149453635" name="Arduino archiver" superClass="it.baeyens.arduino.tool.ar"/>
-							<tool command="${A.RECIPE.C.COMBINE.PATTERN}" commandLinePattern="${A.RECIPE.C.COMBINE.PATTERN.1} ${FLAGS} ${INPUTS} ${A.RECIPE.C.COMBINE.PATTERN.2} ${A.RECIPE.C.COMBINE.PATTERN.3}" errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="it.baeyens.arduino.tool.combine.1957812674" name="Arduino combiner" superClass="it.baeyens.arduino.tool.combine"/>
-							<tool command="all objcopy commands" commandLinePattern="${JANTJE.OBJCOPY}" errorParsers="" id="it.baeyens.arduino.tool.objcopy.eep.1430414111" name="Arduino tool Create eeprom" superClass="it.baeyens.arduino.tool.objcopy.eep"/>
-							<tool command="${JANTJE.SIZE.SWITCH}" commandLinePattern="${COMMAND}" errorParsers="" id="it.baeyens.arduino.tool.size.364819550" name="Arduino tool Print Size" superClass="it.baeyens.arduino.tool.size">
-								<outputType id="it.baeyens.arduino.tool.size.output.648556365" outputPrefix="" superClass="it.baeyens.arduino.tool.size.output"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
-					<sourceEntries>
-						<entry excluding="libraries/?*/**/test*/**|libraries**/._*|libraries/?*/**/third-party/**|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
-					</sourceEntries>
-				</configuration>
-			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-		</cconfiguration>
-		<cconfiguration id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.872680825">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.872680825" moduleId="org.eclipse.cdt.core.settings" name="PowerSwitch Debug">
-				<externalSettings/>
-				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-				</extensions>
-			</storageModule>
-			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="" artifactName="${ProjName}" buildProperties="" description="Power Switch Debug" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.872680825" name="PowerSwitch Debug" parent="org.eclipse.cdt.build.core.emptycfg" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
-					<folderInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.872680825." name="/" resourcePath="">
-						<toolChain errorParsers="" id="it.baeyens.arduino.core.toolChain.release.1771869542" name="Arduino Toolchain" superClass="it.baeyens.arduino.core.toolChain.release">
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="it.baeyens.arduino.targetplatform.527676908" name="Arduino Target" osList="all" superClass="it.baeyens.arduino.targetplatform"/>
-							<builder autoBuildTarget="all" buildPath="${workspace_loc:/SmartHomeWifi}/WaterHeater Release" cleanBuildTarget="clean" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" errorParsers="org.eclipse.cdt.core.MakeErrorParser" id="it.baeyens.arduino.sketch.builder.1118110847" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Arduino sketch builder" parallelBuildOn="false" superClass="it.baeyens.arduino.sketch.builder"/>
-							<tool command="${A.RECIPE.CPP.O.PATTERN}" commandLinePattern="${A.RECIPE.CPP.O.PATTERN.1} ${FLAGS} -D__IN_ECLIPSE__=1 -x c++ ${INPUTS} ${A.RECIPE.CPP.O.PATTERN.2} ${OUTPUT} ${A.RECIPE.CPP.O.PATTERN.3} ${JANTJE.WARNING_LEVEL} ${JANTJE.EXTRA.COMPILE} ${JANTJE.EXTRA.CPP.COMPILE}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.tool.sketch.compiler.cpp.306197087" name="Arduino C++ Compiler" superClass="it.baeyens.arduino.tool.sketch.compiler.cpp">
-								<option id="it.baeyens.arduino.compiler.cpp.sketch.option.incpath.2004744710" name="Include Paths (-I)" superClass="it.baeyens.arduino.compiler.cpp.sketch.option.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/MainApp/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/MainApp/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/Configurations/HW}&quot;"/>
-								</option>
-								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.726016221" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
-							</tool>
-							<tool command="${A.RECIPE.C.O.PATTERN}" commandLinePattern="${A.RECIPE.C.O.PATTERN.1} ${FLAGS} -D__IN_ECLIPSE__=1 ${INPUTS} ${A.RECIPE.C.O.PATTERN.2} ${OUTPUT} ${A.RECIPE.C.O.PATTERN.3} ${JANTJE.WARNING_LEVEL} ${JANTJE.EXTRA.COMPILE} ${JANTJE.EXTRA.C.COMPILE}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.tool.compiler.c.2143244711" name="Arduino C Compiler" superClass="it.baeyens.arduino.tool.compiler.c">
-								<option id="it.baeyens.arduino.compiler.c.sketch.option.incpath.141675064" name="Include Paths (-I)" superClass="it.baeyens.arduino.compiler.c.sketch.option.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/Configurations/HW}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/Configurations/eeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/MainApp/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/MainApp/src}&quot;"/>
-								</option>
-								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.1653430967" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
-							</tool>
-							<tool command="${A.RECIPE.S.O.PATTERN}" commandLinePattern="${A.RECIPE.S.O.PATTERN.1} ${FLAGS} -D__IN_ECLIPSE__=1 ${INPUTS} ${A.RECIPE.S.O.PATTERN.2} ${OUTPUT} ${A.RECIPE.S.O.PATTERN.3} ${JANTJE.WARNING_LEVEL} ${JANTJE.EXTRA.COMPILE} ${JANTJE.EXTRA.S.COMPILE}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.tool.sketch.compiler.s.576044393" name="Arduino Assembler" superClass="it.baeyens.arduino.tool.sketch.compiler.s"/>
-							<tool command="${A.RECIPE.AR.PATTERN}" commandLinePattern="${A.RECIPE.AR.PATTERN.1} ${FLAGS}  ${A.ARCHIVE_FILE} ${INPUTS} ${A.RECIPE.AR.PATTERN.2} ${A.RECIPE.AR.PATTERN.3}" errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="it.baeyens.arduino.tool.ar.1997521587" name="Arduino archiver" superClass="it.baeyens.arduino.tool.ar"/>
-							<tool command="${A.RECIPE.C.COMBINE.PATTERN}" commandLinePattern="${A.RECIPE.C.COMBINE.PATTERN.1} ${FLAGS} ${INPUTS} ${A.RECIPE.C.COMBINE.PATTERN.2} ${A.RECIPE.C.COMBINE.PATTERN.3}" errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="it.baeyens.arduino.tool.combine.288956179" name="Arduino combiner" superClass="it.baeyens.arduino.tool.combine"/>
-							<tool command="all objcopy commands" commandLinePattern="${JANTJE.OBJCOPY}" errorParsers="" id="it.baeyens.arduino.tool.objcopy.eep.1078035301" name="Arduino tool Create eeprom" superClass="it.baeyens.arduino.tool.objcopy.eep"/>
-							<tool command="${JANTJE.SIZE.SWITCH}" commandLinePattern="${COMMAND}" errorParsers="" id="it.baeyens.arduino.tool.size.1743991677" name="Arduino tool Print Size" superClass="it.baeyens.arduino.tool.size">
-								<outputType id="it.baeyens.arduino.tool.size.output.1131828402" outputPrefix="" superClass="it.baeyens.arduino.tool.size.output"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
-					<sourceEntries>
-						<entry excluding="Product/WaterHeater|libraries/?*/**/test*/**|libraries**/._*|libraries/?*/**/third-party/**|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-					</sourceEntries>
-				</configuration>
-			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-		</cconfiguration>
-	</storageModule>
-	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="wwww.null.1929536809" name="wwww"/>
-	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="WaterHeater Debug">
-			<resource resourceType="PROJECT" workspacePath="/SmartHomeWifi"/>
-		</configuration>
-		<configuration configurationName="WaterHeater Release"/>
-		<configuration configurationName="PowerSwitch Debug"/>
-		<configuration configurationName="WaterHeater Clear EEprom Debug"/>
-		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/SmartHomeWifi"/>
-		</configuration>
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+    	
+    <storageModule moduleId="org.eclipse.cdt.core.settings">
+        		
+        <cconfiguration id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646">
+            			
+            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646" moduleId="org.eclipse.cdt.core.settings" name="WaterHeater_Release">
+                				
+                <externalSettings/>
+                				
+                <extensions>
+                    					
+                    <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    				
+                </extensions>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+                				
+                <configuration artifactExtension="" artifactName="${ProjName}" buildProperties="" description="" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646" name="WaterHeater_Release" optionalBuildProperties="" parent="org.eclipse.cdt.build.core.emptycfg" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
+                    					
+                    <folderInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646." name="/" resourcePath="">
+                        						
+                        <toolChain id="io.sloeber.core.toolChain.release.329492233" name="Arduino Toolchain (Sloeber edition)" superClass="io.sloeber.core.toolChain.release">
+                            							
+                            <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="io.sloeber.targetplatform.495039407" name="Arduino Target" osList="all" superClass="io.sloeber.targetplatform"/>
+                            							
+                            <builder buildPath="${workspace_loc:/SmartHomeWifi}/WaterHeater Release" id="io.sloeber.sketch.builder.1334426470" keepEnvironmentInBuildfile="false" name="Arduino sketch builder" superClass="io.sloeber.sketch.builder"/>
+                            							
+                            <tool id="io.sloeber.tool.sketch.compiler.cpp.1590512277" name="Arduino C++ Compiler" superClass="io.sloeber.tool.sketch.compiler.cpp">
+                                								
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.cpp.sketch.option.incpath.1928810569" name="Include Paths (-I)" superClass="io.sloeber.compiler.cpp.sketch.option.incpath" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
+                                    								
+                                </option>
+                                								
+                                <inputType id="io.sloeber.compiler.cpp.sketch.input.1442762690" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="io.sloeber.tool.compiler.c.978393119" name="Arduino C Compiler" superClass="io.sloeber.tool.compiler.c">
+                                								
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.c.sketch.option.incpath.1377168868" name="Include Paths (-I)" superClass="io.sloeber.compiler.c.sketch.option.incpath" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/PowerSwitch/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
+                                    								
+                                </option>
+                                								
+                                <inputType id="io.sloeber.compiler.c.sketch.input.599743426" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="io.sloeber.tool.sketch.compiler.s.2116779088" name="Arduino Assembler" superClass="io.sloeber.tool.sketch.compiler.s">
+                                								
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.asm.sketch.option.incpath.935314287" name="Include Paths (-I)" superClass="io.sloeber.compiler.asm.sketch.option.incpath" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
+                                    								
+                                </option>
+                                								
+                                <inputType id="io.sloeber.compiler.S.sketch.input.1026950336" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="io.sloeber.tool.ar.932344843" name="Arduino archiver" superClass="io.sloeber.tool.ar"/>
+                            							
+                            <tool id="io.sloeber.tool.combine.1376481741" name="Arduino combiner" superClass="io.sloeber.tool.combine"/>
+                            							
+                            <tool id="io.sloeber.tool.objcopy.eep.808534728" name="Arduino tool objcopy command" superClass="io.sloeber.tool.objcopy.eep"/>
+                            							
+                            <tool id="io.sloeber.tool.size.663868674" name="Arduino tool Print Size" superClass="io.sloeber.tool.size"/>
+                            						
+                        </toolChain>
+                        					
+                    </folderInfo>
+                    					
+                    <folderInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.47329033" name="/" resourcePath="libraries/WiFi">
+                        						
+                        <toolChain id="io.sloeber.core.toolChain.release.224556188" name="Arduino Toolchain (Sloeber edition)" superClass="io.sloeber.core.toolChain.release" unusedChildren="">
+                            							
+                            <tool id="io.sloeber.tool.sketch.compiler.cpp.642728440" name="Arduino C++ Compiler" superClass="io.sloeber.tool.sketch.compiler.cpp.1590512277"/>
+                            							
+                            <tool id="io.sloeber.tool.compiler.c.127272822" name="Arduino C Compiler" superClass="io.sloeber.tool.compiler.c.978393119"/>
+                            							
+                            <tool id="io.sloeber.tool.sketch.compiler.s.250795017" name="Arduino Assembler" superClass="io.sloeber.tool.sketch.compiler.s.2116779088"/>
+                            							
+                            <tool id="io.sloeber.tool.ar.820237566" name="Arduino archiver" superClass="io.sloeber.tool.ar.932344843"/>
+                            							
+                            <tool id="io.sloeber.tool.combine.562898009" name="Arduino combiner" superClass="io.sloeber.tool.combine.1376481741"/>
+                            							
+                            <tool id="io.sloeber.tool.objcopy.eep.2087317717" name="Arduino tool objcopy command" superClass="io.sloeber.tool.objcopy.eep.808534728"/>
+                            							
+                            <tool id="io.sloeber.tool.size.1031622394" name="Arduino tool Print Size" superClass="io.sloeber.tool.size.663868674"/>
+                            						
+                        </toolChain>
+                        					
+                    </folderInfo>
+                    					
+                    <sourceEntries>
+                        						
+                        <entry excluding="libraries/WiFi|Product/PowerSwitch|libraries/?*/**/test*/**|libraries**/._*|libraries/?*/**/third-party/**|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        					
+                    </sourceEntries>
+                    				
+                </configuration>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+            		
+        </cconfiguration>
+        		
+        <cconfiguration id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604">
+            			
+            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604" moduleId="org.eclipse.cdt.core.settings" name="WaterHeater_Debug">
+                				
+                <externalSettings/>
+                				
+                <extensions>
+                    					
+                    <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    				
+                </extensions>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+                				
+                <configuration artifactExtension="" artifactName="${ProjName}" buildProperties="" description="" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604" name="WaterHeater_Debug" optionalBuildProperties="" parent="org.eclipse.cdt.build.core.emptycfg" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
+                    					
+                    <folderInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604." name="/" resourcePath="">
+                        						
+                        <toolChain id="io.sloeber.core.toolChain.release.1736139458" name="Arduino Toolchain (Sloeber edition)" superClass="io.sloeber.core.toolChain.release">
+                            							
+                            <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="io.sloeber.targetplatform.1422676455" name="Arduino Target" osList="all" superClass="io.sloeber.targetplatform"/>
+                            							
+                            <builder buildPath="${workspace_loc:/SmartHomeWifi}/WaterHeater Debug" id="io.sloeber.sketch.builder.1536918501" keepEnvironmentInBuildfile="false" name="Arduino sketch builder" superClass="io.sloeber.sketch.builder"/>
+                            							
+                            <tool id="io.sloeber.tool.sketch.compiler.cpp.42582176" name="Arduino C++ Compiler" superClass="io.sloeber.tool.sketch.compiler.cpp">
+                                								
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.cpp.sketch.option.incpath.2086295703" name="Include Paths (-I)" superClass="io.sloeber.compiler.cpp.sketch.option.incpath" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+                                    								
+                                </option>
+                                								
+                                <inputType id="io.sloeber.compiler.cpp.sketch.input.2015372405" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="io.sloeber.tool.compiler.c.1110719508" name="Arduino C Compiler" superClass="io.sloeber.tool.compiler.c">
+                                								
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.c.sketch.option.incpath.1463157313" name="Include Paths (-I)" superClass="io.sloeber.compiler.c.sketch.option.incpath" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+                                    								
+                                </option>
+                                								
+                                <inputType id="io.sloeber.compiler.c.sketch.input.887327644" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="io.sloeber.tool.sketch.compiler.s.2019380047" name="Arduino Assembler" superClass="io.sloeber.tool.sketch.compiler.s">
+                                								
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.asm.sketch.option.incpath.1977866408" name="Include Paths (-I)" superClass="io.sloeber.compiler.asm.sketch.option.incpath" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+                                    								
+                                </option>
+                                								
+                                <inputType id="io.sloeber.compiler.S.sketch.input.640554129" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="io.sloeber.tool.ar.446726427" name="Arduino archiver" superClass="io.sloeber.tool.ar"/>
+                            							
+                            <tool id="io.sloeber.tool.combine.1099777397" name="Arduino combiner" superClass="io.sloeber.tool.combine"/>
+                            							
+                            <tool id="io.sloeber.tool.objcopy.eep.1503556275" name="Arduino tool objcopy command" superClass="io.sloeber.tool.objcopy.eep"/>
+                            							
+                            <tool id="io.sloeber.tool.size.1119231953" name="Arduino tool Print Size" superClass="io.sloeber.tool.size"/>
+                            						
+                        </toolChain>
+                        					
+                    </folderInfo>
+                    					
+                    <fileInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.58247226" name="WiFiUdp.h" rcbsApplicability="disable" resourcePath="libraries/WiFi/src/WiFiUdp.h" toolsToInvoke=""/>
+                    					
+                    <sourceEntries>
+                        						
+                        <entry excluding="libraries/WiFi/src|libraries/WiFi/src/WiFiUdp.h|Product/PowerSwitch|libraries/?*/**/test*/**|libraries**/._*|libraries/?*/**/third-party/**|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        					
+                    </sourceEntries>
+                    				
+                </configuration>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+            		
+        </cconfiguration>
+        		
+        <cconfiguration id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.1092657523">
+            			
+            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.1092657523" moduleId="org.eclipse.cdt.core.settings" name="WaterHeater Clear EEprom Debug">
+                				
+                <externalSettings/>
+                				
+                <extensions>
+                    					
+                    <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    				
+                </extensions>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+                				
+                <configuration artifactExtension="" artifactName="${ProjName}" buildProperties="" description="Clear the eeprom on boot" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.1092657523" name="WaterHeater Clear EEprom Debug" parent="org.eclipse.cdt.build.core.emptycfg" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
+                    					
+                    <folderInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.1092657523." name="/" resourcePath="">
+                        						
+                        <toolChain errorParsers="" id="it.baeyens.arduino.core.toolChain.release.932990406" name="Arduino Toolchain">
+                            							
+                            <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="it.baeyens.arduino.targetplatform.969185571" name="Arduino Target" osList="all"/>
+                            							
+                            <builder autoBuildTarget="all" buildPath="${workspace_loc:/SmartHomeWifi}/WaterHeater Release" cleanBuildTarget="clean" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" errorParsers="org.eclipse.cdt.core.MakeErrorParser" id="it.baeyens.arduino.sketch.builder.413320791" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Arduino sketch builder" parallelBuildOn="false"/>
+                            						
+                        </toolChain>
+                        					
+                    </folderInfo>
+                    					
+                    <sourceEntries>
+                        						
+                        <entry excluding="libraries/?*/**/test*/**|libraries**/._*|libraries/?*/**/third-party/**|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+                        					
+                    </sourceEntries>
+                    				
+                </configuration>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+            		
+        </cconfiguration>
+        		
+        <cconfiguration id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.872680825">
+            			
+            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.872680825" moduleId="org.eclipse.cdt.core.settings" name="PowerSwitch Debug">
+                				
+                <externalSettings/>
+                				
+                <extensions>
+                    					
+                    <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    				
+                </extensions>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+                				
+                <configuration artifactExtension="" artifactName="${ProjName}" buildProperties="" description="Power Switch Debug" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.872680825" name="PowerSwitch Debug" parent="org.eclipse.cdt.build.core.emptycfg" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
+                    					
+                    <folderInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.872680825." name="/" resourcePath="">
+                        						
+                        <toolChain errorParsers="" id="it.baeyens.arduino.core.toolChain.release.1771869542" name="Arduino Toolchain">
+                            							
+                            <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="it.baeyens.arduino.targetplatform.527676908" name="Arduino Target" osList="all"/>
+                            							
+                            <builder autoBuildTarget="all" buildPath="${workspace_loc:/SmartHomeWifi}/WaterHeater Release" cleanBuildTarget="clean" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" errorParsers="org.eclipse.cdt.core.MakeErrorParser" id="it.baeyens.arduino.sketch.builder.1118110847" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Arduino sketch builder" parallelBuildOn="false"/>
+                            						
+                        </toolChain>
+                        					
+                    </folderInfo>
+                    					
+                    <sourceEntries>
+                        						
+                        <entry excluding="Product/WaterHeater|libraries/?*/**/test*/**|libraries**/._*|libraries/?*/**/third-party/**|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        					
+                    </sourceEntries>
+                    				
+                </configuration>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+            		
+        </cconfiguration>
+        		
+        <cconfiguration id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.652642567">
+            			
+            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.652642567" moduleId="org.eclipse.cdt.core.settings" name="WaterHeater_Debug_restore_to_default">
+                				
+                <externalSettings/>
+                				
+                <extensions>
+                    					
+                    <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    				
+                </extensions>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+                				
+                <configuration artifactExtension="" artifactName="${ProjName}" buildProperties="" description="Restore to default" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.652642567" name="WaterHeater_Debug_restore_to_default" optionalBuildProperties="" parent="org.eclipse.cdt.build.core.emptycfg" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
+                    					
+                    <folderInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.652642567." name="/" resourcePath="">
+                        						
+                        <toolChain id="io.sloeber.core.toolChain.release.574460828" name="Arduino Toolchain (Sloeber edition)" superClass="io.sloeber.core.toolChain.release">
+                            							
+                            <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="io.sloeber.targetplatform.1800278604" name="Arduino Target" osList="all" superClass="io.sloeber.targetplatform"/>
+                            							
+                            <builder buildPath="${workspace_loc:/SmartHomeWifi}/WaterHeater Debug" id="io.sloeber.sketch.builder.1318306321" keepEnvironmentInBuildfile="false" name="Arduino sketch builder" superClass="io.sloeber.sketch.builder"/>
+                            							
+                            <tool id="io.sloeber.tool.sketch.compiler.cpp.1789959008" name="Arduino C++ Compiler" superClass="io.sloeber.tool.sketch.compiler.cpp">
+                                								
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.cpp.sketch.option.incpath.1117200285" name="Include Paths (-I)" superClass="io.sloeber.compiler.cpp.sketch.option.incpath" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+                                    								
+                                </option>
+                                								
+                                <inputType id="io.sloeber.compiler.cpp.sketch.input.2053896904" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="io.sloeber.tool.compiler.c.470994867" name="Arduino C Compiler" superClass="io.sloeber.tool.compiler.c">
+                                								
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.c.sketch.option.incpath.934886068" name="Include Paths (-I)" superClass="io.sloeber.compiler.c.sketch.option.incpath" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+                                    								
+                                </option>
+                                								
+                                <inputType id="io.sloeber.compiler.c.sketch.input.903596827" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="io.sloeber.tool.sketch.compiler.s.1767286353" name="Arduino Assembler" superClass="io.sloeber.tool.sketch.compiler.s">
+                                								
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.asm.sketch.option.incpath.2035870936" name="Include Paths (-I)" superClass="io.sloeber.compiler.asm.sketch.option.incpath" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/core}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/core/variant}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/DebugUtils}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROM}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/EEPROMAnything}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/ESP8266WiFi/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/pubsubclient-2.6/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SimpleTimer}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/eeprom}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/Configurations/HW}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/Product/WaterHeater/MainApp/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Data/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/Boot/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/Utils/inc}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/System/ESP12E/GPIO}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/SPI}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SmartHomeWifi/libraries/WiFi/src}&quot;"/>
+                                    								
+                                </option>
+                                								
+                                <inputType id="io.sloeber.compiler.S.sketch.input.40866708" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="io.sloeber.tool.ar.876369127" name="Arduino archiver" superClass="io.sloeber.tool.ar"/>
+                            							
+                            <tool id="io.sloeber.tool.combine.1321615958" name="Arduino combiner" superClass="io.sloeber.tool.combine"/>
+                            							
+                            <tool id="io.sloeber.tool.objcopy.eep.773264906" name="Arduino tool objcopy command" superClass="io.sloeber.tool.objcopy.eep"/>
+                            							
+                            <tool id="io.sloeber.tool.size.1199488555" name="Arduino tool Print Size" superClass="io.sloeber.tool.size"/>
+                            						
+                        </toolChain>
+                        					
+                    </folderInfo>
+                    					
+                    <fileInfo id="it.baeyens.arduino.core.toolChain.release.337326021.1617741646.455847604.652642567.libraries/WiFi/src/WiFiUdp.h" name="WiFiUdp.h" rcbsApplicability="disable" resourcePath="libraries/WiFi/src/WiFiUdp.h" toolsToInvoke=""/>
+                    					
+                    <sourceEntries>
+                        						
+                        <entry excluding="libraries/WiFi/src|libraries/WiFi/src/WiFiUdp.h|Product/PowerSwitch|libraries/?*/**/test*/**|libraries**/._*|libraries/?*/**/third-party/**|libraries/?*/**/?xamples/**|libraries/?*/**/?xtras/**" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        					
+                    </sourceEntries>
+                    				
+                </configuration>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+            		
+        </cconfiguration>
+        	
+    </storageModule>
+    	
+    <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+        		
+        <project id="wwww.null.1929536809" name="wwww"/>
+        	
+    </storageModule>
+    	
+    <storageModule moduleId="scannerConfiguration">
+        		
+        <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+        	
+    </storageModule>
+    	
+    <storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+    	
+    <storageModule moduleId="refreshScope" versionNumber="2">
+        		
+        <configuration configurationName="WaterHeater Debug">
+            			
+            <resource resourceType="PROJECT" workspacePath="/SmartHomeWifi"/>
+            		
+        </configuration>
+        		
+        <configuration configurationName="PowerSwitch Debug"/>
+        		
+        <configuration configurationName="WaterHeater Release"/>
+        		
+        <configuration configurationName="WaterHeater Clear EEprom Debug"/>
+        		
+        <configuration configurationName="WaterHeater_Release"/>
+        		
+        <configuration configurationName="WaterHeater_Debug"/>
+        		
+        <configuration configurationName="WaterHeater_Debug_restore_to_default">
+            			
+            <resource resourceType="PROJECT" workspacePath="/SmartHomeWifi"/>
+            		
+        </configuration>
+        		
+        <configuration configurationName="Release">
+            			
+            <resource resourceType="PROJECT" workspacePath="/SmartHomeWifi"/>
+            		
+        </configuration>
+        		
+        <configuration configurationName="WaterHeater_Debug restore to default">
+            			
+            <resource resourceType="PROJECT" workspacePath="/SmartHomeWifi"/>
+            		
+        </configuration>
+        	
+    </storageModule>
+    	
+    <storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+    	
+    <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+    
 </cproject>
