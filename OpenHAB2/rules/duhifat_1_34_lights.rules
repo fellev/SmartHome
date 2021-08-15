@@ -1,6 +1,7 @@
 val f_turnOffAllAc = [|
         
         sendCommand(Radiator_Power_KidsRoom, "OFF")
+        sendCommand(Radiator_PowerMaster_KidsRoom, "OFF")
         
         if (Air_Conditioner_PowerMaster_Office.state == ON)
         {
@@ -95,15 +96,17 @@ rule "Bedroom RGB Preset purple faint light"
        
         if(receivedCommand == ON)
         {
+            sendCommand( LIVINGROOM_Led_MainLight, "ON")
             postUpdate( LIVINGROOM_Light_R, 100 )
             postUpdate( LIVINGROOM_Light_G, 47 )
             postUpdate( LIVINGROOM_Light_B, 20 )
         }
         else 
         {
+            sendCommand( LIVINGROOM_Led_MainLight, "OFF")
             postUpdate( LIVINGROOM_Light_R, 0 )
             postUpdate( LIVINGROOM_Light_G, 0 )
-            postUpdate( LIVINGROOM_Light_B, 0 )           
+            postUpdate( LIVINGROOM_Light_B, 0 )
         }
 end       
 
@@ -158,14 +161,15 @@ rule "Bedroom RGB Preset Change"
             sendCommand(BEDROOM_Light_RGB_Preset, "ON");
 end
 
-rule "Wireless Switch Living Room"
+rule "Wireless Switch Home Entry"
 when
-    Channel "mihome:sensor_switch:158d000361568f:button" triggered or 
+//    Channel "mihome:sensor_switch:158d000361568f:button" triggered //or 
     Channel "mihome:sensor_switch:158d00035c6133:button" triggered
 then
     var actionName = receivedEvent.getEvent()
     switch(actionName) {
-        case "SHORT_PRESSED": {
+        case "SHORT_PRESSED",
+        case "DOUBLE_PRESSED": {
             if (LIVINGROOM_Light_RGB_Preset1.state == OFF)
             {
                 sendCommand( LIVINGROOM_Light_RGB_Preset1, "ON")
@@ -175,11 +179,40 @@ then
                 sendCommand( LIVINGROOM_Light_RGB_Preset1, "OFF")
             }
         }
-        case "DOUBLE_PRESSED": {
-            //<ACTION>
-        }
         case "LONG_PRESSED": {
             sendCommand( Turn_Off_All, "ON")
+        }
+        case "LONG_RELEASED": {
+            //<ACTION>
+        }
+    }
+end
+
+rule "Wireless Switch Living Room"
+when
+    Channel "mihome:sensor_switch:158d000361568f:button" triggered //or 
+//    Channel "mihome:sensor_switch:158d00035c6133:button" triggered
+then
+    var actionName = receivedEvent.getEvent()
+    switch(actionName) {
+        case "SHORT_PRESSED",
+        case "DOUBLE_PRESSED": {
+            if (LIVINGROOM_Light_RGB_Preset1.state == OFF)
+            {
+                sendCommand( LIVINGROOM_Light_RGB_Preset1, "ON")
+            }
+            else
+            {
+                sendCommand( LIVINGROOM_Light_RGB_Preset1, "OFF")
+            }
+        }
+        case "LONG_PRESSED": {
+            sendCommand( KitchenLights,           "OFF")
+            sendCommand( TV_Power_State_Living,   "OFF")
+            sendCommand( LivingRoom_Light_Main  , "OFF")
+            sendCommand( LivingRoom_Light_Mirror, "OFF")
+            sendCommand( LivingRoom_Light_Table , "OFF")
+            sendCommand( LivingRoom_Light_TV    , "OFF")
         }
         case "LONG_RELEASED": {
             //<ACTION>

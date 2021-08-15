@@ -65,14 +65,14 @@ var f_Thermostat_Power_Control = [ String _device_type, String _device_name, Gen
                     sendCommand(PowerOff, "ON")
                 }                   
             }
-            else if (temp >= maxTemp)
+            else if (temp >= maxTemp || ((Power.state == OFF) && (PowerMaster1.state != PowerMaster.state) && (temp > minTemp)))
             {
                 sendCommand(Power, "ON")
             }
         }
         else if (ControlMode.state == 4) //Control Mode is Heat
         {
-            if (temp <= minTemp)
+            if (temp <= minTemp || ((Power.state == OFF) && (PowerMaster1.state != PowerMaster.state) && (temp < maxTemp)))
             {
                 sendCommand(Power, "ON")
             }
@@ -195,42 +195,6 @@ then
         postUpdate( Air_Conditioner_FanAngle_Office,    Air_Conditioner_FanAngle_Office.state)
         postUpdate( Air_Conditioner_Temperature_Office, Air_Conditioner_Temperature_Office.state)
         postUpdate( Air_Conditioner_Screen_Office,      Air_Conditioner_Screen_Office.state)
-end
-
-rule "Water Heater On With Timer"
-    when
-        Item WaterHeater_Power received command 
-    then
-        if(receivedCommand == ON)
-        {
-            postUpdate( WaterHeater_Timer_Post, String::format("TMR%s",WaterHeater_Set_Timer.state) )
-        }
-        else if(receivedCommand == OFF)
-        {
-            postUpdate( WaterHeater_Timer_Post, "OFF")
-        }
-end
-
-rule "Water Heater Off from device"
-    when
-	Item WaterHeater_Power_Status changed
-    then
-	if(WaterHeater_Power_Status.state == OFF)
-	{
-	  sendCommand( WaterHeater_Power, "OFF")
-	  sendCommand( WaterHeater_Time_Left, 0)
-	}
-end
-
-rule "Water Heater Update Timer"
-    when 
-	Item WaterHeater_Set_Timer changed
-    then
-        //logInfo("WaterHeater_Set_Timer changed", "WaterHeater_Power_Status.state=[{}]", WaterHeater_Power)
-	if (WaterHeater_Power.state == ON)
-	{
-	    sendCommand( WaterHeater_Power, "ON")
-	}
 end
 
 rule "Office AC PWR control"

@@ -11,18 +11,20 @@ Group Stairs    (All)
 Group BathroomParents (All)
 Group BathroomKids    (All)
 Group:Switch:OR(ON,OFF)    Lights           "All Lights"           <lightbulb>
-Group:Switch:OR(ON,OFF)    LivingRoomLights "Living Room Lights"   <lightbulb>
+Group:Switch:AND(ON,OFF)   LivingRoomLights "Living Room Lights"   <lightbulb>
 Group:Switch:OR(ON,OFF)    KitchenLights    "Kitchen Lights"       <lightbulb>
 Group Kitchen                               "Kitchen"              <kitchen> 	(All)
 Group Presence            "Presence"
 Group:Switch:OR(ON,OFF)    AnyoneHome       "Anyone Home"
+Group Temperature
 
 /* Lights */
-Dimmer LIVINGROOM_Light_R                                                                              {mqtt=">[mymosquitto:/CONTROLLERS/RGB/260/RED:state:*:default]"}  /* 260 = 0x100 + 0x004 */
-Dimmer LIVINGROOM_Light_G                                                                              {mqtt=">[mymosquitto:/CONTROLLERS/RGB/260/GREEN:state:*:default]"}
-Dimmer LIVINGROOM_Light_B                                                                              {mqtt=">[mymosquitto:/CONTROLLERS/RGB/260/BLUE:state:*:default]"}
+Dimmer LIVINGROOM_Light_R                                                                              {mqtt=">[mymosquitto:/CONTROLLERS/RGB/005/RED:state:*:default]"}  /* 260 = 0x100 + 0x004  1-Repeat 1 time start from controller id 4 */
+Dimmer LIVINGROOM_Light_G                                                                              {mqtt=">[mymosquitto:/CONTROLLERS/RGB/005/GREEN:state:*:default]"}
+Dimmer LIVINGROOM_Light_B                                                                              {mqtt=">[mymosquitto:/CONTROLLERS/RGB/005/BLUE:state:*:default]"}
 Color  LIVINGROOM_Light_RGB               "RGB Dimmer"                 
 Switch LIVINGROOM_Light_RGB_Preset1       "LivingRoom Light"   <light> (LivingRoom, Lights, LivingRoomLights)            ["Lighting"]
+Switch LIVINGROOM_Led_MainLight           "LivingRoom LED Main Light"   <light>
                                        
 Dimmer BEDROOM_Light_R                                                                                 {mqtt=">[mymosquitto:/CONTROLLERS/RGB/006/RED:state:*:default]"}
 Dimmer BEDROOM_Light_G                                                                                 {mqtt=">[mymosquitto:/CONTROLLERS/RGB/006/GREEN:state:*:default]"}
@@ -56,6 +58,7 @@ Number        WaterHeater_Set_Timer         "Set Timer"          <time>         
 String        WaterHeater_Timer_Post        "Timer Post"         <timer>                        {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"}
 String        WaterHeater_Power_Post        "Power Post"         <switch>                       {mqtt=">[mymosquitto:/CONTROLLERS/WATER_HEATER/011/H2D:state:*:default]"}
 Switch        WaterHeater_Power_Status      "Power Status [%s]"  <status>                       {mqtt="<[mymosquitto:/CONTROLLERS/WATER_HEATER/011/D2H/PWR:state:default]"}
+Number        WaterHeater_Simple_Timer      "Water Heater Timer" <time>
 
 /* Rollershutters */
 Switch Shutter_all (Shutters)
@@ -64,7 +67,8 @@ Rollershutter Shutter_BedRoom                 "Bed Room"      (BedRoom, Shutters
 Rollershutter Shutter_Office                  "Office"        (Office, Shutters)          {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/099:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/099:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/099:state:default]"}
 Rollershutter Shutter_LivingRoom              "LivingRoom"    (LivingRoom, Shutters) ["Blinds"]     {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/003:command:UP:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:DOWN:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/003:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/003:state:default]"}
 /* In Kitchen rollershutter directions are inverted */
-Rollershutter Shutter_Kitchen                 "Kitchen"       (Kitchen, Shutters)  ["Blinds"]       {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/012:command:UP:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/012:command:DOWN:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/012:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/012:state:default]"}
+//Rollershutter Shutter_Kitchen                 "Kitchen"       (Kitchen, Shutters)  ["Blinds"]       {mqtt=">[mymosquitto:/CONTROLLERS/SHUTTER/012:command:UP:SHTCLS],>[mymosquitto:/CONTROLLERS/SHUTTER/012:command:DOWN:SHTOPN],>[mymosquitto:/CONTROLLERS/SHUTTER/012:command:STOP:SHTSTO],<[mymosquitto:/CONTROLLERS/SHUTTER/012:state:default]"}
+Rollershutter Shutter_Kitchen                 "Kitchen"       (Kitchen, Shutters)  ["Blinds"]       {mqtt=">[mymosquitto:cmnd/kitchen/Shutter/Backlog:command:UP:SHUTTEROPEN],>[mymosquitto:cmnd/kitchen/Shutter/Backlog:command:DOWN:SHUTTERCLOSE],>[mymosquitto:cmnd/kitchen/Shutter/Backlog:command:STOP:SHUTTERSTOP],<[mymosquitto:stat/kitchen/Shutter/SHUTTER1:state:default]"}
 Switch Close_All_Shutters                     "Close All Shutters" <returnpipe>
 Switch Open_All_Shutters                      "Open All Shutters"  <flowpipe>
 
@@ -97,7 +101,7 @@ Switch Air_Conditioner_PowerMaster_BedRoom   "AC Power"          <switch>       
 Switch Air_Conditioner_PowerMaster1_BedRoom  "Power"             <switch>          
 Switch Air_Conditioner_PowerOff_BedRoom      "Power"             <switch>          
 
-Number Air_Conditioner_Mode_KidsRoom         "AC Mode"           <settings>                          {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/MODE:state:*:default]"}
+Number Air_Conditioner_Mode_KidsRoom         "AC Mode"           <settings>          (KidsRoom)      {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/MODE:state:*:default]"}
 Switch Air_Conditioner_Power_KidsRoom        "Power Status [%s]" <status>                            {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/POWER:state:*:default]"}
 Number Air_Conditioner_FanSpeed_KidsRoom     "Fan Speed"         <fan>                               {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/FAN:state:*:default]"}
 Number Air_Conditioner_FanAngle_KidsRoom     "Fan Angle"         <incline>                           {mqtt=">[mymosquitto:/CONTROLLERS/AC/008/ANGLE:state:*:default]"}
@@ -154,16 +158,17 @@ String TV_RemoteCommand_Living               "TV Remote Commands" <ircode>
 
 
 Group Weather_Chart													(Weather)
-Number Weather_Temperature              "Outside Temperature [%.2f °C]" <temperature> { channel="mihome:sensor_ht:158d0003547717:temperature" }
-Number:Dimensionless Weather_Humidity	"Humidity [%d%%]"               <humidity>    { channel="mihome:sensor_ht:158d0003547717:humidity" }   
+Number Weather_Temperature              "Outside [%.2f °C]" <temperature>  (Temperature) { channel="mihome:sensor_ht:158d0003547717:temperature" }
+Number:Dimensionless Weather_Humidity	"Humidity [%d%%]"   <humidity>                   { channel="mihome:sensor_ht:158d0003547717:humidity" }   
 Number Weather_Temp_Max 		"Todays Maximum [%.2f °C]"	<temperature> (Weather_Chart)
 Number Weather_Temp_Min 		"Todays Minimum [%.2f °C]"	<temperature> (Weather_Chart)
 Number Weather_Chart_Period		"Chart Period"
 DateTime Weather_LastUpdate		"Last Update [%1$ta %1$tR]"	<clock>
-Number Temperature_KidsRoom             "Room Temperature [%.2f °C]"         <temperature> { channel="mihome:sensor_ht:158d0003546a46:temperature" }
-Number Temperature_BedRoom              "Room Temperature [%.2f °C]"         <temperature> { channel="mihome:sensor_weather_v1:158d0003055bd4:temperature" }
-Number Temperature_Living               "Room Temperature [%.2f °C]"         <temperature> { channel="mihome:sensor_ht:158d000354767a:temperature" }
-Number Temperature_Office               "Room Temperature [%.2f °C]"         <temperature> { channel="mihome:sensor_ht:158d00034f8944:temperature" }
+Number Temperature_KidsRoom             "Kids Room [%.2f °C]"      <temperature> (Temperature) { channel="mihome:sensor_ht:158d0003546a46:temperature" }
+Number Temperature_BedRoom              "BedRoom [%.2f °C]"        <temperature> (Temperature) { channel="mihome:sensor_weather_v1:158d0003055bd4:temperature" }
+Number Temperature_Living               "Living Room [%.2f °C]"    <temperature> (Temperature) { channel="mihome:sensor_ht:158d000354767a:temperature" }
+Number Temperature_Office               "Office [%.2f °C]"         <temperature> (Temperature) { channel="mihome:sensor_ht:158d00034f8944:temperature" }
+Number Temperature_KidsBathroom         "Kids Bathroom [%.2f °C]"  <temperature> (Temperature) { channel="mihome:sensor_ht:158d00040f9a7d:temperature" }
 
 /* NTP binding demo item */
 DateTime		Date			"Date [%1$tA, %1$td.%1$tm.%1$tY]"	<calendar>	{ ntp="Europe/Berlin:de_DE" }
@@ -178,7 +183,7 @@ Switch MS_BatteryLow_Stairs   <energy>  (Stairs) { channel="mihome:sensor_motion
 
 Switch PowerSocket_Kids         "Heater"              <switch>  (KidsRoom)          
 
-Switch PowerSocket_RPI4         "YES Power On/Off"   <switch>  (LivingRoom)
+Switch PowerSocket_RPI4         "RPI4 On/Off"   <switch>  (LivingRoom)
 
 Switch BathroomHeater_Parents   "Heater"              <switch>  (BathroomParents)  ["Switchable"]
 
