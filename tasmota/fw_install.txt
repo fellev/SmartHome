@@ -1,0 +1,12 @@
+#Get deviceIP and deviceID
+avahi-browse -t _ewelink._tcp --resolve
+
+#Get info
+curl http://<deviceIP>:8081/zeroconf/info -XPOST --data '{"deviceid":"<deviceID>","data":{} }'
+
+#Unlock
+curl http://<deviceIP>:8081/zeroconf/ota_unlock -XPOST --data '{"deviceid":"<deviceID>","data":{} }'
+
+#FW download
+curl http://<deviceIP>:8081/zeroconf/ota_flash -XPOST --data '{"deviceid":"<deviceID>","data":{"downloadUrl": "http://<webServer>/tasmota-wifiman.bin", "sha256sum": "<SHAsum>"} }'
+
