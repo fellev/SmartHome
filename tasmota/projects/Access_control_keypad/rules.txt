@@ -1,0 +1,15 @@
+Rule1 on Power1#state=0 do Publish cmnd/entry_access_keypad/POWER3 OFF endon
+
+Rule2 on System#Init do var1 Switch1#state endon on System#Init DO Power1 %value% endon
+
+Rule2 on system#boot do var1 ENDON on switch1#state=1 do Power1 1 ENDON on switch1#state=0 do Power1 0 ENDON
+
+Rule2 on System#Init do var1 Switch1#state endon on var1=1 DO Power1 1 endon on var1=0 DO Power1 0 ENDON
+
+Rule2 on system#boot do var1 + ENDON on switch1#state do Power1 %value% ENDON
+
+Rule2 on system#boot do on switch1#state do Power1 %value% ENDON ENDON
+
+Rule2 on system#boot do var1 + ENDON on switch1#state do Power1 %value% ENDON
+
+Working: Rule2 ON Switch1#Boot DO Power1 %value% ENDON

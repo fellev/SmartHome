@@ -1,0 +1,8 @@
+D0 - Input - Tamper sensor micro switch
+D1 - Input - Open Door
+
+Voltage convertor 12V -> 3.3V
+
+12V * 470/(470 + R) = 3.3
+R = 1239
+

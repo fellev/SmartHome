@@ -1,0 +1,32 @@
+Rule1 on Switch3#state=1 do Publish cmnd/livingroom_and_kitchen/light/POWER1 ON endon on Switch3#state=0 do Publish cmnd/livingroom_and_kitchen/light/POWER1 OFF endon
+
+Rule1 on Power3#state=1 do Publish cmnd/livingroom_and_kitchen/light/POWER1 ON endon on Power3#state=0 do Publish cmnd/livingroom_and_kitchen/light/POWER1 OFF endon
+
+**********************************************************
+Dvice name: Living Room 3ch 
+Rule1 on Power3#state do Publish cmnd/livingroom_and_kitchen/light/POWER1 TOGGLE endon
+Rule1 1
+********************************************************** 
+
+**********************************************************
+Dvice name: Kids Room Light Window
+Rule1 on Power1#state do Publish cmnd/kids_room/light/Power1 TOGGLE endon
+********************************************************** 
+
+********************************************************** 
+Device name: Kids Room Light & AC
+Rule1 on Power2#state=1 do DIMMER1 50 endon on Power2#state=0 do DIMMER1 0 endon
+********************************************************** 
+
+********************************************************** 
+Device name: Bedroom Light & AC
+Rule1 on Power2#state=1 do DIMMER1 50 endon on Power2#state=0 do DIMMER1 0 endon
+Rule2 on Power1#state do Publish cmnd/bedroom_bed/light/POWER1 TOGGLE endon
+********************************************************** 
+
+********************************************************** 
+Device name: Water Heater & Batch Heater
+Rule1 on Power2#state=1 do Publish cmnd/water_heater/POWER1 ON endon on Power2#state=0 do Publish cmnd/water_heater/POWER1 OFF endon
+Rule2 on Power2#state=1 do DIMMER1 100 endon on Power2#state=0 do DIMMER1 0 endon
+********************************************************** 
+
