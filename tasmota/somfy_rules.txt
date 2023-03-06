@@ -31,8 +31,6 @@ Rule3 ON Power5#State=1 DO SomfyUp3 ENDON ON Power6#State=1 DO SomfyDown3 ENDON 
 
 
 
-SomfySet1 5 191 - FF All  //Current Somfy Rolling Code: 190
-
 Somfy FF :
 SomfySet1 6 272 - Office
 SomfySet2 7 199 - Kitchen
@@ -42,12 +40,13 @@ SomfySet4 9 151 - Balcony Door
 Somfy FF 2:
 SomfySet5 10 0 - Balcony upper window
 SomfySet6 11 0 - Entry Window
+
+
+3D printer & Somfy:
 SomfySet7 16 8 - Bedroom Door
 SomfySet8 15 0 - Bedroom Window
 
-3D printer & Somfy:
-
-
+SomfySetx 5 191 - FF All  //Current Somfy Rolling Code: 190
 SomfySetx 12 0 - PlayRoom Door
 SomfySetx 13 0 - Bathroom Door
 SomfySetx 14 0 - KidsRoom Window
@@ -62,25 +61,6 @@ Rule2 + ON Shutter4#Target DO Var4 %value% ENDON ON Power7#State=1 DO SomfyUp4 E
 
 Somfy Control FF Rule: ('module' is published just as message that doing nothing)
 # Control over Office, Kitchen, Garden and Balcony door.
-Ver1:
-rule1   on shutter1#target do if (%value%>0 and %value%<100) var1 cmnd/str/SomfyStop1 else var1 module endif endon on power1#state=1 do publish cmnd/str/SomfyUp1 endon on power2#state=1 do publish cmnd/str/SomfyDown1 endon on power1#state=0 do publish %var1% endon on power2#state=0 do publish %var1% endon
-rule1 + on shutter2#target do if (%value%>0 and %value%<100) var2 cmnd/str/SomfyStop2 else var2 module endif endon on power3#state=1 do publish cmnd/str/SomfyUp2 endon on power4#state=1 do publish cmnd/str/SomfyDown2 endon on power3#state=0 do publish %var2% endon on power4#state=0 do publish %var2% endon
-rule1 + on shutter3#target do if (%value%>0 and %value%<100) var3 cmnd/str/SomfyStop3 else var3 module endif endon on power5#state=1 do publish cmnd/str/SomfyUp3 endon on power6#state=1 do publish cmnd/str/SomfyDown3 endon on power5#state=0 do publish %var3% endon on power6#state=0 do publish %var3% endon
-rule1 + on shutter4#target do if (%value%>0 and %value%<100) var4 cmnd/str/SomfyStop4 else var4 module endif endon on power7#state=1 do publish cmnd/str/SomfyUp4 endon on power8#state=1 do publish cmnd/str/SomfyDown4 endon on power7#state=0 do publish %var4% endon on power8#state=0 do publish %var4% endon
-
-Ver2:
-rule1   on shutter1#target do var1 cmnd/str/SomfyStop1 endon on power1#state=1 do publish cmnd/str/SomfyUp1 endon on power2#state=1 do publish cmnd/str/SomfyDown1 endon on power1#state=0 do publish %var1% endon on power2#state=0 do publish %var1% endon
-rule1 + on shutter2#target do var2 cmnd/str/SomfyStop2 endon on power3#state=1 do publish cmnd/str/SomfyUp2 endon on power4#state=1 do publish cmnd/str/SomfyDown2 endon on power3#state=0 do publish %var2% endon on power4#state=0 do publish %var2% endon
-rule1 + on shutter3#target do var3 cmnd/str/SomfyStop3 endon on power5#state=1 do publish cmnd/str/SomfyUp3 endon on power6#state=1 do publish cmnd/str/SomfyDown3 endon on power5#state=0 do publish %var3% endon on power6#state=0 do publish %var3% endon
-rule1 + on shutter4#target do var4 cmnd/str/SomfyStop4 endon on power7#state=1 do publish cmnd/str/SomfyUp4 endon on power8#state=1 do publish cmnd/str/SomfyDown4 endon on power7#state=0 do publish %var4% endon on power8#state=0 do publish %var4% endon
-
-Ver3:
-Rule1 ON Shutter1#Target DO Var1 %value% ENDON ON Power1#State=1 DO publish cmnd/str/SomfyUp1 ENDON ON Power2#State=1 DO publish cmnd/str/SomfyDown1 ENDON ON Power1#State=0 DO IF (Var1>0 AND Var1<100) backlog mem1 ENDIF ENDON ON Power2#State=0 DO IF (Var1>0 AND Var1<100) mem1 ENDIF ENDON
-Rule2 ON Shutter2#Target DO Var2 %value% ENDON ON Power3#State=1 DO SomfyUp2 ENDON ON Power4#State=1 DO SomfyDown2 ENDON ON Power3#State=0 DO IF (Var2>0 AND Var2<100) SomfyStop2 ENDIF ENDON ON Power4#State=0 DO IF (Var2>0 AND Var2<100) SomfyStop2 ENDIF ENDON
-Rule2 + ON Shutter3#Target DO Var3 %value% ENDON ON Power5#State=1 DO SomfyUp3 ENDON ON Power6#State=1 DO SomfyDown3 ENDON ON Power5#State=0 DO IF (Var3>0 AND Var3<100) SomfyStop3 ENDIF ENDON ON Power6#State=0 DO IF (Var3>0 AND Var3<100) SomfyStop3 ENDIF ENDON
-Rule2 + ON Shutter4#Target DO Var4 %value% ENDON ON Power7#State=1 DO SomfyUp4 ENDON ON Power8#State=1 DO SomfyDown4 ENDON ON Power7#State=0 DO IF (Var4>0 AND Var4<100) SomfyStop4 ENDIF ENDON ON Power8#State=0 DO IF (Var4>0 AND Var4<100) SomfyStop4 ENDIF ENDON
-
-Ver4 (Active):
 rule1   on shutter1#target do if (%value%>0 and %value%<100) var1 cmnd/str/SomfyStop1 else var1 module endif endon on power1#state=1 do publish cmnd/str/SomfyUp1 endon on power2#state=1 do publish cmnd/str/SomfyDown1 endon on power1#state=0 do publish %var1% ; var1 cmnd/str/SomfyStop1 endon on power2#state=0 do publish %var1% ; var1 cmnd/str/SomfyStop1 endon
 rule1 + on shutter2#target do if (%value%>0 and %value%<100) var2 cmnd/str/SomfyStop2 else var2 module endif endon on power3#state=1 do publish cmnd/str/SomfyUp2 endon on power4#state=1 do publish cmnd/str/SomfyDown2 endon on power3#state=0 do publish %var2% ; var2 cmnd/str/SomfyStop2 endon on power4#state=0 do publish %var2% ; var2 cmnd/str/SomfyStop2 endon
 rule1 + on shutter3#target do if (%value%>0 and %value%<100) var3 cmnd/str/SomfyStop3 else var3 module endif endon on power5#state=1 do publish cmnd/str/SomfyUp3 endon on power6#state=1 do publish cmnd/str/SomfyDown3 endon on power5#state=0 do publish %var3% ; var3 cmnd/str/SomfyStop3 endon on power6#state=0 do publish %var3% ; var3 cmnd/str/SomfyStop3 endon
@@ -88,19 +68,14 @@ rule1 + on shutter4#target do if (%value%>0 and %value%<100) var4 cmnd/str/Somfy
 
 
 Somfy Control FF 2 Rule:
-# Control over Balcony upper window, Entry Window, Bedroom Door and Bedroom Window.
-rule1   on shutter1#target do if (%value%>0 and %value%<100) var1 cmnd/str/SomfyStop5 else var1 module endif endon on power1#state=1 do publish cmnd/str/SomfyUp5 endon on power2#state=1 do publish cmnd/str/SomfyDown5 endon on power1#state=0 do publish %var1% endon on power2#state=0 do publish %var1% endon
-rule1 + on shutter2#target do if (%value%>0 and %value%<100) var2 cmnd/str/SomfyStop6 else var2 module endif endon on power3#state=1 do publish cmnd/str/SomfyUp6 endon on power4#state=1 do publish cmnd/str/SomfyDown6 endon on power3#state=0 do publish %var2% endon on power4#state=0 do publish %var2% endon
-rule1 + on shutter3#target do if (%value%>0 and %value%<100) var3 cmnd/str/SomfyStop7 else var3 module endif endon on power5#state=1 do publish cmnd/str/SomfyUp7 endon on power6#state=1 do publish cmnd/str/SomfyDown7 endon on power5#state=0 do publish %var3% endon on power6#state=0 do publish %var3% endon
-rule1 + on shutter4#target do if (%value%>0 and %value%<100) var4 cmnd/str/SomfyStop8 else var4 module endif endon on power7#state=1 do publish cmnd/str/SomfyUp8 endon on power8#state=1 do publish cmnd/str/SomfyDown8 endon on power7#state=0 do publish %var4% endon on power8#state=0 do publish %var4% endon
-
-Ver2 (Active):
+# Control over Balcony upper window, Entry Window.
 rule1   on shutter1#target do if (%value%>0 and %value%<100) var1 cmnd/str/SomfyStop5 else var1 module endif endon on power1#state=1 do publish cmnd/str/SomfyUp5 endon on power2#state=1 do publish cmnd/str/SomfyDown5 endon on power1#state=0 do publish %var1% ; var1 cmnd/str/SomfyStop5 endon on power2#state=0 do publish %var1% ; var1 cmnd/str/SomfyStop5 endon
 rule1 + on shutter2#target do if (%value%>0 and %value%<100) var2 cmnd/str/SomfyStop6 else var2 module endif endon on power3#state=1 do publish cmnd/str/SomfyUp6 endon on power4#state=1 do publish cmnd/str/SomfyDown6 endon on power3#state=0 do publish %var2% ; var2 cmnd/str/SomfyStop6 endon on power4#state=0 do publish %var2% ; var2 cmnd/str/SomfyStop6 endon
-rule1 + on shutter3#target do if (%value%>0 and %value%<100) var3 cmnd/str/SomfyStop7 else var3 module endif endon on power5#state=1 do publish cmnd/str/SomfyUp7 endon on power6#state=1 do publish cmnd/str/SomfyDown7 endon on power5#state=0 do publish %var3% ; var3 cmnd/str/SomfyStop7 endon on power6#state=0 do publish %var3% ; var3 cmnd/str/SomfyStop7 endon
-rule1 + on shutter4#target do if (%value%>0 and %value%<100) var4 cmnd/str/SomfyStop8 else var4 module endif endon on power7#state=1 do publish cmnd/str/SomfyUp8 endon on power8#state=1 do publish cmnd/str/SomfyDown8 endon on power7#state=0 do publish %var4% ; var4 cmnd/str/SomfyStop8 endon on power8#state=0 do publish %var4% ; var4 cmnd/str/SomfyStop8 endon
 
-
+3D printer & Somfy
+# Control over Bedroom Door and Bedroom Window.
+rule1   on shutter1#target do if (%value%>0 and %value%<100) var1 cmnd/str/SomfyStop7 else var1 module endif endon on power1#state=1 do publish cmnd/str/SomfyUp7 endon on power2#state=1 do publish cmnd/str/SomfyDown7 endon on power1#state=0 do publish %var1% ; var1 cmnd/str/SomfyStop7 endon on power2#state=0 do publish %var1% ; var1 cmnd/str/SomfyStop7 endon
+rule1 + on shutter2#target do if (%value%>0 and %value%<100) var2 cmnd/str/SomfyStop8 else var2 module endif endon on power3#state=1 do publish cmnd/str/SomfyUp8 endon on power4#state=1 do publish cmnd/str/SomfyDown8 endon on power3#state=0 do publish %var2% ; var2 cmnd/str/SomfyStop8 endon on power4#state=0 do publish %var2% ; var2 cmnd/str/SomfyStop8 endon
 
 rule2 on shutterstop do publish mnd/str/SomfyStop1
 
